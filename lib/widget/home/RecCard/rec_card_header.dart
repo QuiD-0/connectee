@@ -63,7 +63,7 @@ class NameAndTitle extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: 110),
                 child: Text(
                   '이름',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white,),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   softWrap: false,
@@ -77,7 +77,7 @@ class NameAndTitle extends StatelessWidget {
               ),
               Text(
                 '2020.07.11',
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12,color: Colors.white,),
               )
             ],
           ),
@@ -86,7 +86,7 @@ class NameAndTitle extends StatelessWidget {
           ),
           Text(
             '오늘 나의 일상',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white,),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             softWrap: false,
@@ -111,7 +111,7 @@ class DiaryType extends StatelessWidget {
       child: Center(
           child: Text(
         '일기',
-        style: TextStyle(color: Colors.white, fontSize: 12),
+        style: TextStyle(color: Colors.white, fontSize: 12,),
       )),
     );
   }

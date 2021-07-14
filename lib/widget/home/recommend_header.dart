@@ -13,6 +13,7 @@ class RecommendHeader extends StatelessWidget {
           child: Text(
             '추천 다이어리',
             style: TextStyle(
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

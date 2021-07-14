@@ -24,10 +24,16 @@ class _MyAppState extends State<MyApp> {
       title: 'Connectee',
       theme: ThemeData(
         fontFamily: "GmarketSans",
-        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          brightness:Brightness.dark,
+            backgroundColor: Colors.black,),
+        brightness: Brightness.light,
       ),
-      home: WillPopScope(child: HomePage(),
-      onWillPop: (){},),
+      home: WillPopScope(
+        child: HomePage(),
+        onWillPop: () {},
+      ),
     );
   }
 }
@@ -142,12 +148,10 @@ class HomePage extends StatelessWidget {
   }
 }
 
-
-
 class NoGlowScrollBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(BuildContext context, Widget child,
-      AxisDirection axisDirection) {
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
   }
 }
