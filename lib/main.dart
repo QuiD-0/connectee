@@ -26,7 +26,8 @@ class _MyAppState extends State<MyApp> {
         fontFamily: "GmarketSans",
         brightness: Brightness.dark,
       ),
-      home: HomePage(),
+      home: WillPopScope(child: HomePage(),
+      onWillPop: (){},),
     );
   }
 }

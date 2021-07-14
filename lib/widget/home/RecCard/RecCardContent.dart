@@ -1,4 +1,7 @@
+import 'package:connectee/widget/home/diary_detail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 
 class RecCardContent extends StatelessWidget {
   final data;
@@ -8,7 +11,13 @@ class RecCardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('${data.id} tapped');
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(
+            builder: (BuildContext context) => new DiaryDetail(data:data),
+            fullscreenDialog: true,
+          ),
+        );
       },
       child: Container(
         width: 331,
