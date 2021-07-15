@@ -14,7 +14,6 @@ class RecommendCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 360,
-      height: 294,
       decoration: BoxDecoration(color: Color(0xff3d3d3d), boxShadow: [
         BoxShadow(
           color: Color(0xd000000),

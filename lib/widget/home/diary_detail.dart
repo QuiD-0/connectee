@@ -1,5 +1,8 @@
 import 'package:connectee/widget/home/DetailCard/detail_contents.dart';
+import 'package:connectee/widget/home/DetailCard/reaction_buttons.dart';
+import 'package:connectee/widget/home/RecCard/rec_card_footer.dart';
 import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DiaryDetail extends StatelessWidget {
@@ -27,23 +30,26 @@ class DiaryDetail extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Center(
-            child: Container(
-              width: 360,
-              decoration: BoxDecoration(
-                  color: Color(0xff3d3d3d),
-                  borderRadius: BorderRadius.circular(13)),
-              child: Column(
-                children: [
-                  RecCardHeader(),
-                  DetailContents(
-                    data: data,
+            child: Column(
+              children: [
+                Container(
+                  width: 360,
+                  decoration: BoxDecoration(
+                      color: Color(0xff3d3d3d),
+                      borderRadius: BorderRadius.circular(13)),
+                  child: Column(
+                    children: [
+                      RecCardHeader(),
+                      DetailContents(
+                        data: data,
+                      ),
+                      Container(child: EmotionCount(),margin: EdgeInsets.fromLTRB(20,20,20,10),),
+                      ReactionButtons(),
+                    ],
                   ),
-                  Container(),
-                  SizedBox(
-                    height: 15,
-                  )
-                ],
-              ),
+                ),
+                SizedBox(height: 10,),
+              ],
             ),
           ),
         ));
