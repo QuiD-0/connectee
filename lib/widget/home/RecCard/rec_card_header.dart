@@ -58,12 +58,13 @@ class NameAndTitle extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 110),
                 child: Text(
                   '이름',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white,),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white,),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   softWrap: false,
@@ -75,9 +76,12 @@ class NameAndTitle extends StatelessWidget {
                 color: Colors.white,
                 margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               ),
-              Text(
-                '2020.07.11',
-                style: TextStyle(fontSize: 12,color: Colors.white,),
+              Container(
+                height: 15,
+                child: Text(
+                  '2020.07.11',
+                  style: TextStyle(fontSize: 12,color: Colors.white),
+                ),
               )
             ],
           ),
@@ -85,8 +89,8 @@ class NameAndTitle extends StatelessWidget {
             height: 10,
           ),
           Text(
-            '오늘 나의 일상오늘 나의 일상오늘 나의 일상오늘 나의 일상',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white,),
+            '오늘 나의 일상',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white,),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             softWrap: false,
@@ -103,7 +107,7 @@ class DiaryType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 10, top: 10),
+      margin: EdgeInsets.only(left: 10, top: 10), // 물어보기
       decoration: BoxDecoration(
           color: Color(0xdd2d2d2d), borderRadius: BorderRadius.circular(30)),
       width: 43,

@@ -3,30 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
-/*
-//-> json 받아오기
- List<Map<String,dynamic>> data =[
-    {"date":"2021-07-05 00:00:00.000Z","data":{"title":'asd', "id":1, "display":1}},
-    {"date":"2021-07-02 00:00:00.000Z","data":{"title":'qwe', "id":2, "display":1}},
-    {"date":"2021-06-28 00:00:00.000Z","data":{"title":'zxc', "id":1, "display":1}},
-  ];
-
-        */
 
 class Event {
-  final String title;
-  final int id;
-  final int display;
+  final String emotionType;
 
-  Event({@required this.title, this.id, this.display});
+  Event({@required this.emotionType});
 
-  String toString() => this.title;
 
-  Event.formMap(Map<String, dynamic> map)
-      : title = map['title'],
-        id = map['id'],
-        display = map['display'];
+
+  Event.formMap(String map)
+      : emotionType = map;
 }
 
 class Calendar extends StatefulWidget {
@@ -42,37 +30,31 @@ class _CalendarState extends State<Calendar> {
   List<String> dowList = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
   TextEditingController _eventController = TextEditingController();
 
-  get http => null;
-
   @override
   void initState() {
-    selectedEvents = {
-      DateTime.utc(2021, 7, 5): [
-        Event(title: 'asdasd', id: 1, display: 1),
-        Event(title: 'dasd', id: 2, display: 0)
-      ],
-      DateTime.utc(2021, 7, 2): [Event(title: 'asd', id: 2, display: 1)],
-      DateTime.utc(2021, 6, 28): [Event(title: 'asd', id: 1, display: 1)],
-      DateTime.utc(2021, 6, 22): [Event(title: 'asd', id: 1, display: 1)],
-    };
+    _fetchEvent();
     super.initState();
   }
 
-  // Future _fetchEvent() async {
-  //   //데이터 받아오기
-  //   await http
-  //       .get(Uri.parse("http://18.216.47.35:3000/?page=1&limit=2"))
-  //       .then((res) {
-  //     if (res.statusCode == 200) {
-  //       String jsonString = res.body;
-  //       List data = jsonDecode(jsonString);
-  //       for (var i = 0; i < data.length; i++) {
-  //         Event a = Event.formMap(data[i]["data"]);
-  //         selectedEvents[DateTime.parse(data[i]["date"])] = [a];
-  //       }
-  //     }
-  //   });
-  // }
+  Future _fetchEvent() async {
+    //데이터 받아오기
+    await http
+        .get(Uri.parse("http://3.34.131.217:5000/diaries?userId=1"))
+        .then((res) {
+      if (res.statusCode == 200) {
+        String jsonString = res.body;
+        List data = jsonDecode(jsonString);
+        for (var i = 0; i < data.length; i++) {
+          Event a = Event.formMap(data[i]["emotionType"]);
+          DateTime day=DateTime.parse(data[i]["createdAt"]);
+          setState(() {
+            selectedEvents[DateTime.utc(day.year,day.month,day.day)] = [a];
+          });
+        }
+      }
+
+    });
+  }
 
   List<Event> _getEventsfromDay(DateTime date) {
     return selectedEvents[date] ?? [];
@@ -119,7 +101,7 @@ class _CalendarState extends State<Calendar> {
             calendarBuilders: CalendarBuilders(
               singleMarkerBuilder: (context, date, event) {
                 // 컬러 리스트 만든뒤 리팩토링
-                if (event.id == 1) {
+                if (event.emotionType == "happy" ||event.emotionType == "angry"  ) {
                   return Container(
                     width: 5,
                     height: 5,

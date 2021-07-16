@@ -36,7 +36,7 @@ class _DetailContentsState extends State<DetailContents> {
     }
     return Container(
       width: 330,
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.fromLTRB(20,15,20,15),
       decoration: BoxDecoration(
           color: Color(0xffffffff), borderRadius: BorderRadius.circular(10)),
       child: widget.data.id % 2 == 1
@@ -49,42 +49,24 @@ class _DetailContentsState extends State<DetailContents> {
                 ),
                 Container(
                     padding: EdgeInsets.only(bottom: 5),
-                    constraints: BoxConstraints(maxHeight: 100, minWidth: 300),
-                    child: Scrollbar(
-                      thickness: 6,
-                      radius: Radius.circular(13),
-                      controller: _controllerOne,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.only(right: 10),
-                        controller: _controllerOne,
-                        scrollDirection: Axis.vertical,
-                        child: Text(
-                          '데 이 터 데이 터데 이 터 데이 터데 이 이 터데 이 터 데 이터데 이터 데이 터데 이 터 데 이 터',
-                          style: TextStyle(
-                              color: Colors.black, fontSize: 13, height: 2),
-                        ),
-                      ),
-                    ))
+                    constraints: BoxConstraints( minWidth: 300),
+                    child:Text(
+                      '데 이 터 데이 터데 이 터 데이 터데 이 이 터데 이 터 데 이터데 이터 데이 터데 이 터 데 이 터',
+                      style: TextStyle(
+                          color: Colors.black, fontSize: 13, height: 2),
+                    ),
+                )
               ],
             )
           : Container(
               padding: EdgeInsets.only(bottom: 5),
-              constraints: BoxConstraints(minWidth: 300,maxHeight: 280),
-              child: Scrollbar(
-                thickness: 6,
-                radius: Radius.circular(13),
-                controller: _controllerOne,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(right: 10),
-                  controller: _controllerOne,
-                  scrollDirection: Axis.vertical,
-                  child: Text(
-                    '데 이 터 데이 터데 이 터 데이 터데 이\n\n\데 이 터데 이 터\n\ 데 이터데 이 터 데 이 터\n\n데 이 터 데 이 터',
-                    style:
-                        TextStyle(color: Colors.black, fontSize: 12, height: 2),
-                  ),
-                ),
-              )),
+              constraints: BoxConstraints(minWidth: 300),
+              child: Text(
+                '데 이 터 데이 터데 이 \n\n\n\n\n\n터 데이\n\n\n\n\n\n \n\n\n\n터데 이\n\n\데 이 터데 이 터\n\ 데 이터데 이 터 데 이 터\n\n데 이 터 데 이 터',
+                style:
+                TextStyle(color: Colors.black, fontSize: 12, height: 2),
+              ),
+              ),
     );
   }
 }
