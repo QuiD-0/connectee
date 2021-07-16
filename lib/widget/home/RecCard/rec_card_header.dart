@@ -85,7 +85,7 @@ class NameAndTitle extends StatelessWidget {
             height: 10,
           ),
           Text(
-            '오늘 나의 일상',
+            '오늘 나의 일상오늘 나의 일상오늘 나의 일상오늘 나의 일상',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white,),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

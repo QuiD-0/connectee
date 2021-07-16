@@ -27,7 +27,6 @@ class _ImageSliderState extends State<ImageSlider> {
   @override
   Widget build(BuildContext context) {
     // api 연결 후 이미지가 있을경우로 수정하기
-    if (widget.data.id%2==1) {
       return Container(
         child: Column(
           children: <Widget>[
@@ -48,10 +47,7 @@ class _ImageSliderState extends State<ImageSlider> {
           ],
         ),
       );
-    }
-    else{
-      return Container();
-    }
+
   }
 }
 
