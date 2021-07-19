@@ -1,16 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
-List emotionColorList = [
-  Color(0xffFF9082),
-  Color(0xffFD7F8B),
-  Color(0xffFFD275),
-  Color(0xff7DDEF6),
-  Color(0xff79D3BA),
-  Color(0xffAE81A2),
-  Color(0xffAAB2BD),
-];
 
 class ReactionButtons extends StatefulWidget {
   final data;
@@ -526,20 +516,23 @@ class ValueSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
+                        // 이모티콘 표정 적용
+                        // child: Image.asset('assets/emotions/emotion_2_on.png'),
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Color(0xffFFE9E6),
+                            color: detailColorList[emotion - 1][0],
                             borderRadius: BorderRadius.circular(50)),
                       ),
                       SizedBox(height: 5),
                       Text(
                         '1',
-                        style: TextStyle(color: Colors.white,fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       )
                     ],
                   ),
-                ),GestureDetector(
+                ),
+                GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop(4);
                   },
@@ -549,13 +542,13 @@ class ValueSelector extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Color(0xffffd3cd),
+                            color: detailColorList[emotion - 1][1],
                             borderRadius: BorderRadius.circular(50)),
                       ),
                       SizedBox(height: 5),
                       Text(
                         '2',
-                        style: TextStyle(color: Colors.white,fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       )
                     ],
                   ),
@@ -570,13 +563,13 @@ class ValueSelector extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Color(0xffFFbdb4),
+                            color: detailColorList[emotion - 1][2],
                             borderRadius: BorderRadius.circular(50)),
                       ),
                       SizedBox(height: 5),
                       Text(
                         '3',
-                        style: TextStyle(color: Colors.white,fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       )
                     ],
                   ),
@@ -591,13 +584,13 @@ class ValueSelector extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Color(0xffffa69b),
+                            color: detailColorList[emotion - 1][3],
                             borderRadius: BorderRadius.circular(50)),
                       ),
                       SizedBox(height: 5),
                       Text(
                         '4',
-                        style: TextStyle(color: Colors.white,fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       )
                     ],
                   ),
@@ -612,13 +605,13 @@ class ValueSelector extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Color(0xffff9082),
+                            color: detailColorList[emotion - 1][4],
                             borderRadius: BorderRadius.circular(50)),
                       ),
                       SizedBox(height: 5),
                       Text(
                         '5',
-                        style: TextStyle(color: Colors.white,fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       )
                     ],
                   ),
@@ -631,3 +624,67 @@ class ValueSelector extends StatelessWidget {
     );
   }
 }
+
+
+
+List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
+List emotionColorList = [
+  Color(0xffFF9082),
+  Color(0xffFD7F8B),
+  Color(0xffFFD275),
+  Color(0xff7DDEF6),
+  Color(0xff79D3BA),
+  Color(0xffAE81A2),
+  Color(0xffAAB2BD),
+];
+List<List> detailColorList = [
+  [
+    Color(0xffFFE9E6),
+    Color(0xffFFE9E6),
+    Color(0xffFFBDB4),
+    Color(0xffFFA69B),
+    Color(0xffFF9082),
+  ],
+  [
+    Color(0xffFFE5E8),
+    Color(0xffFECCD1),
+    Color(0xffFEB2B9),
+    Color(0xffFD99A2),
+    Color(0xffFD7F8B),
+  ],
+  [
+    Color(0xffFFF6E3),
+    Color(0xffFFEDC8),
+    Color(0xffFFE4AC),
+    Color(0xffFFDB91),
+    Color(0xffFFD275),
+  ],
+  [
+    Color(0xffE5F8FD),
+    Color(0xffCBF2FB),
+    Color(0xffB1EBFA),
+    Color(0xff97E5F8),
+    Color(0xff97E5F8),
+  ],
+  [
+    Color(0xffE4F6F1),
+    Color(0xffC9EDE3),
+    Color(0xffAFE5D6),
+    Color(0xff94DCC8),
+    Color(0xff79D3BA),
+  ],
+  [
+    Color(0xffEFE6EC),
+    Color(0xffDFCDDA),
+    Color(0xffCEB3C7),
+    Color(0xffBE9AB5),
+    Color(0xffAE81A2),
+  ],
+  [
+    Color(0xffEEF0F2),
+    Color(0xffDDE0E5),
+    Color(0xffCCD1D7),
+    Color(0xffBBC1CA),
+    Color(0xffAAB2BD),
+  ],
+];
