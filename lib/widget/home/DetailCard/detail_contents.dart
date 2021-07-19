@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'image_slider.dart';
 
-final ScrollController _controllerOne = ScrollController();
-
 //detail 데이터 받아오기 필요
 
 //detail model 만들기

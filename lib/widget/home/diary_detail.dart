@@ -1,9 +1,9 @@
 import 'package:connectee/widget/home/DetailCard/detail_contents.dart';
 import 'package:connectee/widget/home/DetailCard/reaction_buttons.dart';
-import 'package:connectee/widget/home/RecCard/rec_card_footer.dart';
 import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 
 class DiaryDetail extends StatelessWidget {
   final data;
@@ -43,8 +43,10 @@ class DiaryDetail extends StatelessWidget {
                       DetailContents(
                         data: data,
                       ),
-                      Container(child: EmotionCount(),margin: EdgeInsets.fromLTRB(20,20,20,10),),
-                      ReactionButtons(),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                        child: ReactionButtons(data:data,visible: true,),
+                      ),
                     ],
                   ),
                 ),
