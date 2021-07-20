@@ -69,6 +69,7 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 360,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13.0),
         color: Color(0xff2D2D2D),

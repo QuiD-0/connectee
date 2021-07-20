@@ -34,7 +34,12 @@ class _HomeContentState extends State<HomeContent> {
 
   @override
   void initState() {
-    _fetchData();
+    _data = [
+      Picture(1, 'asd', 12),
+      Picture(2, 'asd', 12),
+      Picture(3, 'asd', 12)
+    ];
+     // _fetchData();
     _Scroll.addListener(() {
       if (_Scroll.position.pixels >= _Scroll.position.maxScrollExtent) {
         _fetchData();
@@ -72,64 +77,54 @@ class _HomeContentState extends State<HomeContent> {
     });
   }
 
-  void deleteId(inputValues) {
-    var body = json.encode({"id": inputValues});
-    http.post(
-        Uri.parse("https://webhook.site/f31b331d-6f4a-4491-8897-976831f00575"),
-        headers: {"Content-Type": "application/json"},
-        body: body);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        controller: _Scroll,
-        itemCount: _data.length,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return SingleChildScrollView(
+    return SingleChildScrollView(
+        child: Column(
+      children: [
+        SizedBox(
+          height: 15,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 14.0,bottom: 13),
+          child: Calendar(),
+        ),
+        PostDiary(),
+        RecommendHeader(),
+        ListView.builder(
+            physics: ScrollPhysics(),
+            shrinkWrap: true,
+            controller: _Scroll,
+            itemCount: _data.length + 1,
+            itemBuilder: (context, index) {
+              if (index == _data.length) {
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(child: CircularProgressIndicator()),
+                  //로딩 아이콘 의뢰 ?? -> 시간 남으면.
+                );
+              }
+              Picture pic = _data[index];
+              return Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16),
                 child: Column(
-              children: [
-                SizedBox(
-                  height: 15,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xff3d3d3d),
+                      ),
+                      child: RecommendCard(data: pic), // 추천 카드
+                    ),
+                    Container(
+                      height: 15,
+                      width: 360,
+                      decoration: BoxDecoration(color: Color(0xff2d2d2d)),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Calendar(),
-                ),
-                PostDiary(),
-                RecommendHeader(),
-              ],
-            ));
-          }
-          /*  로딩 이미지 사용시 itemCount: _data.length+1 로 변경하기
-          if (index == _data.length) {
-            return Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Center(child: CircularProgressIndicator()),
-              //로딩 아이콘 의뢰?
-            );
-          }
-          */
-          Picture pic = _data[index];
-          return Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16),
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xff3d3d3d),
-                  ),
-                  child: RecommendCard(data: pic), // 추천 카드
-                ),
-                Container(
-                  height: 15,
-                  width: 360,
-                  decoration: BoxDecoration(color: Color(0xff2d2d2d)),
-                )
-              ],
-            ),
-          );
-        });
+              );
+            })
+      ],
+    ));
   }
 }

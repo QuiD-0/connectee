@@ -26,8 +26,9 @@ class _MyAppState extends State<MyApp> {
         fontFamily: "GmarketSans",
         scaffoldBackgroundColor: Colors.black,
         appBarTheme: AppBarTheme(
-          brightness:Brightness.dark,
-            backgroundColor: Colors.black,),
+          brightness: Brightness.dark,
+          backgroundColor: Colors.black,
+        ),
         brightness: Brightness.light,
       ),
       home: WillPopScope(
@@ -70,15 +71,30 @@ class HomePage extends StatelessWidget {
             label: 'GROUP',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icons/add.png',
-              width: 20,
+            icon: GestureDetector(
+              onTap: () {
+                Navigator.of(context, rootNavigator: true).push(
+                  new CupertinoPageRoute(
+                    builder: (BuildContext context) => new WriteDiary(),
+                    fullscreenDialog: true,
+                  ),
+                );
+              },
+              child: Image.asset(
+                'assets/icons/add.png',
+                width: 25,
+              ),
             ),
-            activeIcon: Image.asset(
-              'assets/icons/add_on.png',
-              width: 20,
-            ),
-            label: 'CONNECT',
+            title: GestureDetector(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push(
+                    new CupertinoPageRoute(
+                      builder: (BuildContext context) => new WriteDiary(),
+                      fullscreenDialog: true,
+                    ),
+                  );
+                },
+                child: Text('CONNECT')),
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
@@ -119,11 +135,7 @@ class HomePage extends StatelessWidget {
               );
             });
           case 2:
-            return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(
-                child: WriteDiary(),
-              );
-            });
+            return Container();
           case 3:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(

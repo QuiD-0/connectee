@@ -9,7 +9,7 @@ class GroupScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('그룹'),
       ),
-      body: Container(),
+      body: Container(child: Text('asd',style: TextStyle(color: Colors.white),),),
     );
   }
 }
