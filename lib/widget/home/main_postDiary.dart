@@ -1,3 +1,5 @@
+import 'package:connectee/screen/write_diary.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PostDiary extends StatelessWidget {
@@ -5,7 +7,12 @@ class PostDiary extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("tabbed");
+        Navigator.of(context, rootNavigator: true).push(
+          new CupertinoPageRoute(
+            builder: (BuildContext context) => new WriteDiary(),
+            fullscreenDialog: true,
+          ),
+        );
       },
       child: Container(
         width: 360,
@@ -15,6 +22,7 @@ class PostDiary extends StatelessWidget {
         decoration: BoxDecoration(
             color: Color(0xff2D2D2D), borderRadius: BorderRadius.circular(13)),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 20.0),

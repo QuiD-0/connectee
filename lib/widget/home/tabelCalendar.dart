@@ -128,7 +128,7 @@ class _CalendarState extends State<Calendar> {
                     dowList[date.weekday - 1].toString(),
                     style: TextStyle(
                       color: Color(0xffABABAB),
-                      fontSize: 12,
+                      fontSize: 11,
                     ),
                   ),
                 );
@@ -197,9 +197,9 @@ class _CalendarState extends State<Calendar> {
                 size: 24,
               ),
               leftChevronVisible: true,
-              leftChevronMargin: EdgeInsets.only(left: 10),
+              leftChevronMargin: EdgeInsets.only(left: 10,right: 5),
               leftChevronPadding: EdgeInsets.all(0),
-              rightChevronPadding: EdgeInsets.only(right: 0),
+              rightChevronPadding: EdgeInsets.only(right: 3),
               rightChevronIcon: Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.white,
@@ -209,7 +209,7 @@ class _CalendarState extends State<Calendar> {
               formatButtonVisible: false,
               titleCentered: false,
               formatButtonShowsNext: false,
-              headerMargin: EdgeInsets.fromLTRB(14, 14, 14, 0),
+              headerMargin: EdgeInsets.fromLTRB(14, 14, 0, 0),
               titleTextStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 20,

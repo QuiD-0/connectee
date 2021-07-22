@@ -246,7 +246,9 @@ class _WriteDiaryState extends State<WriteDiary> {
                             )),
                       )
                     // 영화, 도서 다이어리
-                    : Container(color: Color(0xff3D3D3D)),
+                    : Container(
+                        color: Color(0xff3D3D3D),
+                      ),
               ],
             ),
           )),
