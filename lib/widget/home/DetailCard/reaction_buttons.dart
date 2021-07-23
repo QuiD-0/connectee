@@ -103,9 +103,11 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                 height: 150,
                 child: Column(
                   children: [
+                    SizedBox(height: 20,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                        SizedBox(width: 10,),
                         Column(
                           children: [
                             GestureDetector(
@@ -137,13 +139,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 1 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_1.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_1_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '화남',
                               style: TextStyle(
@@ -184,13 +187,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 2 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_2.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_2_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '놀람',
                               style: TextStyle(
@@ -231,13 +235,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 3 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_3.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_3_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '기쁨',
                               style: TextStyle(
@@ -278,13 +283,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 4 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_4.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_4_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '슬픔',
                               style: TextStyle(
@@ -294,11 +300,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                             ),
                           ],
                         ),
+                        SizedBox(width: 10,),
                       ],
                     ),
+                    SizedBox(height: 10,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                        SizedBox(width: 20,),
                         Column(
                           children: [
                             GestureDetector(
@@ -330,13 +339,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 5 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_5.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_5_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '역겨움',
                               style: TextStyle(
@@ -377,13 +387,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 6 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_6.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_6_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '공포',
                               style: TextStyle(
@@ -424,13 +435,14 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                                   selectedEmotion != 7 || emotionValue == null
                                       ? Image.asset(
                                           'assets/emotions/emotion_7.png',
-                                          width: 60,
+                                          width: 40,
                                         )
                                       : Image.asset(
                                           'assets/emotions/emotion_7_on.png',
-                                          width: 60,
+                                          width: 40,
                                         ),
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               '중립',
                               style: TextStyle(
@@ -440,6 +452,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                             ),
                           ],
                         ),
+                        SizedBox(width: 20,),
                       ],
                     )
                   ],
@@ -467,7 +480,7 @@ class ValueSelector extends StatelessWidget {
             height: 5,
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Color(0xffffffff),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(30)),
           ),
           Padding(
