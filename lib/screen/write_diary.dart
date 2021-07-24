@@ -6,7 +6,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
 
 class WriteDiary extends StatefulWidget {
-  const WriteDiary({Key key}) : super(key: key);
+  final groupName;
+
+  const WriteDiary({Key key, this.groupName}) : super(key: key);
 
   @override
   _WriteDiaryState createState() => _WriteDiaryState();
@@ -21,13 +23,14 @@ class _WriteDiaryState extends State<WriteDiary> {
     "movie": "영화",
     "book": "도서",
   };
-  List images = [];
   int finalEmotion;
   int emotionValue;
   int selectEmotion;
+  String isPublic = "open";
 
   @override
   Widget build(BuildContext context) {
+    String group = widget.groupName;
     return WillPopScope(
       onWillPop: () {},
       child: Scaffold(
@@ -47,20 +50,29 @@ class _WriteDiaryState extends State<WriteDiary> {
             actions: [
               GestureDetector(
                 onTap: () {
-                  if (!fbkey.currentState.validate()) {
-                    //토스트 보내기
-                    print('error');
-                    return;
+                  if (emotionValue != null) {
+                    if (!fbkey.currentState.validate()) {
+                      //토스트 보내기
+                      print('error');
+                      return;
+                    }
+                    fbkey.currentState.save();
+                    final inputValues = fbkey.currentState.value;
+                    // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
+                    final finalValues = {
+                      ...inputValues,
+                      'type': type,
+                      'group': group,
+                      "public": isPublic,
+                      'emotion': finalEmotion,
+                      'emotionValue': emotionValue,
+                      //multi part request 전송시
+                      //"test":inputValues['title'], 를 사용하면 될듯
+                    };
+                    print(finalValues);
+                  } else {
+                    print('감정을 선택해 주세요');
                   }
-                  fbkey.currentState.save();
-                  final inputValues = fbkey.currentState.value;
-                  // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
-                  final finalValues = {
-                    ...inputValues,
-                    'type': type,
-                    'emotion': 'happy'
-                  };
-                  print(finalValues);
                   //data 보내기
 
                   //작성완료 알림- 스낵바?
@@ -153,62 +165,67 @@ class _WriteDiaryState extends State<WriteDiary> {
               children: [
                 // 오늘의 감정 표시 위젯
                 Container(
-                  height: 250,
+                  height: 230,
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 25, bottom: 20),
                         child: GestureDetector(
-                          onTap: () async {
-                            var bottomSheet = showModalBottomSheet(
-                                useRootNavigator: true,
-                                isDismissible: true,
-                                isScrollControlled: true,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(13.0)),
-                                backgroundColor: Color(0xff2d2d2d),
-                                context: context,
-                                builder: (context) => Container(
-                                      child: emotionSelector(),
-                                    ));
-                            // Detect when it closes
-                            await bottomSheet.then((onValue) {
-                              if (onValue == null) {
-                                setState(() {
-                                  finalEmotion=null;
-                                  emotionValue=null;
-                                });
-                                print('cancel');
-                              } else {
-                                setState(() {
-                                  finalEmotion = onValue[0];
-                                  emotionValue = onValue[1];
-                                });
-                              }
-                              print("value: $onValue");
-                            });
-                          },
-                          child: finalEmotion==null ?Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                                color: Color(0xff5d5d5d),
-                                borderRadius: BorderRadius.circular(50)),
-                          ):Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                                color: detailColorList[finalEmotion-1][emotionValue-1],
-                                borderRadius: BorderRadius.circular(50)),
-                          )
-                        ),
+                            onTap: () async {
+                              var bottomSheet = showModalBottomSheet(
+                                  useRootNavigator: true,
+                                  isDismissible: true,
+                                  isScrollControlled: true,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(13.0)),
+                                  backgroundColor: Color(0xff2d2d2d),
+                                  context: context,
+                                  builder: (context) => Container(
+                                        child: emotionSelector(),
+                                      ));
+                              // Detect when it closes
+                              await bottomSheet.then((onValue) {
+                                if (onValue == null) {
+                                  setState(() {
+                                    finalEmotion = null;
+                                    emotionValue = null;
+                                  });
+                                  print('cancel');
+                                } else {
+                                  setState(() {
+                                    finalEmotion = onValue[0];
+                                    emotionValue = onValue[1];
+                                  });
+                                }
+                                print("value: $onValue");
+                              });
+                            },
+                            child: finalEmotion == null
+                                ? Container(
+                                    width: 90,
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xff5d5d5d),
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                  )
+                                : Container(
+                                    width: 90,
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                        color: detailColorList[finalEmotion - 1]
+                                            [emotionValue - 1],
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                  )),
                       ),
                       finalEmotion != null
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '오늘은',
+                                  '오늘은 ',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
                                 ),
@@ -225,8 +242,112 @@ class _WriteDiaryState extends State<WriteDiary> {
                               '감정을 선택해주세요!',
                               style:
                                   TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                      //공개 비공개 설정, 그룹이 있을경우에는 그룹 이름 출력
+                      group == null
+                          ? Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '개인',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
+                                    width: 71,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xff2d2d2d),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  PopupMenuButton<String>(
+                                    offset: Offset(18, 40),
+                                    shape: ShapeBorder.lerp(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        0),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 80,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          border:
+                                              Border.all(color: Colors.white)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            isPublic == "open" ? "공개" : "비공개",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_drop_down,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    onSelected: (String value) {
+                                      setState(() {
+                                        isPublic = value;
+                                      });
+                                    },
+                                    color: Color(0xff2d2d2d),
+                                    itemBuilder: (BuildContext context) {
+                                      return [
+                                        PopupMenuItem(
+                                          value: "open",
+                                          child: Center(
+                                              child: Text(
+                                            "공개",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )),
+                                        ),
+                                        PopupMenuItem(
+                                          value: "close",
+                                          child: Center(
+                                              child: Text(
+                                            "비공개",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )),
+                                        ),
+                                      ];
+                                    },
+                                  ),
+                                ],
+                              ),
                             )
-                      //공개 비공개 설정
+                          : Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),color: Color(0xff2d2d2d)),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(18,7,18,7),
+                                  child: Text('$group',style: TextStyle(color: Colors.white,fontSize: 15),),
+                                )),
+                          )
                     ],
                   ),
                 ),
@@ -235,8 +356,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                   color: Color(0xff2D2D2D),
                   height: 2,
                 ),
-                type == "diary" || type == "trip" // 일기, 여행 다이어리
-                    ? Container(
+                Container(
                         padding: EdgeInsets.only(
                             left: 20, top: 10, right: 20, bottom: 20),
                         child: FormBuilder(
@@ -290,9 +410,10 @@ class _WriteDiaryState extends State<WriteDiary> {
                                     ),
                                   ],
                                 ),
-                                //image picker + permission 확인
-                                Padding(
+                                type == "diary" || type == "trip" // 일기, 여행 다이어리
+                                    ? Padding(
                                   padding: const EdgeInsets.only(top: 8),
+                                  //image picker + permission 확인
                                   child: Container(
                                     height: 340,
                                     width: 340,
@@ -307,8 +428,16 @@ class _WriteDiaryState extends State<WriteDiary> {
                                             spreadRadius: 0)
                                       ],
                                     ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [Image.asset('assets/icons/pic_add.png'),
+                                      SizedBox(height: 20,),
+                                      Text("사진을 넣어 주세요",style: TextStyle(fontSize:12,color: Color(0xffd0d0d0)),),],
+                                    ),
                                   ),
-                                ),
+                                ):
+                                    Container(child: Text('영화폼이 들어갈 자리'),),
                                 FormBuilderTextField(
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
@@ -339,10 +468,6 @@ class _WriteDiaryState extends State<WriteDiary> {
                               ],
                             )),
                       )
-                    // 영화, 도서 다이어리
-                    : Container(
-                        color: Color(0xff3D3D3D),
-                      ),
               ],
             ),
           )),

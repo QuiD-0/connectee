@@ -9,7 +9,7 @@ class PostDiary extends StatelessWidget {
       onTap: () {
         Navigator.of(context, rootNavigator: true).push(
           new CupertinoPageRoute(
-            builder: (BuildContext context) => new WriteDiary(),
+            builder: (BuildContext context) => new WriteDiary(groupName:'커넥티'),
             fullscreenDialog: true,
           ),
         );

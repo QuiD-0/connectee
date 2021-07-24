@@ -75,21 +75,23 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
-                    builder: (BuildContext context) => new WriteDiary(),
+                    builder: (BuildContext context) => new WriteDiary(groupName:null),
                     fullscreenDialog: true,
                   ),
                 );
               },
               child: Image.asset(
                 'assets/icons/add.png',
-                width: 25,
+                width: 100,
+                height: 20,
+                fit: BoxFit.fitHeight,
               ),
             ),
             title: GestureDetector(
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
                     new CupertinoPageRoute(
-                      builder: (BuildContext context) => new WriteDiary(),
+                      builder: (BuildContext context) => new WriteDiary(groupName:null),
                       fullscreenDialog: true,
                     ),
                   );
