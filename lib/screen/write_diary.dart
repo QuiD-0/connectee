@@ -424,19 +424,22 @@ class _WriteDiaryState extends State<WriteDiary> {
                                   //image picker + permission 확인
                                   child: GestureDetector(
                                       onTap: () async {
-                                        var status =
-                                            await Permission.storage.request();
+                                        var status = Platform.isIOS
+                                            ? await Permission.photos.request()
+                                            : await Permission.storage
+                                                .request();
+                                        print(status);
                                         if (status.isGranted) {
                                           final ImagePicker _picker =
                                               ImagePicker();
                                           List<XFile> images =
                                               await _picker.pickMultiImage();
-                                          if (images==null) {
+                                          if (images == null) {
                                             setState(() {
                                               _image = null;
                                             });
                                           } else {
-                                            if (images.length>5) {
+                                            if (images.length > 5) {
                                               print('최대 5장');
                                               setState(() {
                                                 _image = null;
@@ -447,7 +450,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                                               });
                                             }
                                           }
-                                        }else{
+                                        } else {
                                           openAppSettings();
                                         }
                                       },
