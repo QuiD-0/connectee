@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
+import 'package:permission_handler/permission_handler.dart';
 
 List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
 
@@ -27,6 +31,7 @@ class _WriteDiaryState extends State<WriteDiary> {
   int emotionValue;
   int selectEmotion;
   String isPublic = "open";
+  List<XFile> _image;
 
   @override
   Widget build(BuildContext context) {
@@ -339,15 +344,21 @@ class _WriteDiaryState extends State<WriteDiary> {
                               ),
                             )
                           : Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),color: Color(0xff2d2d2d)),
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(18,7,18,7),
-                                  child: Text('$group',style: TextStyle(color: Colors.white,fontSize: 15),),
-                                )),
-                          )
+                              padding: const EdgeInsets.all(20.0),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0xff2d2d2d)),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 7, 18, 7),
+                                    child: Text(
+                                      '$group',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    ),
+                                  )),
+                            )
                     ],
                   ),
                 ),
@@ -357,117 +368,195 @@ class _WriteDiaryState extends State<WriteDiary> {
                   height: 2,
                 ),
                 Container(
-                        padding: EdgeInsets.only(
-                            left: 20, top: 10, right: 20, bottom: 20),
-                        child: FormBuilder(
-                            key: fbkey,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width: 250,
-                                      height: 50,
-                                      child: FormBuilderTextField(
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                        name: 'title',
-                                        maxLength: 19,
-                                        validator:
-                                            FormBuilderValidators.required(
-                                                context,
-                                                errorText: '필수 입력'),
-                                        cursorColor: Color(0xffD0D0D0),
-                                        decoration: InputDecoration(
-                                          errorStyle:
-                                              TextStyle(fontSize: 0, height: 0),
-                                          counterText: '',
-                                          focusColor: Color(0xffd0d0d0),
-                                          labelText: '제목을 입력해주세요',
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.never,
-                                          labelStyle: TextStyle(
-                                              color: Color(0xffD0D0D0),
-                                              fontWeight: FontWeight.bold),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide.none),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
-                                      child: Text(
-                                        '${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                type == "diary" || type == "trip" // 일기, 여행 다이어리
-                                    ? Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  //image picker + permission 확인
-                                  child: Container(
-                                    height: 340,
-                                    width: 340,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff565656),
-                                      borderRadius: BorderRadius.circular(13),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Color(0x32000000),
-                                            offset: Offset.zero,
-                                            blurRadius: 10,
-                                            spreadRadius: 0)
-                                      ],
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [Image.asset('assets/icons/pic_add.png'),
-                                      SizedBox(height: 20,),
-                                      Text("사진을 넣어 주세요",style: TextStyle(fontSize:12,color: Color(0xffd0d0d0)),),],
-                                    ),
-                                  ),
-                                ):
-                                    Container(child: Text('영화폼이 들어갈 자리'),),
-                                FormBuilderTextField(
+                  padding:
+                      EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 20),
+                  child: FormBuilder(
+                      key: fbkey,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 250,
+                                height: 50,
+                                child: FormBuilderTextField(
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                  name: 'context',
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                  name: 'title',
+                                  maxLength: 19,
                                   validator: FormBuilderValidators.required(
                                       context,
-                                      errorText: ''),
+                                      errorText: '필수 입력'),
                                   cursorColor: Color(0xffD0D0D0),
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  maxLength: 800,
                                   decoration: InputDecoration(
-                                    counterStyle: TextStyle(
-                                        color: Color(0xffffffff), height: 0),
-                                    focusColor: Color(0xffd0d0d0),
-                                    labelText: '내용을 입력해주세요',
                                     errorStyle:
                                         TextStyle(fontSize: 0, height: 0),
+                                    counterText: '',
+                                    focusColor: Color(0xffd0d0d0),
+                                    labelText: '제목을 입력해주세요',
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                     labelStyle: TextStyle(
-                                      color: Color(0xffD0D0D0),
-                                    ),
+                                        color: Color(0xffD0D0D0),
+                                        fontWeight: FontWeight.bold),
                                     border: OutlineInputBorder(
                                         borderSide: BorderSide.none),
                                   ),
                                 ),
-                              ],
-                            )),
-                      )
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Text(
+                                  '${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          type == "diary" || type == "trip" // 일기, 여행 다이어리
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  //image picker + permission 확인
+                                  child: GestureDetector(
+                                      onTap: () async {
+                                        var status =
+                                            await Permission.storage.request();
+                                        if (status.isGranted) {
+                                          final ImagePicker _picker =
+                                              ImagePicker();
+                                          List<XFile> images =
+                                              await _picker.pickMultiImage();
+                                          if (images==null) {
+                                            setState(() {
+                                              _image = null;
+                                            });
+                                          } else {
+                                            if (images.length>5) {
+                                              print('최대 5장');
+                                              setState(() {
+                                                _image = null;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                _image = images;
+                                              });
+                                            }
+                                          }
+                                        }else{
+                                          openAppSettings();
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 340,
+                                        width: 340,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff565656),
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color(0x32000000),
+                                                offset: Offset.zero,
+                                                blurRadius: 10,
+                                                spreadRadius: 0)
+                                          ],
+                                        ),
+                                        child: _image == null
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                      'assets/icons/pic_add.png'),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Text(
+                                                    "사진을 넣어 주세요",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Color(0xffd0d0d0)),
+                                                  ),
+                                                ],
+                                              )
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                                child: Stack(
+                                                  alignment: Alignment.topRight,
+                                                  children: [
+                                                    Image.file(
+                                                      File(_image[0].path),
+                                                      width: 340,
+                                                      height: 340,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10.0),
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                10.0, 5, 10, 5),
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xff2d2d2d),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        30)),
+                                                        child: Text(
+                                                          '대표',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                      )),
+                                )
+                              : Container(
+                                  child: Text('영화폼이 들어갈 자리'),
+                                ),
+                          FormBuilderTextField(
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            name: 'context',
+                            validator: FormBuilderValidators.required(context,
+                                errorText: ''),
+                            cursorColor: Color(0xffD0D0D0),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            maxLength: 800,
+                            decoration: InputDecoration(
+                              counterStyle: TextStyle(
+                                  color: Color(0xffffffff), height: 0),
+                              focusColor: Color(0xffd0d0d0),
+                              labelText: '내용을 입력해주세요',
+                              errorStyle: TextStyle(fontSize: 0, height: 0),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              labelStyle: TextStyle(
+                                color: Color(0xffD0D0D0),
+                              ),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide.none),
+                            ),
+                          ),
+                        ],
+                      )),
+                )
               ],
             ),
           )),
