@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
                           height: 500,
                         ),
                         FlatButton(
-                          child: Text('kakao auth $userId',
+                          child: Text('kakao auth',
                               style: TextStyle(fontSize: 16)),
                           onPressed: () async {
                             try {
