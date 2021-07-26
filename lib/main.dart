@@ -16,6 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       home: WillPopScope(
         child: HomePage(),
         onWillPop: () {},
-      ),
+      )
     );
   }
 }
