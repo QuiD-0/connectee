@@ -42,10 +42,10 @@ post_install do |installer|
                    '$(inherited)',
 
                    ## dart: PermissionGroup.calendar
-                   'PERMISSION_EVENTS=0',
+                   #'PERMISSION_EVENTS=0',
 
                    ## dart: PermissionGroup.reminders
-                   'PERMISSION_REMINDERS=0',
+                   #'PERMISSION_REMINDERS=0',
 
                    ## dart: PermissionGroup.contacts
                    # 'PERMISSION_CONTACTS=0',
@@ -57,13 +57,13 @@ post_install do |installer|
                    # 'PERMISSION_MICROPHONE=0',
 
                    ## dart: PermissionGroup.speech
-                   'PERMISSION_SPEECH_RECOGNIZER=0',
+                   #'PERMISSION_SPEECH_RECOGNIZER=0',
 
                    ## dart: PermissionGroup.photos
                    'PERMISSION_PHOTOS=0',
 
                    ## dart: [PermissionGroup.location, PermissionGroup.locationAlways, PermissionGroup.locationWhenInUse]
-                   'PERMISSION_LOCATION=0',
+                   #'PERMISSION_LOCATION=0',
 
                    ## dart: PermissionGroup.notification
                    # 'PERMISSION_NOTIFICATIONS=0',
@@ -72,7 +72,7 @@ post_install do |installer|
                    'PERMISSION_MEDIA_LIBRARY=0',
 
                    ## dart: PermissionGroup.sensors
-                   'PERMISSION_SENSORS=0'
+                   #'PERMISSION_SENSORS=0'
                  ]
         end
   end
