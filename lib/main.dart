@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'screen/group.dart';
 import 'screen/home_screen.dart';
 import 'screen/write_diary.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,26 +18,72 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+//shared prefferrnce에 저장후 처음 실행시 불러오기 -> 로그아웃하면 지우기
+  int userId;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    userId=null;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    KakaoContext.clientId = "f90217e80d59b2b247b80059e64a9fa4";
+    KakaoContext.javascriptClientId = "39fa8ae2800478812dfc8289b612c7d3";
+
     return MaterialApp(
-      scrollBehavior: NoGlowScrollBehavior(),
-      debugShowCheckedModeBanner: false,
-      title: 'Connectee',
-      theme: ThemeData(
-        fontFamily: "GmarketSans",
-        scaffoldBackgroundColor: Colors.black,
-        appBarTheme: AppBarTheme(
-          brightness: Brightness.dark,
-          backgroundColor: Colors.black,
+        scrollBehavior: NoGlowScrollBehavior(),
+        debugShowCheckedModeBanner: false,
+        title: 'Connectee',
+        theme: ThemeData(
+          fontFamily: "GmarketSans",
+          scaffoldBackgroundColor: Colors.black,
+          appBarTheme: AppBarTheme(
+            brightness: Brightness.dark,
+            backgroundColor: Colors.black,
+          ),
+          brightness: Brightness.light,
         ),
-        brightness: Brightness.light,
-      ),
-      home: WillPopScope(
-        child: HomePage(),
-        onWillPop: () {},
-      )
-    );
+        home: WillPopScope(
+          child:userId != null?HomePage():SafeArea(
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 500,
+                        ),
+                        FlatButton(
+                          child: Text('kakao auth $userId',
+                              style: TextStyle(fontSize: 16)),
+                          onPressed: () async {
+                            try {
+                              final installed = await isKakaoTalkInstalled();
+                              installed
+                                  ? await UserApi.instance.loginWithKakaoTalk()
+                                  : await UserApi.instance
+                                      .loginWithKakaoAccount();
+                              // perform actions after login
+                            } catch (e) {
+                              print('error on login: $e');
+                            }
+                            User user = await UserApi.instance.me();
+                            print(user);
+                            setState(() {
+                              userId=user.id;
+                            });
+                            },
+                          color: Colors.green,
+                          textColor: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+          onWillPop: () {},
+        ));
   }
 }
 
@@ -76,7 +123,8 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
-                    builder: (BuildContext context) => new WriteDiary(groupName:null),
+                    builder: (BuildContext context) =>
+                        new WriteDiary(groupName: null),
                     fullscreenDialog: true,
                   ),
                 );
@@ -92,7 +140,8 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
                     new CupertinoPageRoute(
-                      builder: (BuildContext context) => new WriteDiary(groupName:null),
+                      builder: (BuildContext context) =>
+                          new WriteDiary(groupName: null),
                       fullscreenDialog: true,
                     ),
                   );
