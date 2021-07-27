@@ -7,7 +7,6 @@ import 'image_slider.dart';
 
 class DetailContents extends StatefulWidget {
   final data;
-
   const DetailContents({Key key, this.data}) : super(key: key);
 
   @override
@@ -26,12 +25,7 @@ class _DetailContentsState extends State<DetailContents> {
 
   @override
   Widget build(BuildContext context) {
-    double contentHeight;
-    if (widget.data.id % 2 == 1) {
-      contentHeight = 150;
-    } else {
-      contentHeight = 280;
-    }
+
     return Container(
       width: 330,
       padding: EdgeInsets.fromLTRB(20,15,20,15),

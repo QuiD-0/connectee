@@ -4,6 +4,7 @@ import 'screen/group.dart';
 import 'screen/home_screen.dart';
 import 'screen/write_diary.dart';
 import 'package:kakao_flutter_sdk/all.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,15 +18,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-//shared prefferrnce에 저장후 처음 실행시 불러오기 -> 로그아웃하면 지우기
-  int userId;
+  int userId=null;
 
   @override
   void initState() {
     // TODO: implement initState
-    userId=null;
+    // _getId();
     super.initState();
+  }
+  _getId() async{
+    //토큰 리프레시확인하기
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getInt('userId');
+    });
   }
 
   @override
@@ -47,41 +53,53 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.light,
         ),
         home: WillPopScope(
-          child:userId != null?HomePage():SafeArea(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 500,
-                        ),
-                        FlatButton(
-                          child: Text('kakao auth',
-                              style: TextStyle(fontSize: 16)),
-                          onPressed: () async {
-                            try {
-                              final installed = await isKakaoTalkInstalled();
-                              installed
-                                  ? await UserApi.instance.loginWithKakaoTalk()
-                                  : await UserApi.instance
-                                      .loginWithKakaoAccount();
-                              // perform actions after login
-                            } catch (e) {
-                              print('error on login: $e');
-                            }
-                            User user = await UserApi.instance.me();
-                            print(user);
-                            setState(() {
-                              userId=user.id;
-                            });
-                            },
-                          color: Colors.green,
-                          textColor: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+          child: HomePage(),
+          // child: userId != null
+          //     ? HomePage()
+          //     : SafeArea(
+          //         child: Container(
+          //           color: Colors.white,
+          //           child: Column(
+          //             children: [
+          //               SizedBox(
+          //                 height: 500,
+          //               ),
+          //               FlatButton(
+          //                 child: Text('kakao auth',
+          //                     style: TextStyle(fontSize: 16)),
+          //                 onPressed: () async {
+          //                   try {
+          //                     final installed = await isKakaoTalkInstalled();
+          //                     installed
+          //                         ? await UserApi.instance.loginWithKakaoTalk()
+          //                         : await UserApi.instance
+          //                             .loginWithKakaoAccount();
+          //                     dynamic token =
+          //                         await AccessTokenStore.instance.fromStore();
+          //                     if (token.refreshToken == null) {
+          //                       print('token error');
+          //                     } else {
+          //                       User user = await UserApi.instance.me();
+          //                       //서버로 토큰 전송하기 성공시 로그인 -- 추가하기
+          //                       final prefs = await SharedPreferences.getInstance();
+          //                       prefs.setInt('userId', user.id);
+          //                       setState(() {
+          //                         //_getId();
+          //                         userId=user.id;
+          //                       });
+          //                     }
+          //                     // perform actions after login
+          //                   } catch (e) {
+          //                     print('error on login: $e');
+          //                   }
+          //                 },
+          //                 color: Colors.green,
+          //                 textColor: Colors.white,
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
           onWillPop: () {},
         ));
   }

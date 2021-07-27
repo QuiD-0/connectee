@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'home/RecCard/rec_card.dart';
@@ -12,14 +13,14 @@ class HomeContent extends StatefulWidget {
   _HomeContentState createState() => _HomeContentState();
 }
 
-class Picture {
+class Post {
   int id;
   String name;
   int age;
 
-  Picture(this.id, this.name, this.age);
+  Post(this.id, this.name, this.age);
 
-  Picture.formMap(Map<String, dynamic> map)
+  Post.formMap(Map<String, dynamic> map)
       : id = map['id'],
         name = map['name'],
         age = map['age'];
@@ -28,16 +29,15 @@ class Picture {
 class _HomeContentState extends State<HomeContent> {
   List _data = [];
   int page = 1;
-
-  // ignore: non_constant_identifier_names
   ScrollController _Scroll = ScrollController();
+  int id;
 
   @override
   void initState() {
     _data = [
-      Picture(1, 'asd', 12),
-      Picture(2, 'asd', 12),
-      Picture(3, 'asd', 12)
+      Post(1, 'asd', 12),
+      Post(2, 'asd', 12),
+      Post(3, 'asd', 12)
     ];
      // _fetchData();
     _Scroll.addListener(() {
@@ -45,7 +45,15 @@ class _HomeContentState extends State<HomeContent> {
         _fetchData();
       }
     });
+    _getId();
     super.initState();
+  }
+
+  _getId() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      id = prefs.getInt('userId');
+    });
   }
 
   void dispose() {
@@ -60,12 +68,12 @@ class _HomeContentState extends State<HomeContent> {
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;
-        List pic = jsonDecode(jsonString);
-        for (int i = 0; i < pic.length; i++) {
-          var pics = pic[i];
-          Picture pictureToAdd = Picture(pics["id"], pics["name"], pics["age"]);
+        List posts = jsonDecode(jsonString);
+        for (int i = 0; i < posts.length; i++) {
+          var post = posts[i];
+          Post postToAdd = Post(post["id"], post["name"], post["age"]);
           setState(() {
-            _data.add(pictureToAdd);
+            _data.add(postToAdd);
           });
         }
         setState(() {
@@ -104,7 +112,7 @@ class _HomeContentState extends State<HomeContent> {
                   //로딩 아이콘 의뢰 ?? -> 시간 남으면.
                 );
               }
-              Picture pic = _data[index];
+              Post post = _data[index];
               return Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16),
                 child: Column(
@@ -113,7 +121,7 @@ class _HomeContentState extends State<HomeContent> {
                       decoration: BoxDecoration(
                         color: Color(0xff3d3d3d),
                       ),
-                      child: RecommendCard(data: pic), // 추천 카드
+                      child: RecommendCard(data: post), // 추천 카드
                     ),
                     Container(
                       height: 15,

@@ -1,13 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
-
-List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
 
 class WriteDiary extends StatefulWidget {
   final groupName;
@@ -32,6 +32,32 @@ class _WriteDiaryState extends State<WriteDiary> {
   int selectEmotion;
   String isPublic = "open";
   List<XFile> _image;
+
+  postDiaryAndTrip(group) async {
+    final inputValues = fbkey.currentState.value;
+    // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
+    var request = new http.MultipartRequest(
+      "POST",
+      Uri.parse('https://webhook.site/a53016bd-0195-4def-a9bf-27fa90d52b82'),
+    );
+    request.fields['title'] = inputValues['title'];
+    request.fields['content'] = inputValues['content'];
+    request.fields['group'] = group ?? "null";
+    request.fields['private'] = isPublic == "open" ? 'false' : 'true';
+    request.fields['category'] = type;
+    request.fields['emotionType'] = engEmotionList[finalEmotion];
+    request.fields['emotionLevel'] = emotionValue.toString();
+    request.fields['userId'] = "1";
+
+    if (_image != null) {
+      for (var i = 0; i < _image.length; i++) {
+        request.files
+            .add(await http.MultipartFile.fromPath('image$i', _image[i].path));
+      }
+    }
+    request.send();
+    print("send");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,27 +88,17 @@ class _WriteDiaryState extends State<WriteDiary> {
                       return;
                     }
                     fbkey.currentState.save();
-                    final inputValues = fbkey.currentState.value;
-                    // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
-                    final finalValues = {
-                      ...inputValues,
-                      'type': type,
-                      'group': group,
-                      "public": isPublic,
-                      'emotion': finalEmotion,
-                      'emotionValue': emotionValue,
-                      //multi part request 전송시
-                      //"test":inputValues['title'], 를 사용하면 될듯
-                    };
-                    print(finalValues);
+                    if (type == "diary" || type == "trip") {
+                      postDiaryAndTrip(group);
+                    } else if (type == "movie") {
+                      //
+                    } else {
+                      //
+                    }
+                    //Navigator.of(context).pop();
                   } else {
                     print('감정을 선택해 주세요');
                   }
-                  //data 보내기
-
-                  //작성완료 알림- 스낵바?
-
-                  //Navigator.of(context).pop();
                 },
                 child: Center(
                     child: Padding(
@@ -530,12 +546,18 @@ class _WriteDiaryState extends State<WriteDiary> {
                                               ),
                                       )),
                                 )
-                              : Container(
-                                  child: Text('영화폼이 들어갈 자리'),
-                                ),
+                              //영화
+                              : type == "movie"
+                                  ? Container(
+                                      child: Text('영화폼이 들어갈 자리'),
+                                    )
+                                  //독서
+                                  : Container(
+                                      child: Text('독서폼이 들어갈 자리'),
+                                    ),
                           FormBuilderTextField(
                             style: TextStyle(color: Colors.white, fontSize: 16),
-                            name: 'context',
+                            name: 'content',
                             validator: FormBuilderValidators.required(context,
                                 errorText: ''),
                             cursorColor: Color(0xffD0D0D0),
@@ -990,4 +1012,14 @@ List<List> detailColorList = [
     Color(0xffBBC1CA),
     Color(0xffAAB2BD),
   ],
+];
+List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
+List engEmotionList = [
+  "angry",
+  "surprised",
+  "happy",
+  "sad",
+  "disgusting",
+  "fear",
+  "none"
 ];
