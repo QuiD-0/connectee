@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:connectee/widget/write/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,13 @@ class _WriteDiaryState extends State<WriteDiary> {
   int selectEmotion;
   String isPublic = "open";
   List<XFile> _image;
+
+  //영화
+  String movieName = '';
+  String director = '';
+  String actors = '';
+  String playDate = '';
+  String imgLink = '';
 
   postDiaryAndTrip(group) async {
     final inputValues = fbkey.currentState.value;
@@ -547,14 +555,143 @@ class _WriteDiaryState extends State<WriteDiary> {
                                       )),
                                 )
                               //영화
-                              : type == "movie"
-                                  ? Container(
-                                      child: Text('영화폼이 들어갈 자리'),
-                                    )
-                                  //독서
-                                  : Container(
-                                      child: Text('독서폼이 들어갈 자리'),
+                              : Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
                                     ),
+                                    type == "movie"
+                                        ? Container(
+                                            child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  //영화 이미지
+                                                  imgLink == ''
+                                                      ? GestureDetector(
+                                                    onTap:() async{
+                                                      final result = await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => Search(type:type)),
+                                                      );
+                                                      print(result);
+                                                      //리턴 받기 받은후 setstate작업
+                                                    },
+                                                        child: Container(
+                                                            height: 150,
+                                                            width: 150,
+                                                            decoration: BoxDecoration(
+                                                                color: Color(
+                                                                    0xff565656),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            13)),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Image.asset(
+                                                                    'assets/icons/pic_add.png'),
+                                                                SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                Text(
+                                                                  "영화를 선택해주세요",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Color(
+                                                                          0xffd0d0d0)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                      )
+                                                      : ClipRRect(
+                                                    borderRadius:
+                                                    BorderRadius.circular(13),
+                                                        child: Image.network(
+                                                            '$imgLink',
+                                                            width: 150,
+                                                            height: 150,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                      ),
+                                                  //영화 정보
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        left: 20),
+                                                    width: 200,
+                                                    height: 150,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          movieName == ''
+                                                              ? '[제목]'
+                                                              : '[$movieName]',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Text(
+                                                          '감독: $director',
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Text(
+                                                          '배우: $actors',
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 40,
+                                                        ),
+                                                        Text(
+                                                          '개봉: $playDate',
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              //star rating 위젯
+                                              Container()
+                                            ],
+                                          ))
+                                        //독서
+                                        : Container(
+                                            child: Text('독서폼이 들어갈 자리'),
+                                          ),
+                                    SizedBox(height: 10,),
+                                    Text('스타 레이팅'),
+                                  ],
+                                ),
                           FormBuilderTextField(
                             style: TextStyle(color: Colors.white, fontSize: 16),
                             name: 'content',
