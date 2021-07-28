@@ -57,49 +57,49 @@ class _MyAppState extends State<MyApp> {
           // child: userId != null
           //     ? HomePage()
           //     : SafeArea(
-          //         child: Container(
-          //           color: Colors.white,
-          //           child: Column(
-          //             children: [
-          //               SizedBox(
-          //                 height: 500,
-          //               ),
-          //               FlatButton(
-          //                 child: Text('kakao auth',
-          //                     style: TextStyle(fontSize: 16)),
-          //                 onPressed: () async {
-          //                   try {
-          //                     final installed = await isKakaoTalkInstalled();
-          //                     installed
-          //                         ? await UserApi.instance.loginWithKakaoTalk()
-          //                         : await UserApi.instance
-          //                             .loginWithKakaoAccount();
-          //                     dynamic token =
-          //                         await AccessTokenStore.instance.fromStore();
-          //                     if (token.refreshToken == null) {
-          //                       print('token error');
-          //                     } else {
-          //                       User user = await UserApi.instance.me();
-          //                       //서버로 토큰 전송하기 성공시 로그인 -- 추가하기
-          //                       final prefs = await SharedPreferences.getInstance();
-          //                       prefs.setInt('userId', user.id);
-          //                       setState(() {
-          //                         //_getId();
-          //                         userId=user.id;
-          //                       });
-          //                     }
-          //                     // perform actions after login
-          //                   } catch (e) {
-          //                     print('error on login: $e');
-          //                   }
-          //                 },
-          //                 color: Colors.green,
-          //                 textColor: Colors.white,
-          //               ),
-          //             ],
-          //           ),
+          //   child: Container(
+          //     color: Colors.white,
+          //     child: Column(
+          //       children: [
+          //         SizedBox(
+          //           height: 500,
           //         ),
-          //       ),
+          //         FlatButton(
+          //           child: Text('kakao auth',
+          //               style: TextStyle(fontSize: 16)),
+          //           onPressed: () async {
+          //             try {
+          //               final installed = await isKakaoTalkInstalled();
+          //               installed
+          //                   ? await UserApi.instance.loginWithKakaoTalk()
+          //                   : await UserApi.instance
+          //                   .loginWithKakaoAccount();
+          //               dynamic token =
+          //               await AccessTokenStore.instance.fromStore();
+          //               if (token.refreshToken == null) {
+          //                 print('token error');
+          //               } else {
+          //                 User user = await UserApi.instance.me();
+          //                 //서버로 토큰 전송하기 성공시 로그인 -- 추가하기
+          //                 final prefs = await SharedPreferences.getInstance();
+          //                 prefs.setInt('userId', user.id);
+          //                 setState(() {
+          //                   //_getId();
+          //                   userId=user.id;
+          //                 });
+          //               }
+          //               // perform actions after login
+          //             } catch (e) {
+          //               print('error on login: $e');
+          //             }
+          //           },
+          //           color: Colors.green,
+          //           textColor: Colors.white,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           onWillPop: () {},
         ));
   }
