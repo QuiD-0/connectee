@@ -41,12 +41,12 @@ class _WriteDiaryState extends State<WriteDiary> {
   String playDate = '';
   String imgLink = '';
 
-  postDiaryAndTrip(group) async {
+  post(group) async {
     final inputValues = fbkey.currentState.value;
     // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
     var request = new http.MultipartRequest(
       "POST",
-      Uri.parse('https://webhook.site/62637522-cd29-46ef-9c12-19b1af2266f7'),
+      Uri.parse('https://webhook.site/c3950cc3-9c72-4b01-b392-21ed5c6d4784'),
     );
     request.fields['title'] = inputValues['title'];
     request.fields['content'] = inputValues['content'];
@@ -96,13 +96,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                       return;
                     }
                     fbkey.currentState.save();
-                    if (type == "diary" || type == "trip") {
-                      postDiaryAndTrip(group);
-                    } else if (type == "movie") {
-                      //
-                    } else {
-                      //
-                    }
+                    post(group);
                     //Navigator.of(context).pop();
                   } else {
                     print('감정을 선택해 주세요');

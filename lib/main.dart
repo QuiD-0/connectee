@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screen/group.dart';
@@ -5,6 +7,7 @@ import 'screen/home_screen.dart';
 import 'screen/write_diary.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -18,15 +21,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int userId=null;
+  int userId;
 
   @override
   void initState() {
     // TODO: implement initState
     // _getId();
+    userId = null;
     super.initState();
   }
-  _getId() async{
+
+  _getId() async {
     //토큰 리프레시확인하기
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -53,53 +58,64 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.light,
         ),
         home: WillPopScope(
-          child: HomePage(),
-          // child: userId != null
-          //     ? HomePage()
-          //     : SafeArea(
-          //   child: Container(
-          //     color: Colors.white,
-          //     child: Column(
-          //       children: [
-          //         SizedBox(
-          //           height: 500,
-          //         ),
-          //         FlatButton(
-          //           child: Text('kakao auth',
-          //               style: TextStyle(fontSize: 16)),
-          //           onPressed: () async {
-          //             try {
-          //               final installed = await isKakaoTalkInstalled();
-          //               installed
-          //                   ? await UserApi.instance.loginWithKakaoTalk()
-          //                   : await UserApi.instance
-          //                   .loginWithKakaoAccount();
-          //               dynamic token =
-          //               await AccessTokenStore.instance.fromStore();
-          //               if (token.refreshToken == null) {
-          //                 print('token error');
-          //               } else {
-          //                 User user = await UserApi.instance.me();
-          //                 //서버로 토큰 전송하기 성공시 로그인 -- 추가하기
-          //                 final prefs = await SharedPreferences.getInstance();
-          //                 prefs.setInt('userId', user.id);
-          //                 setState(() {
-          //                   //_getId();
-          //                   userId=user.id;
-          //                 });
-          //               }
-          //               // perform actions after login
-          //             } catch (e) {
-          //               print('error on login: $e');
-          //             }
-          //           },
-          //           color: Colors.green,
-          //           textColor: Colors.white,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          // child: HomePage(),
+          child: userId != null
+              ? HomePage()
+              : SafeArea(
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 500,
+                        ),
+                        FlatButton(
+                          child: Text('kakao auth',
+                              style: TextStyle(fontSize: 16)),
+                          onPressed: () async {
+                            try {
+                              final installed = await isKakaoTalkInstalled();
+                              installed
+                                  ? await UserApi.instance.loginWithKakaoTalk()
+                                  : await UserApi.instance
+                                      .loginWithKakaoAccount();
+                              dynamic token =
+                                  await AccessTokenStore.instance.fromStore();
+                              if (token.refreshToken == null) {
+                                print('token error');
+                              } else {
+                                User user = await UserApi.instance.me();
+                                //서버로 토큰 전송하기 성공시 로그인 -- 추가하기
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setInt('userId', user.id);
+                                var data = {
+                                  "password": token.accessToken.toString(),
+                                  "username": user.id.toString(),
+                                };
+                                var res = await http.post(
+                                    Uri.parse(
+                                        "http://52.79.146.213:5000/users/login"),
+                                    body: data);
+                                print(res.body);
+                                print(data);
+                                setState(() {
+                                  //_getId();
+                                  userId = user.id;
+                                });
+                              }
+                              // perform actions after login
+                            } catch (e) {
+                              print('error on login: $e');
+                            }
+                          },
+                          color: Colors.green,
+                          textColor: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
           onWillPop: () {},
         ));
   }
