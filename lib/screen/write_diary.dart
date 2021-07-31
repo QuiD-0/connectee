@@ -46,7 +46,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
     var request = new http.MultipartRequest(
       "POST",
-      Uri.parse('https://webhook.site/c3950cc3-9c72-4b01-b392-21ed5c6d4784'),
+      Uri.parse('http://52.79.146.213:5000/diaries/create'),
     );
     request.fields['title'] = inputValues['title'];
     request.fields['content'] = inputValues['content'];
