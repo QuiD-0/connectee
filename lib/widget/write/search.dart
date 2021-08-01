@@ -11,11 +11,12 @@ class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
 }
-
+// 텍스트 에딧 컨트롤러로 바꾸기
+// 영화, 독서 최근 검색어 분리 type에 따라
 class _SearchState extends State<Search> {
   String searchValue;
   bool visibleRecent;
-  List searchData;
+  List searchData = [];
   List<String> recent = [];
 
   _getList() async {
@@ -85,10 +86,16 @@ class _SearchState extends State<Search> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 15),
+                        padding: EdgeInsets.only(left: 15),
                         width: 300,
                         child: TextField(
                           onChanged: (text) {
+                            if (text == "") {
+                              setState(() {
+                                visibleRecent = true;
+                                searchData = [];
+                              });
+                            }
                             setState(() {
                               searchValue = text;
                             });
@@ -176,13 +183,23 @@ class _SearchState extends State<Search> {
                                           .map((item) => Container(
                                               margin: EdgeInsets.all(5),
                                               padding: EdgeInsets.fromLTRB(
-                                                  13, 5, 13, 5),
+                                                  13, 5, 10, 5),
                                               decoration: BoxDecoration(
                                                   color: Color(0xff9D9D9D),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           13)),
-                                              child: Text(item)))
+                                                child: Wrap(
+                                                  alignment: WrapAlignment.center,
+                                                  children: [
+                                                    Text(item),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 3,top: 1),
+                                                      child: Icon(Icons.clear_rounded,size: 14,)
+                                                    )
+                                                  ],
+                                                ),
+                                              ))
                                           .toList()
                                           .cast<Widget>(),
                                     )
@@ -195,9 +212,22 @@ class _SearchState extends State<Search> {
                         ),
                       ),
                     )
-                  : Text('asd'),
-
+                  : Container(),
               //검색 결과
+              SizedBox(
+                height: 10,
+              ),
+              searchData.isNotEmpty?ListView.builder(
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: searchData.length+1,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      "$index",
+                      style: TextStyle(color: Colors.white),
+                    );
+                  }):
+                  Container()
             ],
           ),
         ));
