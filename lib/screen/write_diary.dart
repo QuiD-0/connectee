@@ -561,17 +561,39 @@ class _WriteDiaryState extends State<WriteDiary> {
                                               Row(
                                                 children: [
                                                   //영화 이미지
-                                                  imgLink == ''
-                                                      ? GestureDetector(
-                                                    onTap:() async{
-                                                      final result = await Navigator.push(
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      final result =
+                                                          await Navigator.push(
                                                         context,
-                                                        MaterialPageRoute(builder: (context) => Search(type:type)),
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Search(
+                                                                    type:
+                                                                        type)),
                                                       );
                                                       print(result);
-                                                      //리턴 받기 받은후 setstate작업
+                                                      if (result==null){
+                                                       setState(() {
+                                                         movieName = '';
+                                                         director = '';
+                                                         actors = '';
+                                                         playDate = '';
+                                                         imgLink = '';
+                                                       });
+                                                      }else{
+                                                        setState(() {
+                                                          movieName = result[0];
+                                                          director = result[2];
+                                                          actors = result[3];
+                                                          playDate = result[4];
+                                                          imgLink = result[1];
+                                                        }
+                                                      );
+                                                      }
                                                     },
-                                                        child: Container(
+                                                    child: imgLink == ''
+                                                        ? Container(
                                                             height: 150,
                                                             width: 150,
                                                             decoration: BoxDecoration(
@@ -604,18 +626,51 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                                 ),
                                                               ],
                                                             ),
-                                                          ),
-                                                      )
-                                                      : ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(13),
-                                                        child: Image.network(
-                                                            '$imgLink',
-                                                            width: 150,
-                                                            height: 150,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                      ),
+                                                          )
+                                                        : imgLink != 'none'
+                                                            ? ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            13),
+                                                                child: Image
+                                                                    .network(
+                                                                  '$imgLink',
+                                                                  width: 150,
+                                                                  height: 150,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                height: 150,
+                                                                width: 150,
+                                                                decoration: BoxDecoration(
+                                                                    color: Color(
+                                                                        0xff565656),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            13)),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      "이미지가 없습니다",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                              Color(0xffd0d0d0)),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                  ),
                                                   //영화 정보
                                                   Container(
                                                     padding: EdgeInsets.only(
@@ -642,25 +697,45 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                         SizedBox(
                                                           height: 20,
                                                         ),
-                                                        Text(
-                                                          '감독: $director',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.white),
+                                                        Container(
+                                                          height: 30,
+                                                          child: Text(
+                                                            '감독: $director',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .white),
+                                                            overflow: TextOverflow.ellipsis,
+                                                          ),
                                                         ),
-                                                        SizedBox(
-                                                          height: 20,
-                                                        ),
-                                                        Text(
-                                                          '배우: $actors',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 40,
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "배우:",
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .white),
+
+                                                            ),
+                                                            Container(
+                                                              width: 110,
+                                                              height: 50,
+                                                              child: Text(
+                                                                ' $actors',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white),
+                                                                overflow: TextOverflow.ellipsis,
+                                                                maxLines: 3,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                         Text(
                                                           '개봉: $playDate',
@@ -682,7 +757,9 @@ class _WriteDiaryState extends State<WriteDiary> {
                                         : Container(
                                             child: Text('독서폼이 들어갈 자리'),
                                           ),
-                                    SizedBox(height: 10,),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
                                     Text('스타 레이팅'),
                                   ],
                                 ),
