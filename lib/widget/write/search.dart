@@ -144,10 +144,7 @@ class _SearchState extends State<Search> {
                                             BorderRadius.circular(30)),
                                     child: GestureDetector(
                                       onTap: () async {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        prefs.clear();
+                                        _deleteAll();
                                         _getList();
                                       },
                                       child: Text('전체삭제',
@@ -220,10 +217,15 @@ class _SearchState extends State<Search> {
                                               .toList()
                                               .cast<Widget>(),
                                         )
-                                      : Text('최근 검색어가 없습니다.',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ))
+                                      : Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text('최근 검색어가 없습니다.',
+                                              style: TextStyle(
+                                                color: Color(0xffcdcdcd),
+                                              ),),
+                                        ),
+                                      )
                                   : bookRecent.isNotEmpty
                                       ? Wrap(
                                           alignment: WrapAlignment.start,
@@ -282,10 +284,15 @@ class _SearchState extends State<Search> {
                                               .toList()
                                               .cast<Widget>(),
                                         )
-                                      : Text('최근 검색어가 없습니다.',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ))
+                                      : Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text('최근 검색어가 없습니다.',
+                                    style: TextStyle(
+                                      color: Color(0xffcdcdcd),
+                                    ),),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -320,7 +327,8 @@ class _SearchState extends State<Search> {
                             height: 300,
                             child: Text(
                               '검색결과가 없습니다.',
-                              style: TextStyle(color: Colors.white,
+                              style: TextStyle(
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16),
                             ),
@@ -334,108 +342,243 @@ class _SearchState extends State<Search> {
                                   color: Color(0xff3d3d3d),
                                   borderRadius: BorderRadius.circular(13)),
                               height: 114,
-                              child: Row(
-                                children: [
-                                  searchData[index - 1]['image'] != "none"
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(13),
-                                          child: Image.network(
-                                            searchData[index - 1]['image'],
-                                            width: 82,
-                                            height: 82,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : Container(
-                                          alignment: Alignment.center,
-                                          width: 82,
-                                          height: 82,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xff4d4d4d),
-                                              borderRadius:
-                                                  BorderRadius.circular(13)),
-                                          child: Text(
-                                            '이미지가\n없습니다',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10),
-                                          ),
+                              child: widget.type == "movie"
+                                  ? Row(
+                                      children: [
+                                        searchData[index - 1]['image'] != "none"
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                                child: Image.network(
+                                                  searchData[index - 1]
+                                                      ['image'],
+                                                  width: 82,
+                                                  height: 82,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : Container(
+                                                alignment: Alignment.center,
+                                                width: 82,
+                                                height: 82,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff4d4d4d),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            13)),
+                                                child: Text(
+                                                  '이미지가\n없습니다',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10),
+                                                ),
+                                              ),
+                                        SizedBox(
+                                          width: 15,
                                         ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                              width: 180,
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                    width: 180,
+                                                    child: Text(
+                                                      searchData[index - 1]
+                                                          ['title'],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).pop([
+                                                      searchData[index - 1]
+                                                          ['title'],
+                                                      searchData[index - 1]
+                                                          ['image'],
+                                                      searchData[index - 1]
+                                                          ['director'],
+                                                      searchData[index - 1]
+                                                          ['actor'],
+                                                      searchData[index - 1]
+                                                          ['playDate'],
+                                                    ]);
+                                                  },
+                                                  child: Container(
+                                                    width: 70,
+                                                    height: 30,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff2d2d2d),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30)),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      '선택',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                              width: 240,
                                               child: Text(
-                                                searchData[index - 1]['title'],
-                                                overflow: TextOverflow.ellipsis,
+                                                '감독: ${searchData[index - 1]['director']}',
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).pop([
-                                                searchData[index - 1]['title'],
-                                                searchData[index - 1]['image'],
-                                                searchData[index - 1]
-                                                    ['director'],
-                                                searchData[index - 1]['actor'],
-                                                searchData[index - 1]['playDate'],
-                                              ]);
-                                            },
-                                            child: Container(
-                                              width: 70,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xff2d2d2d),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30)),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                '선택',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16),
+                                                    fontSize: 12),
+                                                overflow:
+                                                TextOverflow.ellipsis,
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        '감독: ${searchData[index - 1]['director']}',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 12),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                          width: 240,
-                                          child: Text(
-                                            '배우: ${searchData[index - 1]['actor']}',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12),
-                                            overflow: TextOverflow.ellipsis,
-                                          )),
-                                    ],
-                                  )
-                                ],
-                              ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                                width: 240,
+                                                child: Text(
+                                                  '배우: ${searchData[index - 1]['actor']}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        searchData[index - 1]['image'] != "none"
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                                child: Image.network(
+                                                  searchData[index - 1]
+                                                      ['image'],
+                                                  width: 82,
+                                                  height: 82,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : Container(
+                                                alignment: Alignment.center,
+                                                width: 82,
+                                                height: 82,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff4d4d4d),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            13)),
+                                                child: Text(
+                                                  '이미지가\n없습니다',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10),
+                                                ),
+                                              ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                    width: 180,
+                                                    child: Text(
+                                                      searchData[index - 1]
+                                                          ['title'],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).pop([
+                                                      searchData[index - 1]
+                                                          ['title'],
+                                                      searchData[index - 1]
+                                                          ['image'],
+                                                      searchData[index - 1]
+                                                          ['author'],
+                                                      searchData[index - 1]
+                                                          ['publisher'],
+                                                      searchData[index - 1]
+                                                          ['pubDate'],
+                                                    ]);
+                                                  },
+                                                  child: Container(
+                                                    width: 70,
+                                                    height: 30,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff2d2d2d),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30)),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      '선택',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                              width: 240,
+                                              child: Text(
+                                                '저자: ${searchData[index - 1]['author']}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                                overflow:
+                                                TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                                width: 240,
+                                                child: Text(
+                                                  '출판: ${searchData[index - 1]['publisher']}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                             ),
                           );
                         }
@@ -493,6 +636,21 @@ class _SearchState extends State<Search> {
     }
   }
 
+  _deleteAll() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (widget.type == "movie") {
+      setState(() {
+        movieRecent=[];
+      });
+      await prefs.setStringList("movieRecent", movieRecent);
+    } else {
+      setState(() {
+        bookRecent=[];
+      });
+      await prefs.setStringList("bookRecent", bookRecent);
+    }
+  }
+
   _getMovieData(String name) async {
     Map<String, String> requestHeaders = {
       'X-Naver-Client-Id': clientId.toString(),
@@ -513,10 +671,12 @@ class _SearchState extends State<Search> {
         for (var i = 0; i < total; i++) {
           searchData.add({
             'title': _parseHtmlString(result['items'][i]['title']),
-            'image': result['items'][i]['image']!=""?result['items'][i]['image']:"none",
+            'image': result['items'][i]['image'] != ""
+                ? result['items'][i]['image']
+                : "none",
             "director": _replaceBar(result['items'][i]["director"]),
             "actor": _replaceBar(result['items'][i]["actor"]),
-            'playDate':result['items'][i]['pubDate'],
+            'playDate': result['items'][i]['pubDate'],
           });
         }
       } else {
@@ -526,7 +686,37 @@ class _SearchState extends State<Search> {
   }
 
   _getBookData(String name) async {
-    print(name);
+    Map<String, String> requestHeaders = {
+      'X-Naver-Client-Id': clientId.toString(),
+      'X-Naver-Client-Secret': clientSecret.toString(),
+    };
+    await http
+        .get(
+            Uri.parse(
+                "https://openapi.naver.com/v1/search/book.json?query=$name&display=50"),
+            headers: requestHeaders)
+        .then((res) {
+      if (res.statusCode == 200) {
+        var result = json.decode(res.body);
+        total = result['total'] <= 50 ? result['total'] : 50;
+        setState(() {
+          searchData.clear();
+        });
+        for (var i = 0; i < total; i++) {
+          searchData.add({
+            'title': _parseHtmlString(result['items'][i]['title']),
+            'image': result['items'][i]['image'] != ""
+                ? result['items'][i]['image']
+                : "none",
+            "author": result['items'][i]["author"],
+            "publisher": result['items'][i]["publisher"],
+            'pubDate': _addDateComma(result['items'][i]['pubdate']),
+          });
+        }
+      } else {
+        print(res.body);
+      }
+    });
   }
 
   String _parseHtmlString(String htmlString) {
@@ -542,5 +732,20 @@ class _SearchState extends State<Search> {
       resultData = resultData.substring(0, resultData.length - 2);
     }
     return resultData;
+  }
+
+  String _addDateComma(String data) {
+    data = data.length == 8
+        ? data.substring(0, 4) +
+            "." +
+            data.substring(4, 6) +
+            "." +
+            data.substring(6, 8)
+        : data.substring(0, 2) +
+            "." +
+            data.substring(2, 4) +
+            "." +
+            data.substring(4, 6);
+    return data;
   }
 }

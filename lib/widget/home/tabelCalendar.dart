@@ -5,16 +5,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-
 class Event {
   final String emotionType;
 
   Event({@required this.emotionType});
 
-
-
-  Event.formMap(String map)
-      : emotionType = map;
+  Event.formMap(String map) : emotionType = map;
 }
 
 class Calendar extends StatefulWidget {
@@ -46,13 +42,12 @@ class _CalendarState extends State<Calendar> {
         List data = jsonDecode(jsonString);
         for (var i = 0; i < data.length; i++) {
           Event a = Event.formMap(data[i]["emotionType"]);
-          DateTime day=DateTime.parse(data[i]["createdAt"]);
+          DateTime day = DateTime.parse(data[i]["createdAt"]);
           setState(() {
-            selectedEvents[DateTime.utc(day.year,day.month,day.day)] = [a];
+            selectedEvents[DateTime.utc(day.year, day.month, day.day)] = [a];
           });
         }
       }
-
     });
   }
 
@@ -102,25 +97,38 @@ class _CalendarState extends State<Calendar> {
             calendarBuilders: CalendarBuilders(
               singleMarkerBuilder: (context, date, event) {
                 // 컬러 리스트 만든뒤 리팩토링 스위치문 사용
-                if (event.emotionType == "happy" ||event.emotionType == "angry"  ) {
-                  return Container(
-                    width: 5,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.lightBlueAccent,
-                    ),
-                  );
-                } else {
-                  return Container(
-                    width: 5,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.redAccent,
-                    ),
-                  );
+                var color;
+                switch (event.emotionType) {
+                  case "happy":
+                    color = Color(0xffFFD275);
+                    break;
+                  case "angry":
+                    color = Color(0xffFF9082);
+                    break;
+                  case "surprised":
+                    color = Color(0xffFD7F8B);
+                    break;
+                  case "sad":
+                    color =Color(0xff7DDEF6);
+                    break;
+                  case "disgusting":
+                    color =Color(0xff79D3BA);
+                    break;
+                  case "fear":
+                    color = Color(0xffAE81A2);
+                    break;
+                  case "none":
+                    color = Color(0xffAAB2BD);
+                    break;
                 }
+                return Container(
+                  width: 5,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: color,
+                  ),
+                );
               },
               dowBuilder: (context, date) {
                 return Center(
@@ -197,7 +205,7 @@ class _CalendarState extends State<Calendar> {
                 size: 24,
               ),
               leftChevronVisible: true,
-              leftChevronMargin: EdgeInsets.only(left: 10,right: 5),
+              leftChevronMargin: EdgeInsets.only(left: 10, right: 5),
               leftChevronPadding: EdgeInsets.all(0),
               rightChevronPadding: EdgeInsets.only(right: 3),
               rightChevronIcon: Icon(
