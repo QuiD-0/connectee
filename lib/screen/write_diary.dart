@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class WriteDiary extends StatefulWidget {
   final groupName;
@@ -41,47 +42,14 @@ class _WriteDiaryState extends State<WriteDiary> {
   String playDate = '';
 
   //책
-  String bookName='';
+  String bookName = '';
   String author = '';
   String publisher = '';
   String publishDate = '';
+
   //영화,책 공통
   String imgLink = '';
-  double rating=0;
-
-
-  post(group) async {
-    final inputValues = fbkey.currentState.value;
-    // json 추가 방법 - 사용자 정보, 감정 값등 추가하기
-    var request = new http.MultipartRequest(
-      "POST",
-      Uri.parse('http://52.79.146.213:5000/diaries/create'),
-    );
-    request.fields['title'] = inputValues['title'];
-    request.fields['content'] = inputValues['content'];
-    request.fields['group'] = group ?? "null";
-    request.fields['private'] = isPublic == "open" ? 'false' : 'true';
-    request.fields['category'] = type;
-    request.fields['emotionType'] = engEmotionList[finalEmotion];
-    request.fields['emotionLevel'] = emotionValue.toString();
-    request.fields['userId'] = "1";
-
-    if (_image != null) {
-      for (var i = 0; i < _image.length; i++) {
-        request.files
-            .add(await http.MultipartFile.fromPath('image$i', _image[i].path));
-      }
-    }
-    var res = await request.send();
-    var respStr =await http.Response.fromStream(res);
-    var resJson = json.decode(respStr.body);
-    if (resJson["success"]==true){
-      Navigator.of(context).pop();
-    }else{
-      print(resJson);
-    }
-
-  }
+  double rating = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +65,52 @@ class _WriteDiaryState extends State<WriteDiary> {
                 size: 16,
                 color: Colors.white,
               ),
-              onPressed: () {
-                //취소 팝업 보이기
-                Navigator.of(context).pop();
+              onPressed: () async {
+                var res = await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  barrierColor: Color(0x55000000),
+                  builder: (BuildContext context) {
+                    return WillPopScope(
+                      onWillPop: () async => false,
+                      child: AlertDialog(
+                        titlePadding: EdgeInsets.fromLTRB(20,40,20,10),
+                        elevation: 0,
+                        backgroundColor: Color(0xff3D3D3D),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        title: Text(
+                          '작성을 종료하시겟습니까?',textAlign: TextAlign.center,
+                        ),
+                        titleTextStyle: TextStyle(fontSize: 18, color: Colors.white,fontFamily: 'GmarketSans',fontWeight: FontWeight.bold),
+                        content: Text(
+                          '작성중인 일기는\n저장되지 않습니다.',textAlign: TextAlign.center,
+                        ),
+                        contentTextStyle: TextStyle(fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans'),
+                        actions: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              FlatButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('취소',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans')),
+                              ),
+                              FlatButton(
+                                onPressed: () => Navigator.pop(context, 'back'),
+                                child: Text('확인',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans')),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+                res == 'back' ? Navigator.of(context).pop() : null;
               },
             ),
             actions: [
@@ -107,15 +118,24 @@ class _WriteDiaryState extends State<WriteDiary> {
                 onTap: () {
                   if (emotionValue != null) {
                     if (!fbkey.currentState.validate()) {
-                      //토스트 보내기
-                      print('error');
+                      if (fbkey.currentState.fields['title'].value == null) {
+                        _toast('제목을 입력해주세요');
+                      } else {
+                        _toast('내용을 입력해 주세요');
+                      }
                       return;
                     }
                     fbkey.currentState.save();
-                    post(group);
+                    if (type == "movie" && movieName == '') {
+                      _toast('영화를 선택해 주세요');
+                    } else if (type == "book" && bookName == '') {
+                      _toast('책을 선택해 주세요');
+                    } else {
+                      post(group);
+                    }
                     //Navigator.of(context).pop();
                   } else {
-                    print('감정을 선택해 주세요');
+                    _toast('감정을 선택해 주세요');
                   }
                 },
                 child: Center(
@@ -162,7 +182,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                     director = '';
                     actors = '';
                     playDate = '';
-                    bookName='';
+                    bookName = '';
                     author = '';
                     publisher = '';
                     publishDate = '';
@@ -600,23 +620,22 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                                         type)),
                                                       );
                                                       print(result);
-                                                      if (result==null){
-                                                       setState(() {
-                                                         movieName = '';
-                                                         director = '';
-                                                         actors = '';
-                                                         playDate = '';
-                                                         imgLink = '';
-                                                       });
-                                                      }else{
+                                                      if (result == null) {
+                                                        setState(() {
+                                                          movieName = '';
+                                                          director = '';
+                                                          actors = '';
+                                                          playDate = '';
+                                                          imgLink = '';
+                                                        });
+                                                      } else {
                                                         setState(() {
                                                           movieName = result[0];
                                                           director = result[2];
                                                           actors = result[3];
                                                           playDate = result[4];
                                                           imgLink = result[1];
-                                                        }
-                                                      );
+                                                        });
                                                       }
                                                     },
                                                     child: imgLink == ''
@@ -721,7 +740,8 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                                   FontWeight
                                                                       .bold),
                                                           maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         ),
                                                         SizedBox(
                                                           height: 20,
@@ -734,7 +754,9 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                                 fontSize: 12,
                                                                 color: Colors
                                                                     .white),
-                                                            overflow: TextOverflow.ellipsis,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         ),
                                                         Row(
@@ -748,7 +770,6 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                                   fontSize: 12,
                                                                   color: Colors
                                                                       .white),
-
                                                             ),
                                                             Container(
                                                               width: 110,
@@ -760,7 +781,9 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                                         12,
                                                                     color: Colors
                                                                         .white),
-                                                                overflow: TextOverflow.ellipsis,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
                                                                 maxLines: 3,
                                                               ),
                                                             ),
@@ -784,236 +807,247 @@ class _WriteDiaryState extends State<WriteDiary> {
                                           ))
                                         //독서 선택
                                         : Container(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                //도서 이미지
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    final result =
-                                                    await Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Search(
-                                                                  type:
-                                                                  type)),
-                                                    );
-                                                    print(result);
-                                                    if (result==null){
-                                                      setState(() {
-                                                        bookName='';
-                                                        author='';
-                                                        publishDate='';
-                                                        publisher='';
-                                                        imgLink='';
-                                                      });
-                                                    }else{
-                                                      setState(() {
-                                                        //추가
-                                                        bookName=result[0];
-                                                        author=result[2];
-                                                        publishDate=result[4];
-                                                        publisher=result[3];
-                                                        imgLink=result[1];
-
-                                                      }
+                                            child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  //도서 이미지
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      final result =
+                                                          await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Search(
+                                                                    type:
+                                                                        type)),
                                                       );
-                                                    }
-                                                  },
-                                                  child: imgLink == ''
-                                                      ? Container(
+                                                      print(result);
+                                                      if (result == null) {
+                                                        setState(() {
+                                                          bookName = '';
+                                                          author = '';
+                                                          publishDate = '';
+                                                          publisher = '';
+                                                          imgLink = '';
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          //추가
+                                                          bookName = result[0];
+                                                          author = result[2];
+                                                          publishDate =
+                                                              result[4];
+                                                          publisher = result[3];
+                                                          imgLink = result[1];
+                                                        });
+                                                      }
+                                                    },
+                                                    child: imgLink == ''
+                                                        ? Container(
+                                                            height: 150,
+                                                            width: 150,
+                                                            decoration: BoxDecoration(
+                                                                color: Color(
+                                                                    0xff565656),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            13)),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Image.asset(
+                                                                    'assets/icons/pic_add.png'),
+                                                                SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                Text(
+                                                                  "책을 선택해주세요",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Color(
+                                                                          0xffd0d0d0)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : imgLink != 'none'
+                                                            ? ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            13),
+                                                                child: Image
+                                                                    .network(
+                                                                  '$imgLink',
+                                                                  width: 150,
+                                                                  height: 150,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                height: 150,
+                                                                width: 150,
+                                                                decoration: BoxDecoration(
+                                                                    color: Color(
+                                                                        0xff565656),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            13)),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      "이미지가 없습니다",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                              Color(0xffd0d0d0)),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                  ),
+                                                  //영화 정보
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        left: 20),
+                                                    width: 200,
                                                     height: 150,
-                                                    width: 150,
-                                                    decoration: BoxDecoration(
-                                                        color: Color(
-                                                            0xff565656),
-                                                        borderRadius:
-                                                        BorderRadius
-                                                            .circular(
-                                                            13)),
                                                     child: Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .center,
                                                       crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .center,
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        Image.asset(
-                                                            'assets/icons/pic_add.png'),
+                                                        Text(
+                                                          bookName == ''
+                                                              ? '[제목]'
+                                                              : '[$bookName]',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
                                                         SizedBox(
                                                           height: 20,
                                                         ),
-                                                        Text(
-                                                          "책을 선택해주세요",
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                              12,
-                                                              color: Color(
-                                                                  0xffd0d0d0)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                      : imgLink != 'none'
-                                                      ? ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        13),
-                                                    child: Image
-                                                        .network(
-                                                      '$imgLink',
-                                                      width: 150,
-                                                      height: 150,
-                                                      fit: BoxFit
-                                                          .cover,
-                                                    ),
-                                                  )
-                                                      : Container(
-                                                    height: 150,
-                                                    width: 150,
-                                                    decoration: BoxDecoration(
-                                                        color: Color(
-                                                            0xff565656),
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            13)),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .center,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Text(
-                                                          "이미지가 없습니다",
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                              12,
-                                                              color:
-                                                              Color(0xffd0d0d0)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                //영화 정보
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                      left: 20),
-                                                  width: 200,
-                                                  height: 150,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      Text(
-                                                        bookName == ''
-                                                            ? '[제목]'
-                                                            : '[$bookName]',
-                                                        style: TextStyle(
-                                                            color:
-                                                            Colors.white,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .bold),
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Container(
-                                                        height: 30,
-                                                        child: Text(
-                                                          '저자: $author',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color: Colors
-                                                                  .white),
-                                                          overflow: TextOverflow.ellipsis,
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          Text(
-                                                            "출판:",
+                                                        Container(
+                                                          height: 30,
+                                                          child: Text(
+                                                            '저자: $author',
                                                             style: TextStyle(
                                                                 fontSize: 12,
                                                                 color: Colors
                                                                     .white),
-
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
-                                                          Container(
-                                                            width: 110,
-                                                            height: 30,
-                                                            child: Text(
-                                                              ' $publisher',
+                                                        ),
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "출판:",
                                                               style: TextStyle(
-                                                                  fontSize:
-                                                                  12,
+                                                                  fontSize: 12,
                                                                   color: Colors
                                                                       .white),
-                                                              overflow: TextOverflow.ellipsis,
-                                                              maxLines: 1,
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Text(
-                                                        '출간: $publishDate',
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                            Colors.white),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            //star rating 위젯
-                                            Container()
-                                          ],
-                                        )),
+                                                            Container(
+                                                              width: 110,
+                                                              height: 30,
+                                                              child: Text(
+                                                                ' $publisher',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Text(
+                                                          '출간: $publishDate',
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              //star rating 위젯
+                                              Container()
+                                            ],
+                                          )),
                                     SizedBox(
                                       height: 10,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(top:10.0),
-                                            child: Text('평점', style: TextStyle(color: Colors.white,fontSize: 16),),
+                                            padding: const EdgeInsets.only(
+                                                top: 10.0),
+                                            child: Text(
+                                              '평점',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16),
+                                            ),
                                           ),
                                           SmoothStarRating(
                                               allowHalfRating: false,
                                               onRated: (v) {
                                                 setState(() {
-                                                  rating=v;
+                                                  rating = v;
                                                 });
                                               },
                                               starCount: 5,
                                               rating: rating,
                                               size: 40.0,
-                                              isReadOnly:false,
+                                              isReadOnly: false,
                                               color: Colors.white,
                                               borderColor: Color(0xff565656),
-                                              defaultIconData: Icons.star_rate_sharp,
-                                              filledIconData: Icons.star_rate_sharp,
-                                              spacing:15.0
-                                          ),
+                                              defaultIconData:
+                                                  Icons.star_rate_sharp,
+                                              filledIconData:
+                                                  Icons.star_rate_sharp,
+                                              spacing: 15.0),
                                         ],
                                       ),
                                     )
@@ -1049,6 +1083,75 @@ class _WriteDiaryState extends State<WriteDiary> {
               ],
             ),
           )),
+    );
+  }
+
+  post(group) async {
+    final inputValues = fbkey.currentState.value;
+
+    //실제 url
+    var request = new http.MultipartRequest(
+      "POST",
+      Uri.parse('http://52.79.146.213:5000/diaries/create'),
+    );
+
+    // // 테스트 url
+    // var request = new http.MultipartRequest(
+    //   "POST",
+    //   Uri.parse('https://webhook.site/6e787a02-db05-4a97-9869-129531f999d3'),
+    // );
+
+    //기본 필드값
+    request.fields['title'] = inputValues['title'];
+    request.fields['content'] = inputValues['content'];
+    request.fields['group'] = group ?? "null";
+    request.fields['private'] = isPublic == "open" ? 'false' : 'true';
+    request.fields['category'] = type;
+    request.fields['emotionType'] = engEmotionList[finalEmotion - 1];
+    request.fields['emotionLevel'] = emotionValue.toString();
+    request.fields['userId'] = "1";
+    // 일기,여행-> 이미지 선택
+    if (_image != null) {
+      for (var i = 0; i < _image.length; i++) {
+        request.files
+            .add(await http.MultipartFile.fromPath('image$i', _image[i].path));
+      }
+    }
+    //영화 필드
+    request.fields['movie'] = movieName;
+    request.fields['director'] = director;
+    request.fields['actors'] = actors;
+    request.fields['playDate'] = playDate;
+
+    //도서 필드
+    request.fields['book'] = bookName;
+    request.fields['author'] = author;
+    request.fields['publisher'] = publisher;
+    request.fields['publishDate'] = publishDate;
+
+    //영화, 책 공통
+    request.fields['imgLink'] = imgLink;
+    request.fields['rating'] = rating.toString();
+
+    var res = await request.send();
+    var respStr = await http.Response.fromStream(res);
+    var resJson = json.decode(respStr.body);
+    if (resJson["success"] == true) {
+      _toast('오늘의 일기가 기록되었습니다.');
+      Navigator.of(context).pop();
+    } else {
+      _toast('다시 시도해 주세요');
+      print(resJson);
+    }
+  }
+
+  _toast(msg) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
     );
   }
 
@@ -1478,6 +1581,7 @@ List<List> detailColorList = [
   ],
 ];
 List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
+
 List engEmotionList = [
   "angry",
   "surprised",

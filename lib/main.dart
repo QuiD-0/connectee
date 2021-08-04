@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.light,
         ),
         home: WillPopScope(
-          // child: HomePage(),
+          // 개발완료후 수정
           child: userId != null
               ? HomePage()
               : SafeArea(
