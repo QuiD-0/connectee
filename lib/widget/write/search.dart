@@ -74,6 +74,18 @@ class _SearchState extends State<Search> {
                         width: 300,
                         child: TextField(
                           controller: txt,
+                          onSubmitted: (value){
+                            //검색어 저장
+                            _saveList(txt.text);
+                            //최근 검색어 끄기
+                            setState(() {
+                              visibleRecent = false;
+                            });
+                            //api통신
+                            widget.type == "movie"
+                                ? _getMovieData(txt.text)
+                                : _getBookData(txt.text);
+                          },
                           onChanged: (text) {
                             if (text == "") {
                               setState(() {
@@ -93,7 +105,6 @@ class _SearchState extends State<Search> {
                         onPressed: () {
                           //검색어 저장
                           _saveList(txt.text);
-                          print(movieRecent);
                           //최근 검색어 끄기
                           setState(() {
                             visibleRecent = false;
