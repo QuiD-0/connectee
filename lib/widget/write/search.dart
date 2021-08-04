@@ -383,7 +383,7 @@ class _SearchState extends State<Search> {
                                             Row(
                                               children: [
                                                 Container(
-                                                    width: 180,
+                                                    width: 175,
                                                     child: Text(
                                                       searchData[index - 1]
                                                           ['title'],
@@ -501,7 +501,7 @@ class _SearchState extends State<Search> {
                                             Row(
                                               children: [
                                                 Container(
-                                                    width: 180,
+                                                    width: 175,
                                                     child: Text(
                                                       searchData[index - 1]
                                                           ['title'],
