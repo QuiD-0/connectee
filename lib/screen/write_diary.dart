@@ -177,7 +177,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                 onSelected: (String value) {
                   setState(() {
                     type = value;
-                    //영화, 도서 선택값 초기화
+                    //영화, 도서, 사진 선택값 초기화
                     movieName = '';
                     director = '';
                     actors = '';
@@ -187,6 +187,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                     publisher = '';
                     publishDate = '';
                     imgLink = '';
+                    _image=null;
                   });
                 },
                 color: Color(0xff2d2d2d),
