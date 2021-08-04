@@ -505,7 +505,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                                             });
                                           } else {
                                             if (images.length > 5) {
-                                              print('최대 5장');
+                                              _toast("사진은 최대 5장까지 선택가능합니다.");
                                               setState(() {
                                                 _image = null;
                                               });
