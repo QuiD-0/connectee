@@ -69,7 +69,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                 var res = await showDialog(
                   context: context,
                   barrierDismissible: false,
-                  barrierColor: Color(0x55000000),
+                  barrierColor: Color(0x99000000),
                   builder: (BuildContext context) {
                     return WillPopScope(
                       onWillPop: () async => false,
@@ -84,7 +84,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                         ),
                         titleTextStyle: TextStyle(fontSize: 18, color: Colors.white,fontFamily: 'GmarketSans',fontWeight: FontWeight.bold),
                         content: Text(
-                          '작성중인 일기는\n저장되지 않습니다.',textAlign: TextAlign.center,
+                          '작성중인 일기는\n저장되지 않습니다',textAlign: TextAlign.center,
                         ),
                         contentTextStyle: TextStyle(fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans'),
                         actions: <Widget>[
@@ -138,14 +138,16 @@ class _WriteDiaryState extends State<WriteDiary> {
                     _toast('감정을 선택해 주세요');
                   }
                 },
-                child: Center(
-                    child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    '완료',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width:80,
+                    height: 40,
+                    child: Text(
+                      '완료',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                )),
+
               )
             ],
             centerTitle: true,
@@ -1110,7 +1112,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     request.fields['category'] = type;
     request.fields['emotionType'] = engEmotionList[finalEmotion - 1];
     request.fields['emotionLevel'] = emotionValue.toString();
-    request.fields['userId'] = "1";
+    request.fields['userId'] = "2";
     // 일기,여행-> 이미지 선택
     if (_image != null) {
       for (var i = 0; i < _image.length; i++) {

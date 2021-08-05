@@ -97,9 +97,11 @@ class _MyAppState extends State<MyApp> {
                                     Uri.parse(
                                         "http://52.79.146.213:5000/users/login"),
                                     body: data);
+                                print(res.headers);
                                 print(res.body);
                                 print(data);
                                 setState(() {
+                                  //헤더에 있는 id값이 내 아이디
                                   //_getId();
                                   userId = user.id;
                                 });

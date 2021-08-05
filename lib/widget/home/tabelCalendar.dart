@@ -35,7 +35,7 @@ class _CalendarState extends State<Calendar> {
   Future _fetchEvent() async {
     //데이터 받아오기
     await http
-        .get(Uri.parse("http://52.79.146.213:5000/diaries?userId=1"))
+        .get(Uri.parse("http://52.79.146.213:5000/diaries?userId=2"))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;
