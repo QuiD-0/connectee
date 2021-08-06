@@ -39,7 +39,6 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       } else {
         setState(() {
           selectedEmotion = emotion;
-          //postcount는 api 연결후 수정할것
           postCount = postCount + 1;
           emotionValue = value;
           print(selectedEmotion);

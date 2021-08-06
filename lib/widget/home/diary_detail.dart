@@ -4,7 +4,7 @@ import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
+// 뒤로가기로 반응 상태 넘기기
 class DiaryDetail extends StatelessWidget {
   final data;
 
@@ -45,6 +45,7 @@ class DiaryDetail extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                        // 수정하기
                         child: ReactionButtons(data:data,visible: true,),
                       ),
                     ],
