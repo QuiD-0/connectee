@@ -24,6 +24,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
     postCount = 0;
     super.initState();
   }
+//감정 반응 후 다시 페치 받기..?
 
 // 수정 하기
   void changeEmotion(emotion, value) {

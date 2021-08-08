@@ -1139,7 +1139,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     var res = await request.send();
     var respStr = await http.Response.fromStream(res);
     var resJson = json.decode(respStr.body);
-    if (resJson["success"] == true) {
+    if (resJson["result"] == true) {
       _toast('오늘의 일기가 기록되었습니다.');
       Navigator.of(context).pop();
     } else {

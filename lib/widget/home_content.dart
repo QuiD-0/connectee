@@ -13,7 +13,7 @@ class HomeContent extends StatefulWidget {
   @override
   _HomeContentState createState() => _HomeContentState();
 }
-
+// 파일을 합치고 더보기 스캐폴드에서 뒤로가기시 스테이트 수정하기..?
 class Post {
   int id;
   String name;
