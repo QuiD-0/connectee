@@ -1,17 +1,12 @@
 import 'dart:convert';
 
+import 'package:connectee/model/calendarEvent.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:http/http.dart' as http;
 
-class Event {
-  final String emotionType;
-
-  Event({@required this.emotionType});
-
-  Event.formMap(String map) : emotionType = map;
-}
 
 class Calendar extends StatefulWidget {
   @override
@@ -25,17 +20,25 @@ class _CalendarState extends State<Calendar> {
   DateTime focusedDay = DateTime.now();
   List<String> dowList = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
   TextEditingController _eventController = TextEditingController();
+  String userId;
 
   @override
   void initState() {
-    _fetchEvent();
+    _getId().then((res){
+      _fetchEvent();
+    });
     super.initState();
   }
-
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
   Future _fetchEvent() async {
     //데이터 받아오기
     await http
-        .get(Uri.parse("http://52.79.146.213:5000/diaries?userId=2"))
+        .get(Uri.parse("http://52.79.146.213:5000/diaries/getall?userId=$userId"))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;

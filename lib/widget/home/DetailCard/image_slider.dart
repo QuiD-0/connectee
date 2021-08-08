@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 
 class ImageSlider extends StatefulWidget {
-  final List<String> movies;
+  final List<String> images;
   final data;
-  const ImageSlider({Key key,this.data,this.movies}) : super(key: key);
+  const ImageSlider({Key key,this.data,this.images}) : super(key: key);
 
   @override
   _ImageSliderState createState() => _ImageSliderState();
@@ -13,15 +13,15 @@ class ImageSlider extends StatefulWidget {
 
 class _ImageSliderState extends State<ImageSlider> {
   List<String> movies;
-  List<Widget> images;
+  List<Widget> imageWidget;
   int _currentPage = 0;
 
 
   @override
   void initState() {
     super.initState();
-    movies = widget.movies;
-    images = movies.map((m) => Image.network(m,fit: BoxFit.cover,height: 300,width: 300,)).toList();
+    movies = widget.images;
+    imageWidget = movies.map((m) => Image.network(m,fit: BoxFit.cover,height: 300,width: 300,)).toList();
   }
 
   @override
@@ -31,7 +31,7 @@ class _ImageSliderState extends State<ImageSlider> {
         child: Column(
           children: <Widget>[
             CarouselSlider(
-              items: images,
+              items: imageWidget,
               options: CarouselOptions(onPageChanged: (index, reason) {
                 setState(() {
                   _currentPage = index;
@@ -41,7 +41,7 @@ class _ImageSliderState extends State<ImageSlider> {
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: makeIndicator(images, _currentPage),
+                children: makeIndicator(imageWidget, _currentPage),
               ),
             )
           ],

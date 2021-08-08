@@ -1,3 +1,4 @@
+import 'package:connectee/model/post.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,77 +14,26 @@ class HomeContent extends StatefulWidget {
   @override
   _HomeContentState createState() => _HomeContentState();
 }
-// 파일을 합치고 더보기 스캐폴드에서 뒤로가기시 스테이트 수정하기..?
-class Post {
-  int id;
-  String name;
-  int age;
-
-  Post(this.id, this.name, this.age);
-
-  Post.formMap(Map<String, dynamic> map)
-      : id = map['id'],
-        name = map['name'],
-        age = map['age'];
-}
 
 class _HomeContentState extends State<HomeContent> {
+  var _globalkey = GlobalKey();
   List _data = [];
   int page = 1;
   ScrollController _Scroll = ScrollController();
-  int id;
-  // 내가 단 리액션 리스트
-  // post ID
-  // emotion
-  //
+  String userId;
 
   @override
   void initState() {
-    _data = [Post(1, 'asd', 12), Post(2, 'asd', 12), Post(3, 'asd', 12)];
-    // _fetchData();
+    _getId().then((res){
+      _fetchData();
+      //내가 쓴 댓글 받아오기
+    });
     _Scroll.addListener(() {
       if (_Scroll.position.pixels >= _Scroll.position.maxScrollExtent) {
         _fetchData();
       }
     });
-    _getId();
     super.initState();
-  }
-
-  _getId() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      id = prefs.getInt('userId');
-    });
-  }
-
-  void dispose() {
-    _Scroll.dispose();
-    super.dispose();
-  }
-
-  Future _fetchData() async {
-    int limit = 15;
-    await http
-        .get(Uri.parse("http://18.216.47.35:3000/?page=$page&limit=$limit"))
-        .then((res) {
-      if (res.statusCode == 200) {
-        String jsonString = res.body;
-        List posts = jsonDecode(jsonString);
-        for (int i = 0; i < posts.length; i++) {
-          var post = posts[i];
-          Post postToAdd = Post(post["id"], post["name"], post["age"]);
-          setState(() {
-            _data.add(postToAdd);
-          });
-        }
-        setState(() {
-          page++;
-        });
-      } else {
-        print('error');
-      }
-    });
   }
 
   @override
@@ -113,7 +63,7 @@ class _HomeContentState extends State<HomeContent> {
                   //로딩 아이콘 의뢰 ?? -> 시간 남으면.
                 );
               }
-              Post post = _data[index];
+              Diary post = _data[index];
               return Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16),
                 child: Column(
@@ -146,12 +96,14 @@ class _HomeContentState extends State<HomeContent> {
                                   context,
                                   CupertinoPageRoute(
                                     builder: (BuildContext context) =>
-                                        new DiaryDetail(data: post),
+                                        new DiaryDetail(post: post),
                                     fullscreenDialog: true,
                                   ),
                                 );
                                 print(res);
-                                //상태 변경
+                                // 상태 변경
+                                // 리액션 리스트에 추가
+                                // 감정 보내기 버튼에도 복붙하기
                               },
                               child: Container(
                                 width: 331,
@@ -161,13 +113,15 @@ class _HomeContentState extends State<HomeContent> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    post.id % 2 == 1
+                                    //이미지가 있는경우
+                                    post.Images.isNotEmpty
                                         ? Container(
                                             padding: EdgeInsets.only(
                                                 top: 5, bottom: 10),
                                             child: Image.network(
-                                              'https://sw-connectee-s3.s3.ap-northeast-2.amazonaws.com/original/image_picker4783559709162979169.jpg',
+                                              post.Images[0],
                                               width: 300,
                                               height: 300,
                                               fit: BoxFit.cover,
@@ -175,7 +129,7 @@ class _HomeContentState extends State<HomeContent> {
                                           )
                                         : Container(),
                                     Text(
-                                      '미데 이 터더미 데이 터더 미데 이터더미데이asd터더미데이asd터더미데이asd터더미데이asd',
+                                      post.content,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 5,
                                       softWrap: false,
@@ -194,6 +148,7 @@ class _HomeContentState extends State<HomeContent> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
+                                  //내 리액션리스트에 있는지 확인후 출력
                                   // Container(
                                   //   // 내가 표현한 감정 표시
                                   //   child: Row(
@@ -241,7 +196,7 @@ class _HomeContentState extends State<HomeContent> {
                                   // ),
                                   GestureDetector(
                                     onTap: () {
-                                      print('tap send btn ${post.id}');
+                                      print('tap send btn ${post.diaryId}');
                                     },
                                     child: Container(
                                       width: 90,
@@ -280,4 +235,42 @@ class _HomeContentState extends State<HomeContent> {
       ],
     ));
   }
+
+
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
+
+  void dispose() {
+    _Scroll.dispose();
+    super.dispose();
+  }
+
+  Future _fetchData() async {
+    await http
+        .get(Uri.parse('http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
+        .then((res) {
+      if (res.statusCode == 200) {
+        String jsonString = res.body;
+        List posts = jsonDecode(jsonString);
+        for (int i = 0; i < posts.length; i++) {
+          var post = posts[i];
+          Diary diaryToAdd = Diary.fromMap(post);
+          setState(() {
+            _data.add(diaryToAdd);
+          });
+        }
+        setState(() {
+          page++;
+        });
+      } else {
+        print('error');
+      }
+    });
+    print('done');
+  }
+
 }

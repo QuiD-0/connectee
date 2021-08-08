@@ -21,22 +21,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int userId;
+  String userId;
 
   @override
   void initState() {
     // TODO: implement initState
-    // _getId();
-    userId = null;
+    _getId();
     super.initState();
   }
 
   _getId() async {
     //토큰 리프레시확인하기
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getInt('userId');
-    });
+    dynamic token =
+    await AccessTokenStore.instance.fromStore();
+    User user = await UserApi.instance.me();
+    var data = {
+      "password": token.accessToken.toString(),
+      "username": user.id.toString(),
+    };
+    var res = await http.post(
+        Uri.parse(
+            "http://52.79.146.213:5000/users/login"),
+        body: data);
+    var result = json.decode(res.body);
+    if (result["success"]==true){
+        prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
+      setState(() {
+        userId = prefs.getString('userId');
+      });
+    }
+
   }
 
   @override
@@ -61,6 +76,7 @@ class _MyAppState extends State<MyApp> {
           // 개발완료후 수정
           child: userId != null
               ? HomePage()
+          //Oauth page
               : SafeArea(
                   child: Container(
                     color: Colors.white,
@@ -85,10 +101,8 @@ class _MyAppState extends State<MyApp> {
                                 print('token error');
                               } else {
                                 User user = await UserApi.instance.me();
-                                //서버로 토큰 전송하기 성공시 로그인 -- 추가하기
                                 final prefs =
                                     await SharedPreferences.getInstance();
-                                prefs.setInt('userId', user.id);
                                 var data = {
                                   "password": token.accessToken.toString(),
                                   "username": user.id.toString(),
@@ -97,21 +111,20 @@ class _MyAppState extends State<MyApp> {
                                     Uri.parse(
                                         "http://52.79.146.213:5000/users/login"),
                                     body: data);
-                                print(res.headers);
-                                print(res.body);
-                                print(data);
-                                setState(() {
-                                  //헤더에 있는 id값이 내 아이디
-                                  //_getId();
-                                  userId = user.id;
-                                });
+                                var result = json.decode(res.body);
+                                if (result["success"]==true){
+                                  prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
+                                  setState(() {
+                                    userId = prefs.getString('userId');
+                                  });
+                                }
                               }
                               // perform actions after login
                             } catch (e) {
                               print('error on login: $e');
                             }
                           },
-                          color: Colors.green,
+                          color: Colors.yellow,
                           textColor: Colors.white,
                         ),
                       ],
