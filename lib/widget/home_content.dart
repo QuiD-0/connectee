@@ -167,7 +167,7 @@ class _HomeContentState extends State<HomeContent> {
                                             padding: EdgeInsets.only(
                                                 top: 5, bottom: 10),
                                             child: Image.network(
-                                              'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+                                              'https://sw-connectee-s3.s3.ap-northeast-2.amazonaws.com/original/image_picker4783559709162979169.jpg',
                                               width: 300,
                                               height: 300,
                                               fit: BoxFit.cover,
