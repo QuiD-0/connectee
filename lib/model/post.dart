@@ -10,6 +10,7 @@ class Diary {
   List<String> Images;
   String nickname;
   String maxEmotion;
+  int emotionCount;
 
   Diary.fromMap(Map<String, dynamic> map)
       : diaryId = map['id'],
@@ -22,6 +23,7 @@ class Diary {
         nickname = map["User"]['nickname'],
         maxEmotion = map['maxEmotion'],
         emotionLevel = map['emotionLevel'],
+        emotionCount = map['Comments'].length,
         Images = [
           for (var i = 0; i < map["Images"].length; i++)
             map["Images"][i]["location"]

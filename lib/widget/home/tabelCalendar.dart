@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:connectee/model/calendarEvent.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -29,12 +30,14 @@ class _CalendarState extends State<Calendar> {
     });
     super.initState();
   }
+
   _getId() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getString('userId');
     });
   }
+
   Future _fetchEvent() async {
     //데이터 받아오기
     await http
@@ -89,10 +92,22 @@ class _CalendarState extends State<Calendar> {
 
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) {
-              setState(() {
-                selectedDay = selectDay;
-                focusedDay = focusDay;
-              });
+              if (selectedEvents[selectDay]!=null){
+                Navigator.of(context, rootNavigator: true).push(
+                  new CupertinoPageRoute(
+                    builder: (BuildContext context) =>
+                    new Scaffold(appBar: AppBar(title: Text('추후 수정'),),),
+                    fullscreenDialog: true,
+                  ),
+                );
+              }
+              DateTime day=DateTime.now();
+              if(DateTime.utc(day.year, day.month, day.day)!=selectDay){
+                setState(() {
+                  selectedDay = selectDay;
+                  focusedDay = focusDay;
+                });
+              }
             },
             selectedDayPredicate: (DateTime date) {
               return isSameDay(selectedDay, date);
@@ -173,12 +188,13 @@ class _CalendarState extends State<Calendar> {
                   fontSize: 17,
                   fontWeight: FontWeight.normal),
               todayTextStyle: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 17,
                   fontWeight: FontWeight.normal),
               todayDecoration: BoxDecoration(
+                color: Colors.white,
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(5.0),
+                borderRadius: BorderRadius.circular(30.0),
               ),
               defaultDecoration: BoxDecoration(
                 shape: BoxShape.rectangle,
@@ -228,15 +244,13 @@ class _CalendarState extends State<Calendar> {
             ),
             daysOfWeekHeight: 38,
           ),
-          /*
-          ..._getEventsfromDay(selectedDay).map(
-            (Event event) => ListTile(
-              title: Text(
-                event.title,
-              ),
-            ),
-          ),
-          */
+          // ..._getEventsfromDay(selectedDay).map(
+          //   (Event event) => ListTile(
+          //     title: Text(
+          //       event.emotionType,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

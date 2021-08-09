@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:connectee/widget/write/search.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ class WriteDiary extends StatefulWidget {
 
 class _WriteDiaryState extends State<WriteDiary> {
   GlobalKey<FormBuilderState> fbkey = GlobalKey<FormBuilderState>();
+  String userId;
   String type = "diary"; //default
   Map<String, String> types = {
     "diary": "일기",
@@ -51,6 +53,12 @@ class _WriteDiaryState extends State<WriteDiary> {
   String imgLink = '';
   double rating = 0;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getId();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     String group = widget.groupName;
@@ -1088,6 +1096,12 @@ class _WriteDiaryState extends State<WriteDiary> {
           )),
     );
   }
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
 
   post(group) async {
     final inputValues = fbkey.currentState.value;
@@ -1098,12 +1112,6 @@ class _WriteDiaryState extends State<WriteDiary> {
       Uri.parse('http://52.79.146.213:5000/diaries/create'),
     );
 
-    // // 테스트 url
-    // var request = new http.MultipartRequest(
-    //   "POST",
-    //   Uri.parse('https://webhook.site/6e787a02-db05-4a97-9869-129531f999d3'),
-    // );
-
     //기본 필드값
     request.fields['title'] = inputValues['title'];
     request.fields['content'] = inputValues['content'];
@@ -1112,7 +1120,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     request.fields['category'] = type;
     request.fields['emotionType'] = engEmotionList[finalEmotion - 1];
     request.fields['emotionLevel'] = emotionValue.toString();
-    request.fields['userId'] = "2";
+    request.fields['userId'] = userId;
     // 일기,여행-> 이미지 선택
     if (_image != null) {
       for (var i = 0; i < _image.length; i++) {
@@ -1142,7 +1150,8 @@ class _WriteDiaryState extends State<WriteDiary> {
     if (resJson["result"] == true) {
       _toast('오늘의 일기가 기록되었습니다.');
       Navigator.of(context).pop();
-    } else {
+    }
+    else if (resJson["success"] == false){
       _toast('다시 시도해 주세요');
       print(resJson);
     }
@@ -1520,7 +1529,10 @@ class _WriteDiaryState extends State<WriteDiary> {
           ));
     });
   }
+
 }
+
+
 
 List emotionColorList = [
   Color(0xffFF9082),
@@ -1590,7 +1602,7 @@ List engEmotionList = [
   "surprised",
   "happy",
   "sad",
-  "disgusting",
-  "fear",
-  "none"
+  "disgusted",
+  "terrified",
+  "neutral"
 ];

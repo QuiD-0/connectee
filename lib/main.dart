@@ -26,32 +26,41 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-    _getId();
+    _getId().then((res){
+      _tokenCheck();
+    });
     super.initState();
   }
-
   _getId() async {
-    //토큰 리프레시확인하기
     final prefs = await SharedPreferences.getInstance();
-    dynamic token =
-    await AccessTokenStore.instance.fromStore();
-    User user = await UserApi.instance.me();
-    var data = {
-      "password": token.accessToken.toString(),
-      "username": user.id.toString(),
-    };
-    var res = await http.post(
-        Uri.parse(
-            "http://52.79.146.213:5000/users/login"),
-        body: data);
-    var result = json.decode(res.body);
-    if (result["success"]==true){
-        prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
-      setState(() {
-        userId = prefs.getString('userId');
-      });
-    }
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
 
+  _tokenCheck() async {
+    //토큰 리프레시확인하기
+    if (userId!=null){
+      final prefs = await SharedPreferences.getInstance();
+      dynamic token =
+      await AccessTokenStore.instance.fromStore();
+      User user = await UserApi.instance.me();
+      var data = {
+        "password": token.accessToken.toString(),
+        "username": user.id.toString(),
+      };
+      var res = await http.post(
+          Uri.parse(
+              "http://52.79.146.213:5000/users/login"),
+          body: data);
+      var result = json.decode(res.body);
+      if (result["success"]==true){
+        prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
+        setState(() {
+          userId = prefs.getString('userId');
+        });
+      }
+    }
   }
 
   @override
@@ -112,6 +121,7 @@ class _MyAppState extends State<MyApp> {
                                         "http://52.79.146.213:5000/users/login"),
                                     body: data);
                                 var result = json.decode(res.body);
+                                print(result);
                                 if (result["success"]==true){
                                   prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
                                   setState(() {

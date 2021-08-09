@@ -1,4 +1,5 @@
 import 'package:connectee/model/post.dart';
+import 'package:connectee/vars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,16 +17,17 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  var _globalkey = GlobalKey();
   List _data = [];
+  Map<int, List<dynamic>> myEmotion = {};
   int page = 1;
   ScrollController _Scroll = ScrollController();
   String userId;
 
   @override
   void initState() {
-    _getId().then((res){
+    _getId().then((res) {
       _fetchData();
+      _fetchMyEmotion();
       //내가 쓴 댓글 받아오기
     });
     _Scroll.addListener(() {
@@ -92,18 +94,43 @@ class _HomeContentState extends State<HomeContent> {
                             GestureDetector(
                               // 리액션 상태 변경
                               onTap: () async {
+                                var prevEmotion = myEmotion[post.diaryId];
                                 var res = await Navigator.push(
                                   context,
                                   CupertinoPageRoute(
                                     builder: (BuildContext context) =>
-                                        new DiaryDetail(post: post),
+                                        new DiaryDetail(
+                                            post: post,
+                                            myEmotion: myEmotion[post.diaryId]),
                                     fullscreenDialog: true,
                                   ),
                                 );
-                                print(res);
-                                // 상태 변경
-                                // 리액션 리스트에 추가
-                                // 감정 보내기 버튼에도 복붙하기
+                                if (res[0] != null) {
+                                  if (prevEmotion == null) {
+                                    setState(() {
+                                      _data[index].emotionCount += 1;
+                                      myEmotion[post.diaryId] = [
+                                        res[0],
+                                        res[1],
+                                        res[2],
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      myEmotion[post.diaryId] = [
+                                        res[0],
+                                        res[1],
+                                        res[2],
+                                      ];
+                                    });
+                                  }
+                                }
+                                if (prevEmotion != null && res[0] == null) {
+                                  setState(() {
+                                    myEmotion.remove(post.diaryId);
+                                    _data[index].emotionCount -= 1;
+                                  });
+                                }
                               },
                               child: Container(
                                 width: 331,
@@ -149,54 +176,118 @@ class _HomeContentState extends State<HomeContent> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   //내 리액션리스트에 있는지 확인후 출력
-                                  // Container(
-                                  //   // 내가 표현한 감정 표시
-                                  //   child: Row(
-                                  //     children: [
-                                  //       postCount == 0
-                                  //           ? Text(
-                                  //               '가장 먼저 감정을 보내보세요!',
-                                  //               style: TextStyle(
-                                  //                   color: Colors.white,
-                                  //                   fontSize: 12),
-                                  //             )
-                                  //       //if (postID in myemotionList)
-                                  //       // myEmotionList[postID]
-                                  //       // else post.emotionCount명
-                                  //           : selectedEmotion == null
-                                  //               ? Row(
-                                  //                   children: [
-                                  //                     Text(
-                                  //                       '$postCount명',
-                                  //                       style: TextStyle(
-                                  //                           color: Colors.white,
-                                  //                           fontSize: 12,
-                                  //                           fontWeight:
-                                  //                               FontWeight
-                                  //                                   .bold),
-                                  //                     ),
-                                  //                     Text(
-                                  //                       '의 커넥티가 감정을 표현했어요!',
-                                  //                       style: TextStyle(
-                                  //                           color: Colors.white,
-                                  //                           fontSize: 12),
-                                  //                     ),
-                                  //                   ],
-                                  //                 )
-                                  //               : Container(
-                                  //                   child: Text(
-                                  //                     '${emotionList[selectedEmotion - 1]}의 감정을 보냈어요!',
-                                  //                     style: TextStyle(
-                                  //                         fontSize: 12,
-                                  //                         color: Colors.white),
-                                  //                   ),
-                                  //                 ),
-                                  //     ],
-                                  //   ),
-                                  // ),
+                                  Container(
+                                    // 내가 표현한 감정 표시
+                                    child: Row(
+                                      children: [
+                                        post.emotionCount == 0
+                                            ? Text(
+                                                '가장 먼저 감정을 보내보세요!',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10),
+                                              )
+                                            : myEmotion[post.diaryId] == null
+                                                ? Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10.0),
+                                                        child: Image.asset(
+                                                          'assets/emotions/${post.maxEmotion}.png',
+                                                          width: 25,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${post.emotionCount}명',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(
+                                                        '의 커넥티가 감정을 표현했어요!',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10.0),
+                                                        child: Image.asset(
+                                                          'assets/emotions/${myEmotion[post.diaryId][0]}.png',
+                                                          width: 25,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${engToKor[myEmotion[post.diaryId][0]]}',
+                                                        style: TextStyle(
+                                                            color: emotionColorList[engToInt[myEmotion[post.diaryId][0]]-1],
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(
+                                                        '의 감정을 보냈어요!',
+                                                        style: TextStyle(
+                                                            color: emotionColorList[engToInt[myEmotion[post.diaryId][0]]-1],
+                                                            fontSize: 10),
+                                                      ),
+                                                    ],
+                                                  )
+                                      ],
+                                    ),
+                                  ),
                                   GestureDetector(
-                                    onTap: () {
-                                      print('tap send btn ${post.diaryId}');
+                                    onTap: () async {
+                                      var prevEmotion = myEmotion[post.diaryId];
+                                      var res = await Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (BuildContext context) =>
+                                          new DiaryDetail(
+                                              post: post,
+                                              myEmotion: myEmotion[post.diaryId]),
+                                          fullscreenDialog: true,
+                                        ),
+                                      );
+                                      if (res[0] != null) {
+                                        if (prevEmotion == null) {
+                                          setState(() {
+                                            _data[index].emotionCount += 1;
+                                            myEmotion[post.diaryId] = [
+                                              res[0],
+                                              res[1],
+                                              res[2],
+                                            ];
+                                          });
+                                        } else {
+                                          setState(() {
+                                            myEmotion[post.diaryId] = [
+                                              res[0],
+                                              res[1],
+                                              res[2],
+                                            ];
+                                          });
+                                        }
+                                      }
+                                      if (prevEmotion != null && res[0] == null) {
+                                        setState(() {
+                                          myEmotion.remove(post.diaryId);
+                                          _data[index].emotionCount -= 1;
+                                        });
+                                      }
                                     },
                                     child: Container(
                                       width: 90,
@@ -236,7 +327,6 @@ class _HomeContentState extends State<HomeContent> {
     ));
   }
 
-
   _getId() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -251,7 +341,8 @@ class _HomeContentState extends State<HomeContent> {
 
   Future _fetchData() async {
     await http
-        .get(Uri.parse('http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
+        .get(Uri.parse(
+            'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;
@@ -270,7 +361,26 @@ class _HomeContentState extends State<HomeContent> {
         print('error');
       }
     });
-    print('done');
   }
 
+  void _fetchMyEmotion() async {
+    await http
+        .get(Uri.parse(
+            'http://52.79.146.213:5000/comments/getall?userId=$userId'))
+        .then((res) {
+      if (res.statusCode == 200) {
+        String jsonString = res.body;
+        var result = json.decode(jsonString);
+        for (var i = 0; i < result.length; i++) {
+          setState(() {
+            myEmotion[result[i]['diaryId']] = [
+              result[i]['emotionType'],
+              result[i]['emotionLevel'],
+              result[i]['id'],
+            ];
+          });
+        }
+      }
+    });
+  }
 }

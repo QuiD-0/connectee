@@ -1,11 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-
 class ImageSlider extends StatefulWidget {
   final List<String> images;
   final data;
-  const ImageSlider({Key key,this.data,this.images}) : super(key: key);
+
+  const ImageSlider({Key key, this.data, this.images}) : super(key: key);
 
   @override
   _ImageSliderState createState() => _ImageSliderState();
@@ -16,41 +16,50 @@ class _ImageSliderState extends State<ImageSlider> {
   List<Widget> imageWidget;
   int _currentPage = 0;
 
-
   @override
   void initState() {
     super.initState();
     movies = widget.images;
-    imageWidget = movies.map((m) => Image.network(m,fit: BoxFit.cover,height: 300,width: 300,)).toList();
+    imageWidget = movies
+        .map((m) => Image.network(
+              m,
+              fit: BoxFit.cover,
+              height: 300,
+              width: 300,
+            ))
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     // api 연결 후 이미지가 있을경우로 수정하기
-      return Container(
-        child: Column(
-          children: <Widget>[
-            CarouselSlider(
-              items: imageWidget,
-              options: CarouselOptions(onPageChanged: (index, reason) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },viewportFraction: 1.05,aspectRatio: 1,enlargeCenterPage: true),
+    return Container(
+      child: Column(
+        children: <Widget>[
+          CarouselSlider(
+            items: imageWidget,
+            options: CarouselOptions(
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                },
+                viewportFraction: 1.05,
+                aspectRatio: 1,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: false),
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: makeIndicator(imageWidget, _currentPage),
             ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: makeIndicator(imageWidget, _currentPage),
-              ),
-            )
-          ],
-        ),
-      );
-
+          )
+        ],
+      ),
+    );
   }
 }
-
 
 List<Widget> makeIndicator(List list, int _currentPage) {
   List<Widget> results = [];
