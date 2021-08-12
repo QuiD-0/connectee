@@ -11,6 +11,7 @@ class Diary {
   String nickname;
   String maxEmotion;
   int emotionCount;
+  String linkImg;
 
   Diary.fromMap(Map<String, dynamic> map)
       : diaryId = map['id'],
@@ -27,5 +28,18 @@ class Diary {
         Images = [
           for (var i = 0; i < map["Images"].length; i++)
             map["Images"][i]["location"]
-        ];
+        ],
+        linkImg = getImg(map);
+
+  static getImg(Map<String, dynamic> map) {
+    if (map['BookApi'] != null) {
+      return map['BookApi']["imgLink"];
+    }
+    else if (map['MovieApi'] != null) {
+      return map['MovieApi']["imgLink"];
+    }
+    else{
+      return "none";
+    }
+  }
 }
