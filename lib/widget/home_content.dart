@@ -142,18 +142,31 @@ class _HomeContentState extends State<HomeContent> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     //이미지가 있는경우
-                                    post.Images.isNotEmpty
-                                        ? Container(
-                                            padding: EdgeInsets.only(
-                                                top: 5, bottom: 10),
-                                            child: Image.network(
-                                              post.Images[0],
-                                              width: 300,
-                                              height: 300,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                        : Container(),
+                                    post.category == 'diary' ||
+                                            post.category == 'trip'
+                                        ? post.Images.isNotEmpty
+                                            ? Container(
+                                                padding: EdgeInsets.only(
+                                                    top: 5, bottom: 10),
+                                                child: Image.network(
+                                                  post.Images[0],
+                                                  width: 300,
+                                                  height: 300,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : Container()
+                                    //영화, 책 이미지 부분
+                                        : Container(
+                                      padding: EdgeInsets.only(
+                                          top: 5, bottom: 10),
+                                      child: Image.network(
+                                        post.linkImg,
+                                        width: 300,
+                                        height: 300,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                     Text(
                                       post.content,
                                       overflow: TextOverflow.ellipsis,
@@ -231,7 +244,11 @@ class _HomeContentState extends State<HomeContent> {
                                                       Text(
                                                         '${engToKor[myEmotion[post.diaryId][0]]}',
                                                         style: TextStyle(
-                                                            color: emotionColorList[engToInt[myEmotion[post.diaryId][0]]-1],
+                                                            color: emotionColorList[
+                                                                engToInt[myEmotion[
+                                                                            post.diaryId]
+                                                                        [0]] -
+                                                                    1],
                                                             fontSize: 10,
                                                             fontWeight:
                                                                 FontWeight
@@ -240,7 +257,11 @@ class _HomeContentState extends State<HomeContent> {
                                                       Text(
                                                         '의 감정을 보냈어요!',
                                                         style: TextStyle(
-                                                            color: emotionColorList[engToInt[myEmotion[post.diaryId][0]]-1],
+                                                            color: emotionColorList[
+                                                                engToInt[myEmotion[
+                                                                            post.diaryId]
+                                                                        [0]] -
+                                                                    1],
                                                             fontSize: 10),
                                                       ),
                                                     ],
@@ -255,9 +276,10 @@ class _HomeContentState extends State<HomeContent> {
                                         context,
                                         CupertinoPageRoute(
                                           builder: (BuildContext context) =>
-                                          new DiaryDetail(
-                                              post: post,
-                                              myEmotion: myEmotion[post.diaryId]),
+                                              new DiaryDetail(
+                                                  post: post,
+                                                  myEmotion:
+                                                      myEmotion[post.diaryId]),
                                           fullscreenDialog: true,
                                         ),
                                       );
@@ -281,7 +303,8 @@ class _HomeContentState extends State<HomeContent> {
                                           });
                                         }
                                       }
-                                      if (prevEmotion != null && res[0] == null) {
+                                      if (prevEmotion != null &&
+                                          res[0] == null) {
                                         setState(() {
                                           myEmotion.remove(post.diaryId);
                                           _data[index].emotionCount -= 1;
@@ -341,7 +364,7 @@ class _HomeContentState extends State<HomeContent> {
   Future _fetchData() async {
     await http
         .get(Uri.parse(
-            'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
+            'http://52.79.146.213:5000/diaries/fetch?userId=1&page=$page&limit=5'))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;
