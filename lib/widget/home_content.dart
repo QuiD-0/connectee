@@ -62,7 +62,6 @@ class _HomeContentState extends State<HomeContent> {
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Center(child: CircularProgressIndicator()),
-                  //로딩 아이콘 의뢰 ?? -> 시간 남으면.
                 );
               }
               Diary post = _data[index];

@@ -9,7 +9,7 @@ class PostDiary extends StatelessWidget {
       onTap: () {
         Navigator.of(context, rootNavigator: true).push(
           new CupertinoPageRoute(
-            builder: (BuildContext context) => new WriteDiary(groupName: '커넥티'),
+            builder: (BuildContext context) => new WriteDiary(),
             fullscreenDialog: true,
           ),
         );
@@ -27,10 +27,10 @@ class PostDiary extends StatelessWidget {
           children: [
             Image.asset(
               'assets/emoji.png',
-              width: 170,
+              width: 200,
               height: 100,
+              fit: BoxFit.cover,
             ),
-            SizedBox(width: 20,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,8 @@ class PostDiary extends StatelessWidget {
                   ],
                 ),
               ],
-            )
+            ),
+            SizedBox(width: 20,),
           ],
         ),
       ),

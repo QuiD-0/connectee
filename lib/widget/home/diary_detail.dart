@@ -89,7 +89,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                             Container(
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   //내 리액션리스트에 있는지 확인후 출력
                                   Container(
@@ -98,70 +98,74 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                       children: [
                                         post.emotionCount == 0
                                             ? Text(
-                                          '가장 먼저 감정을 보내보세요!',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        )
+                                                '가장 먼저 감정을 보내보세요!',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                              )
                                             : selectedEmotion == null
-                                            ? Row(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  right: 10.0),
-                                              child: Image.asset(
-                                                'assets/emotions/${post.maxEmotion}.png',
-                                                width: 25,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${post.emotionCount.toString()}명',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .bold),
-                                            ),
-                                            Text(
-                                              '의 커넥티가 감정을 표현했어요!',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12),
-                                            ),
-                                          ],
-                                        )
-                                            : Row(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  right: 10.0),
-                                              child: Image.asset(
-                                                'assets/emotions/${intToEng[selectedEmotion]}.png',
-                                                width: 25,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${emotionList[selectedEmotion-1]}',
-                                              style: TextStyle(
-                                                  color: emotionColorList[selectedEmotion-1],
-                                                  fontSize: 12,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .bold),
-                                            ),
-                                            Text(
-                                              '의 감정을 보냈어요!',
-                                              style: TextStyle(
-                                                  color: emotionColorList[selectedEmotion-1],
-                                                  fontSize: 12),
-                                            ),
-                                          ],
-                                        )
+                                                ? Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10.0),
+                                                        child: Image.asset(
+                                                          'assets/emotions/${post.maxEmotion}.png',
+                                                          width: 25,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${post.emotionCount.toString()}명',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(
+                                                        '의 커넥티가 감정을 표현했어요!',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10.0),
+                                                        child: Image.asset(
+                                                          'assets/emotions/${intToEng[selectedEmotion]}.png',
+                                                          width: 25,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${emotionList[selectedEmotion - 1]}',
+                                                        style: TextStyle(
+                                                            color: emotionColorList[
+                                                                selectedEmotion -
+                                                                    1],
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(
+                                                        '의 감정을 보냈어요!',
+                                                        style: TextStyle(
+                                                            color: emotionColorList[
+                                                                selectedEmotion -
+                                                                    1],
+                                                            fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  )
                                       ],
                                     ),
                                   ),
@@ -169,8 +173,9 @@ class _DiaryDetailState extends State<DiaryDetail> {
                               ),
                             ),
                             Container(
-                              height: 150,
+                              height: 170,
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     height: 20,
@@ -185,50 +190,61 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 1 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(1, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          1),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(1, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 1 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_1.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_1_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion == 1 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(1, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                      showModalBottomSheet(
+                                                          useRootNavigator:
+                                                              true,
+                                                          isDismissible: true,
+                                                          isScrollControlled:
+                                                              true,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          13.0)),
+                                                          backgroundColor:
+                                                              Color(0xff2d2d2d),
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              Container(
+                                                                child:
+                                                                    ValueSelector(
+                                                                        emotion:
+                                                                            1),
+                                                              ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(1, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 1 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_1.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_1_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                        'assets/emotions/1.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -236,58 +252,70 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '화남',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                            fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 2 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(2, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          2),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(2, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 2 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_2.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_2_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion == 2 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(2, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                  showModalBottomSheet(
+                                                      useRootNavigator:
+                                                      true,
+                                                      isDismissible: true,
+                                                      isScrollControlled:
+                                                      true,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              13.0)),
+                                                      backgroundColor:
+                                                      Color(0xff2d2d2d),
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          Container(
+                                                            child:
+                                                            ValueSelector(
+                                                                emotion:
+                                                                2),
+                                                          ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(2, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 2 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_2.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_2_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/emotions/2.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -295,58 +323,70 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '놀람',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 3 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(3, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          3),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(3, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 3 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_3.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_3_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion ==3 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(3, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                  showModalBottomSheet(
+                                                      useRootNavigator:
+                                                      true,
+                                                      isDismissible: true,
+                                                      isScrollControlled:
+                                                      true,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              13.0)),
+                                                      backgroundColor:
+                                                      Color(0xff2d2d2d),
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          Container(
+                                                            child:
+                                                            ValueSelector(
+                                                                emotion:
+                                                                3),
+                                                          ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(3, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 3 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_3.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_3_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/emotions/3.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -354,58 +394,70 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '기쁨',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 4 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(4, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          4),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(4, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 4 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_4.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_4_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion == 4 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(4, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                  showModalBottomSheet(
+                                                      useRootNavigator:
+                                                      true,
+                                                      isDismissible: true,
+                                                      isScrollControlled:
+                                                      true,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              13.0)),
+                                                      backgroundColor:
+                                                      Color(0xff2d2d2d),
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          Container(
+                                                            child:
+                                                            ValueSelector(
+                                                                emotion:
+                                                                4),
+                                                          ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(4, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 4 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_4.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_4_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/emotions/4.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -413,8 +465,9 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '슬픔',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
@@ -431,55 +484,66 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       SizedBox(
-                                        width: 20,
+                                        width: 40,
                                       ),
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 5 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(5, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          5),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(5, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 5 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_5.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_5_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion == 5 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(5, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                  showModalBottomSheet(
+                                                      useRootNavigator:
+                                                      true,
+                                                      isDismissible: true,
+                                                      isScrollControlled:
+                                                      true,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              13.0)),
+                                                      backgroundColor:
+                                                      Color(0xff2d2d2d),
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          Container(
+                                                            child:
+                                                            ValueSelector(
+                                                                emotion:
+                                                                5),
+                                                          ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(5, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 5 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_5.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_5_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/emotions/5.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -487,58 +551,70 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '역겨움',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 6 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(6, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          6),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(6, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 6 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_6.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_6_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion == 6 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(6, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                  showModalBottomSheet(
+                                                      useRootNavigator:
+                                                      true,
+                                                      isDismissible: true,
+                                                      isScrollControlled:
+                                                      true,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              13.0)),
+                                                      backgroundColor:
+                                                      Color(0xff2d2d2d),
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          Container(
+                                                            child:
+                                                            ValueSelector(
+                                                                emotion:
+                                                                6),
+                                                          ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(6, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 6 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_6.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_6_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/emotions/6.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -546,58 +622,70 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '공포',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                       Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () async {
-                                              if (selectedEmotion == 7 &&
-                                                  emotionValue != null) {
-                                                changeEmotion(7, null);
-                                              } else {
-                                                var bottomSheet =
-                                                    showModalBottomSheet(
-                                                        useRootNavigator: true,
-                                                        isDismissible: true,
-                                                        isScrollControlled:
-                                                            true,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        13.0)),
-                                                        backgroundColor:
-                                                            Color(0xff2d2d2d),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Container(
-                                                              child:
-                                                                  ValueSelector(
-                                                                      emotion:
-                                                                          7),
-                                                            ));
-                                                // Detect when it closes
-                                                await bottomSheet
-                                                    .then((onValue) {
-                                                  changeEmotion(7, onValue);
-                                                });
-                                              }
-                                            },
-                                            child: selectedEmotion != 7 ||
-                                                    emotionValue == null
-                                                ? Image.asset(
-                                                    'assets/emotions/emotion_7.png',
-                                                    width: 40,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/emotions/emotion_7_on.png',
-                                                    width: 40,
-                                                  ),
-                                          ),
+                                              onTap: () async {
+                                                if (selectedEmotion == 7 &&
+                                                    emotionValue != null) {
+                                                  changeEmotion(7, null);
+                                                } else {
+                                                  var bottomSheet =
+                                                  showModalBottomSheet(
+                                                      useRootNavigator:
+                                                      true,
+                                                      isDismissible: true,
+                                                      isScrollControlled:
+                                                      true,
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              13.0)),
+                                                      backgroundColor:
+                                                      Color(0xff2d2d2d),
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          Container(
+                                                            child:
+                                                            ValueSelector(
+                                                                emotion:
+                                                                7),
+                                                          ));
+                                                  // Detect when it closes
+                                                  await bottomSheet
+                                                      .then((onValue) {
+                                                    changeEmotion(7, onValue);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width: 45,
+                                                height: 45,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    selectedEmotion != 7 ||
+                                                        emotionValue == null
+                                                        ? Image.asset(
+                                                      'assets/emotions/emotion_7.png',
+                                                      width: 40,
+                                                    )
+                                                        : Image.asset(
+                                                      'assets/emotions/emotion_7_on.png',
+                                                      width: 45,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/emotions/7.png',width: 24,),
+                                                  ],
+                                                ),
+                                              )),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -605,13 +693,14 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             '중립',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 11,
-                                                height: 0.7),
+                                                fontSize: 10,
+                                                height: 0.7,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                       SizedBox(
-                                        width: 20,
+                                        width: 40,
                                       ),
                                     ],
                                   )
@@ -678,8 +767,11 @@ class _DiaryDetailState extends State<DiaryDetail> {
       "userId": int.parse(userId),
       "diaryId": widget.post.diaryId,
     };
-    await http.post(Uri.parse('http://52.79.146.213:5000/comments'),
-        headers: {'Content-Type': 'application/json'}, body: json.encode(body)).then((res){
+    await http
+        .post(Uri.parse('http://52.79.146.213:5000/comments'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode(body))
+        .then((res) {
       print(res.body);
     });
   }
@@ -773,14 +865,15 @@ class ValueSelector extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: emotionColorList[emotion - 1],
-              borderRadius: BorderRadius.circular(50),
-            ),
-          ),
+          // Container(
+          //   width: 100,
+          //   height: 100,
+          //   decoration: BoxDecoration(
+          //     color: emotionColorList[emotion - 1],
+          //     borderRadius: BorderRadius.circular(50),
+          //   ),
+          // ),
+          Image.asset('assets/emotions/${intToEng[emotion]}_big.png',),
           Container(
             margin: EdgeInsets.only(top: 35, bottom: 15),
             child: Text(
@@ -801,7 +894,7 @@ class ValueSelector extends StatelessWidget {
                     children: [
                       Container(
                         // 이모티콘 표정 적용
-                        // child: Image.asset('assets/emotions/emotion_2_on.png'),
+                        child: Image.asset('assets/emotions/$emotion.png'),
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
@@ -823,6 +916,7 @@ class ValueSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
+                        child: Image.asset('assets/emotions/$emotion.png'),
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
@@ -844,6 +938,7 @@ class ValueSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
+                        child: Image.asset('assets/emotions/$emotion.png'),
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
@@ -865,6 +960,7 @@ class ValueSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
+                        child: Image.asset('assets/emotions/$emotion.png'),
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
@@ -886,6 +982,7 @@ class ValueSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
+                        child: Image.asset('assets/emotions/$emotion.png'),
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
