@@ -61,7 +61,7 @@ class _HomeContentState extends State<HomeContent> {
               if (index == _data.length) {
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Center(child: CircularProgressIndicator(),),
                 );
               }
               Diary post = _data[index];
@@ -364,7 +364,7 @@ class _HomeContentState extends State<HomeContent> {
   Future _fetchData() async {
     await http
         .get(Uri.parse(
-            'http://52.79.146.213:5000/diaries/fetch?userId=1&page=$page&limit=5'))
+            'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;

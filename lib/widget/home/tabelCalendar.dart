@@ -8,6 +8,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'package:http/http.dart' as http;
 
+import 'CalDetail/cal_detail.dart';
+
 
 class Calendar extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   Map<DateTime, List<Event>> selectedEvents = {};
   CalendarFormat format = CalendarFormat.month;
-  DateTime selectedDay = DateTime.now();
+  DateTime selectedDay;
   DateTime focusedDay = DateTime.now();
   List<String> dowList = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
   TextEditingController _eventController = TextEditingController();
@@ -25,46 +27,15 @@ class _CalendarState extends State<Calendar> {
 
   @override
   void initState() {
+    if(DateTime.now().day==1){
+      selectedDay =DateTime.utc(DateTime.now().year,DateTime.now().month,DateTime.now().day+1);
+    }else{
+      selectedDay =DateTime.utc(DateTime.now().year,DateTime.now().month,DateTime.now().day-1);
+    }
     _getId().then((res){
       _fetchEvent();
     });
     super.initState();
-  }
-
-  _getId() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString('userId');
-    });
-  }
-
-  Future _fetchEvent() async {
-    //데이터 받아오기
-    await http
-        .get(Uri.parse("http://52.79.146.213:5000/diaries/getall?userId=$userId"))
-        .then((res) {
-      if (res.statusCode == 200) {
-        String jsonString = res.body;
-        List data = jsonDecode(jsonString);
-        for (var i = 0; i < data.length; i++) {
-          Event a = Event.formMap(data[i]["emotionType"]);
-          DateTime day = DateTime.parse(data[i]["createdAt"]);
-          setState(() {
-            selectedEvents[DateTime.utc(day.year, day.month, day.day)] = [a];
-          });
-        }
-      }
-    });
-  }
-
-  List<Event> _getEventsfromDay(DateTime date) {
-    return selectedEvents[date] ?? [];
-  }
-
-  @override
-  void dispose() {
-    _eventController.dispose();
-    super.dispose();
   }
 
   @override
@@ -91,15 +62,26 @@ class _CalendarState extends State<Calendar> {
             daysOfWeekVisible: true,
 
             //Day Changed
-            onDaySelected: (DateTime selectDay, DateTime focusDay) {
+            onDaySelected: (DateTime selectDay, DateTime focusDay) async{
               if (selectedEvents[selectDay]!=null){
-                Navigator.of(context, rootNavigator: true).push(
+                var res = await Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
                     builder: (BuildContext context) =>
-                    new Scaffold(appBar: AppBar(title: Text('추후 수정'),),),
+                    CalDetail(date:selectDay,emotion:selectedEvents[selectDay][0].emotionType),
                     fullscreenDialog: true,
                   ),
                 );
+                print(res);
+                if (selectedEvents[selectDay][0].emotionType!=res[1]){
+                  //db 업데이트
+
+                  //스테이트 변경
+                  setState(() {
+                    Event a = Event.formMap({"emotionType":"sad","isMain":true});
+                    selectedEvents[res[0]] = [a];
+                  });
+                }
+
               }
               DateTime day=DateTime.now();
               if(DateTime.utc(day.year, day.month, day.day)!=selectDay){
@@ -135,7 +117,7 @@ class _CalendarState extends State<Calendar> {
                   case "fear":
                     color = Color(0xffAE81A2);
                     break;
-                  case "none":
+                  case "neutral":
                     color = Color(0xffAAB2BD);
                     break;
                 }
@@ -255,4 +237,43 @@ class _CalendarState extends State<Calendar> {
       ),
     );
   }
+
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
+
+  Future _fetchEvent() async {
+    //데이터 받아오기
+    await http
+        .get(Uri.parse("http://52.79.146.213:5000/diaries/getall?userId=$userId"))
+        .then((res) {
+      if (res.statusCode == 200) {
+        String jsonString = res.body;
+        List data = jsonDecode(jsonString);
+        for (var i = 0; i < data.length; i++) {
+          Event a = Event.formMap(data[i]);
+          DateTime day = DateTime.parse(data[i]["createdAt"]);
+          if(a.isMain==true){
+            setState(() {
+              selectedEvents[DateTime.utc(day.year, day.month, day.day)] = [a];
+            });
+          }
+        }
+      }
+    });
+  }
+
+  List<Event> _getEventsfromDay(DateTime date) {
+    return selectedEvents[date] ?? [];
+  }
+
+  @override
+  void dispose() {
+    _eventController.dispose();
+    super.dispose();
+  }
+
 }
