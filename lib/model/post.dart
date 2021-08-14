@@ -12,6 +12,8 @@ class Diary {
   String maxEmotion;
   int emotionCount;
   String linkImg;
+  String group;
+  int private;
 
   Diary.fromMap(Map<String, dynamic> map)
       : diaryId = map['id'],
@@ -25,6 +27,8 @@ class Diary {
         maxEmotion = map['maxEmotion'],
         emotionLevel = map['emotionLevel'],
         emotionCount = map['Comments'].length,
+        group = map['group'],
+        private = map['private'],
         Images = [
           for (var i = 0; i < map["Images"].length; i++)
             map["Images"][i]["location"]

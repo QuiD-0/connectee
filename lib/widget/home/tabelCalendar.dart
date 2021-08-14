@@ -12,6 +12,7 @@ import 'CalDetail/cal_detail.dart';
 
 
 class Calendar extends StatefulWidget {
+  const Calendar({Key key}) : super(key: key);
   @override
   _CalendarState createState() => _CalendarState();
 }
@@ -67,7 +68,7 @@ class _CalendarState extends State<Calendar> {
                 var res = await Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
                     builder: (BuildContext context) =>
-                    CalDetail(date:selectDay,emotion:selectedEvents[selectDay][0].emotionType),
+                    CalDetail(date:selectDay,emotion:selectedEvents[selectDay][0].emotionType,),
                     fullscreenDialog: true,
                   ),
                 );
@@ -77,7 +78,7 @@ class _CalendarState extends State<Calendar> {
 
                   //스테이트 변경
                   setState(() {
-                    Event a = Event.formMap({"emotionType":"sad","isMain":true});
+                    Event a = Event.formMap({"emotionType":res[1],"isMain":true});
                     selectedEvents[res[0]] = [a];
                   });
                 }
@@ -114,7 +115,7 @@ class _CalendarState extends State<Calendar> {
                   case "disgusting":
                     color =Color(0xff79D3BA);
                     break;
-                  case "fear":
+                  case "terrified":
                     color = Color(0xffAE81A2);
                     break;
                   case "neutral":
