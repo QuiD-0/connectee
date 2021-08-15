@@ -15,6 +15,7 @@ class Calendar extends StatefulWidget {
   const Calendar({Key key}) : super(key: key);
   @override
   _CalendarState createState() => _CalendarState();
+
 }
 
 class _CalendarState extends State<Calendar> {
@@ -25,6 +26,7 @@ class _CalendarState extends State<Calendar> {
   List<String> dowList = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
   TextEditingController _eventController = TextEditingController();
   String userId;
+
 
   @override
   void initState() {
@@ -82,7 +84,6 @@ class _CalendarState extends State<Calendar> {
                     selectedEvents[res[0]] = [a];
                   });
                 }
-
               }
               DateTime day=DateTime.now();
               if(DateTime.utc(day.year, day.month, day.day)!=selectDay){

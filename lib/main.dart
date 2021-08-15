@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screen/group.dart';
@@ -8,6 +7,7 @@ import 'screen/write_diary.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
 
 void main() {
   runApp(MyApp());
@@ -26,11 +26,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-    _getId().then((res){
+    _getId().then((res) {
       _tokenCheck();
     });
     super.initState();
   }
+
   _getId() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -40,22 +41,20 @@ class _MyAppState extends State<MyApp> {
 
   _tokenCheck() async {
     //토큰 리프레시확인하기
-    if (userId!=null){
+    if (userId != null) {
       final prefs = await SharedPreferences.getInstance();
-      dynamic token =
-      await AccessTokenStore.instance.fromStore();
+      dynamic token = await AccessTokenStore.instance.fromStore();
       User user = await UserApi.instance.me();
       var data = {
         "password": token.accessToken.toString(),
         "username": user.id.toString(),
       };
-      var res = await http.post(
-          Uri.parse(
-              "http://52.79.146.213:5000/users/login"),
-          body: data);
+      var res = await http
+          .post(Uri.parse("http://52.79.146.213:5000/users/login"), body: data);
       var result = json.decode(res.body);
-      if (result["success"]==true){
-        prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
+      if (result["success"] == true) {
+        prefs.setString('userId',
+            res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
         setState(() {
           userId = prefs.getString('userId');
         });
@@ -85,7 +84,7 @@ class _MyAppState extends State<MyApp> {
           // 개발완료후 수정
           child: userId != null
               ? HomePage()
-          //Oauth page
+              //Oauth page
               : SafeArea(
                   child: Container(
                     color: Colors.white,
@@ -96,7 +95,7 @@ class _MyAppState extends State<MyApp> {
                         ),
                         FlatButton(
                           child: Text('kakao auth',
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 16,color: Colors.black)),
                           onPressed: () async {
                             try {
                               final installed = await isKakaoTalkInstalled();
@@ -122,8 +121,13 @@ class _MyAppState extends State<MyApp> {
                                     body: data);
                                 var result = json.decode(res.body);
                                 print(result);
-                                if (result["success"]==true){
-                                  prefs.setString('userId', res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
+                                if (result["success"] == true) {
+                                  prefs.setString(
+                                      'userId',
+                                      res.headers["set-cookie"]
+                                          .split(";")[0]
+                                          .split("=")[1]
+                                          .toString());
                                   setState(() {
                                     userId = prefs.getString('userId');
                                   });
@@ -146,11 +150,29 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        onTap: (index){
+          if (index==2){
+            Navigator.of(context, rootNavigator: true).push(
+              new CupertinoPageRoute(
+                builder: (BuildContext context) =>
+                new WriteDiary(groupName: null),
+                fullscreenDialog: true,
+              ),
+            );
+          }
+        },
         border: Border.all(width: 55),
         activeColor: Colors.white,
         backgroundColor: Colors.black,
@@ -183,29 +205,34 @@ class HomePage extends StatelessWidget {
                 Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
                     builder: (BuildContext context) =>
-                        new WriteDiary(groupName: null),
+                    new WriteDiary(groupName: null),
                     fullscreenDialog: true,
                   ),
                 );
               },
-              child: Image.asset(
-                'assets/icons/add.png',
-                width: 100,
-                height: 20,
-                fit: BoxFit.fitHeight,
+              child: Container(
+                color: Colors.black,
+                height: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Image.asset(
+                      'assets/icons/add.png',
+                      width: double.infinity,
+                      height: 20,
+                      fit: BoxFit.fitHeight,
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text('CONNECT',style: TextStyle(color: Colors.white60),),
+                  ],
+                ),
               ),
             ),
-            title: GestureDetector(
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    new CupertinoPageRoute(
-                      builder: (BuildContext context) =>
-                          new WriteDiary(groupName: null),
-                      fullscreenDialog: true,
-                    ),
-                  );
-                },
-                child: Text('CONNECT')),
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
@@ -245,8 +272,6 @@ class HomePage extends StatelessWidget {
                 child: GroupScreen(),
               );
             });
-          case 2:
-            return Container();
           case 3:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
@@ -270,6 +295,8 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+
 
 class NoGlowScrollBehavior extends ScrollBehavior {
   @override

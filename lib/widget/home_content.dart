@@ -20,6 +20,7 @@ class _HomeContentState extends State<HomeContent> {
   List _data = [];
   Map<int, List<dynamic>> myEmotion = {};
   int page = 1;
+  // ignore: non_constant_identifier_names
   ScrollController _Scroll = ScrollController();
   String userId;
 

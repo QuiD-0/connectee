@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:connectee/model/post.dart';
 import 'package:connectee/screen/write_diary.dart';
 import 'package:connectee/vars.dart';
+import 'package:connectee/widget/home/CalDetail/myDiaryHeader.dart';
+import 'package:connectee/widget/home/CalDetail/mydiaryDetail.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +62,7 @@ class _CalDetailState extends State<CalDetail> {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
+                //대표 감정
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -135,34 +138,157 @@ class _CalDetailState extends State<CalDetail> {
                     ),
                   ]),
                 ),
+                //디바이더
                 Container(
                   height: 1,
                   color: Color(0xff4D4D4D),
                 ),
+                Container(
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: Color(0xff2d2d2d),
+                  ),
+                ),
                 ListView.separated(
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: diarys.length + 1,
+                  itemCount: diarys.length,
                   itemBuilder: (BuildContext context, int index) {
-                    if (index == diarys.length) {
+                    var diary = diarys[index];
                       return Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: Color(0xff2d2d2d),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(13),
-                              bottomRight: Radius.circular(13)),
+                        color: Color(0xff3D3D3D),
+                        child: Column(
+                          children: [
+                            MyDiaryHeader(
+                              post: diary,
+                            ),
+                            GestureDetector(
+                              // 리액션 상태 변경
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (BuildContext context) =>
+                                    new MyDiaryDetail(post: diary),
+                                    fullscreenDialog: true,
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 331,
+                                padding: EdgeInsets.fromLTRB(20, 10, 20, 15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    //이미지가 있는경우
+                                    diary.category == 'diary' ||
+                                        diary.category == 'trip'
+                                        ? diary.Images.isNotEmpty
+                                        ? Container(
+                                      padding: EdgeInsets.only(
+                                          top: 5, bottom: 10),
+                                      child: Image.network(
+                                        diary.Images[0],
+                                        width: 300,
+                                        height: 300,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                        : Container()
+                                    //영화, 책 이미지 부분
+                                        : Container(
+                                      padding: EdgeInsets.only(
+                                          top: 5, bottom: 10),
+                                      child: Image.network(
+                                        diary.linkImg,
+                                        width: 300,
+                                        height: 300,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Text(
+                                      diary.content,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 5,
+                                      softWrap: false,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          height: 2,
+                                          fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(right: 10.0),
+                                            child: diary.emotionCount!=0?
+                                            Image.asset(
+                                              'assets/emotions/${diary.maxEmotion}.png',
+                                              width: 25,
+                                            ):
+                                            Container(),
+                                          ),
+                                          Text(
+                                            '${diary.emotionCount}명',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            '의 커넥티가 감정을 표현했어요!',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 10),
+                                          ),
+                                        ],
+                                      )),
+                                  GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (BuildContext context) =>
+                                          new MyDiaryDetail(post: diary),
+                                          fullscreenDialog: true,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 90,
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          border: Border.all(
+                                              color: Colors.white, width: 1.5)),
+                                      child: Center(
+                                        child: Text(
+                                          '자세히 보기 >',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       );
-                    } else {
-                      return Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Colors.white,
-                        child: Text('diaryId: ${diarys[index].diaryId}'),
-                      );
-                    }
                   },
                   separatorBuilder: (BuildContext context, int index) =>
                       Container(
@@ -170,6 +296,16 @@ class _CalDetailState extends State<CalDetail> {
                     color: Color(0xff2D2D2D),
                   ),
                 ),
+            Container(
+              margin: EdgeInsets.only(bottom: 10),
+              height: 25,
+              decoration: BoxDecoration(
+                color: Color(0xff2d2d2d),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(13),
+                    bottomRight: Radius.circular(13)),
+              ),
+            ),
               ],
             ),
           ),
@@ -177,6 +313,7 @@ class _CalDetailState extends State<CalDetail> {
   }
 
   void _fetchDiary() async {
+    // 링크 바꾸기
     await http
         .get(Uri.parse(
             'http://52.79.146.213:5000/diaries/fetch?userId=1&page=1&limit=5'))
@@ -197,6 +334,7 @@ class _CalDetailState extends State<CalDetail> {
   }
 
   void _getEmotions() {
+    //해당 날짜에 있는 감정들 저장
     for (var i = 0; i < diarys.length; i++) {
       if (!emotions.contains(diarys[i].emotionType)) {
         setState(() {
@@ -230,6 +368,7 @@ class _CalDetailState extends State<CalDetail> {
       });
     }
   }
+
 }
 
 class ValueSelector extends StatelessWidget {
@@ -274,14 +413,14 @@ class ValueSelector extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Container(
-              height: 230,
-              alignment: Alignment.topCenter,
+              height: 200,
+              alignment: Alignment.center,
               child: Wrap(
                 alignment: WrapAlignment.center,
                 children: [
                   for (var i in emotions)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 20, 10, 10),
+                      padding: const EdgeInsets.fromLTRB(10.0, 20, 10, 0),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop(i);
@@ -328,7 +467,7 @@ class ValueSelector extends StatelessWidget {
                             Text(
                               engToKor[i],
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
+                                  TextStyle(color: Colors.white, fontSize: 14),
                             )
                           ],
                         ),
@@ -338,6 +477,7 @@ class ValueSelector extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(height: 30,),
           Text(
             '대표 감정은 캘린더에 표시됩니다',
             style: TextStyle(color: Colors.white, fontSize: 9),
