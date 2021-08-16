@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/vars.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:connectee/widget/write/search.dart';
@@ -290,15 +291,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                                         borderRadius:
                                             BorderRadius.circular(50)),
                                   )
-                                : Container(
-                                    width: 90,
-                                    height: 90,
-                                    decoration: BoxDecoration(
-                                        color: detailColorList[finalEmotion - 1]
-                                            [emotionValue - 1],
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                  )),
+                                : Image.asset('assets/emotions/${intToEng[finalEmotion]}_big.png',width: 90,),),
                       ),
                       finalEmotion != null
                           ? Row(
@@ -1208,154 +1201,29 @@ class _WriteDiaryState extends State<WriteDiary> {
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
                       child: Container(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          children: [for (var i in [1,2,3,4,5,6,7]) Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
                               children: [
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 1;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_1.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '화남',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 2;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_2.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '놀람',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 3;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_3.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '기쁨',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 4;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_4.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '슬픔',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectEmotion = i;
+                                      });
+                                    },
+                                    child: Image.asset(
+                                        'assets/emotions/${intToEng[i]}_big.png',width:60)),
+                                SizedBox(height: 15),
+                                Text(
+                                  engToKor[intToEng[i]],
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                )
                               ],
                             ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 5;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_5.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '역겨움',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 6;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_6.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '공포',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectEmotion = 7;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                            'assets/emotions/emotion_7.png')),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      '중립',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            )
-                          ],
+                          ),],
                         ),
                       ),
                     )
@@ -1368,7 +1236,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                             });
                           },
                           child: Image.asset(
-                            'assets/emotions/emotion_${selectEmotion}.png',
+                            'assets/emotions/${intToEng[selectEmotion]}_big.png',
                             width: 100,
                             fit: BoxFit.cover,
                           ),
@@ -1385,141 +1253,168 @@ class _WriteDiaryState extends State<WriteDiary> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              GestureDetector(
+                              for (var i in [1,2,3,4,5]) GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pop([selectEmotion, 1]);
+                                  Navigator.of(context).pop([selectEmotion, i]);
                                 },
                                 child: Column(
                                   children: [
                                     Container(
                                       // 이모티콘 표정 적용
-                                      // child: Image.asset('assets/emotions/emotion_2_on.png'),
+                                      child: Image.asset('assets/emotions/${selectEmotion}.png'),
                                       width: 50,
                                       height: 50,
                                       decoration: BoxDecoration(
                                           color:
-                                              detailColorList[selectEmotion - 1]
-                                                  [0],
+                                          detailColorList[selectEmotion - 1]
+                                          [i-1],
                                           borderRadius:
-                                              BorderRadius.circular(50)),
+                                          BorderRadius.circular(50)),
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      '1',
+                                      i.toString(),
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 12),
                                     )
                                   ],
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop([selectEmotion, 2]);
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // 이모티콘 표정 적용
-                                      // child: Image.asset('assets/emotions/emotion_2_on.png'),
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color:
-                                              detailColorList[selectEmotion - 1]
-                                                  [1],
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      '2',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop([selectEmotion, 3]);
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // 이모티콘 표정 적용
-                                      // child: Image.asset('assets/emotions/emotion_2_on.png'),
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color:
-                                              detailColorList[selectEmotion - 1]
-                                                  [2],
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      '3',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop([selectEmotion, 4]);
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // 이모티콘 표정 적용
-                                      // child: Image.asset('assets/emotions/emotion_2_on.png'),
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color:
-                                              detailColorList[selectEmotion - 1]
-                                                  [3],
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      '4',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop([selectEmotion, 5]);
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // 이모티콘 표정 적용
-                                      // child: Image.asset('assets/emotions/emotion_2_on.png'),
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color:
-                                              detailColorList[selectEmotion - 1]
-                                                  [4],
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      '5',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    )
-                                  ],
-                                ),
-                              ),
+                              )
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.of(context).pop([selectEmotion, 1]);
+                              //   },
+                              //   child: Column(
+                              //     children: [
+                              //       Container(
+                              //         // 이모티콘 표정 적용
+                              //         child: Image.asset('assets/emotions/${selectEmotion}.png'),
+                              //         width: 50,
+                              //         height: 50,
+                              //         decoration: BoxDecoration(
+                              //             color:
+                              //                 detailColorList[selectEmotion - 1]
+                              //                     [0],
+                              //             borderRadius:
+                              //                 BorderRadius.circular(50)),
+                              //       ),
+                              //       SizedBox(height: 5),
+                              //       Text(
+                              //         '1',
+                              //         style: TextStyle(
+                              //             color: Colors.white, fontSize: 12),
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.of(context).pop([selectEmotion, 2]);
+                              //   },
+                              //   child: Column(
+                              //     children: [
+                              //       Container(
+                              //         // 이모티콘 표정 적용
+                              //         // child: Image.asset('assets/emotions/emotion_2_on.png'),
+                              //         width: 50,
+                              //         height: 50,
+                              //         decoration: BoxDecoration(
+                              //             color:
+                              //                 detailColorList[selectEmotion - 1]
+                              //                     [1],
+                              //             borderRadius:
+                              //                 BorderRadius.circular(50)),
+                              //       ),
+                              //       SizedBox(height: 5),
+                              //       Text(
+                              //         '2',
+                              //         style: TextStyle(
+                              //             color: Colors.white, fontSize: 12),
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.of(context).pop([selectEmotion, 3]);
+                              //   },
+                              //   child: Column(
+                              //     children: [
+                              //       Container(
+                              //         // 이모티콘 표정 적용
+                              //         // child: Image.asset('assets/emotions/emotion_2_on.png'),
+                              //         width: 50,
+                              //         height: 50,
+                              //         decoration: BoxDecoration(
+                              //             color:
+                              //                 detailColorList[selectEmotion - 1]
+                              //                     [2],
+                              //             borderRadius:
+                              //                 BorderRadius.circular(50)),
+                              //       ),
+                              //       SizedBox(height: 5),
+                              //       Text(
+                              //         '3',
+                              //         style: TextStyle(
+                              //             color: Colors.white, fontSize: 12),
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.of(context).pop([selectEmotion, 4]);
+                              //   },
+                              //   child: Column(
+                              //     children: [
+                              //       Container(
+                              //         // 이모티콘 표정 적용
+                              //         // child: Image.asset('assets/emotions/emotion_2_on.png'),
+                              //         width: 50,
+                              //         height: 50,
+                              //         decoration: BoxDecoration(
+                              //             color:
+                              //                 detailColorList[selectEmotion - 1]
+                              //                     [3],
+                              //             borderRadius:
+                              //                 BorderRadius.circular(50)),
+                              //       ),
+                              //       SizedBox(height: 5),
+                              //       Text(
+                              //         '4',
+                              //         style: TextStyle(
+                              //             color: Colors.white, fontSize: 12),
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.of(context).pop([selectEmotion, 5]);
+                              //   },
+                              //   child: Column(
+                              //     children: [
+                              //       Container(
+                              //         // 이모티콘 표정 적용
+                              //         // child: Image.asset('assets/emotions/emotion_2_on.png'),
+                              //         width: 50,
+                              //         height: 50,
+                              //         decoration: BoxDecoration(
+                              //             color:
+                              //                 detailColorList[selectEmotion - 1]
+                              //                     [4],
+                              //             borderRadius:
+                              //                 BorderRadius.circular(50)),
+                              //       ),
+                              //       SizedBox(height: 5),
+                              //       Text(
+                              //         '5',
+                              //         style: TextStyle(
+                              //             color: Colors.white, fontSize: 12),
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
                             ],
                           ),
                         )
