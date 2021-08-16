@@ -235,7 +235,7 @@ class _CalDetailState extends State<CalDetail> {
                                           Padding(
                                             padding:
                                             const EdgeInsets.only(right: 10.0),
-                                            child: diary.emotionCount!=0?
+                                            child: diary.maxEmotion!=null?
                                             Image.asset(
                                               'assets/emotions/${diary.maxEmotion}.png',
                                               width: 25,
@@ -313,10 +313,10 @@ class _CalDetailState extends State<CalDetail> {
   }
 
   void _fetchDiary() async {
-    // 링크 바꾸기
+    var date =widget.date.toString().split(' ')[0];
     await http
         .get(Uri.parse(
-            'http://52.79.146.213:5000/diaries/fetch?userId=1&page=1&limit=5'))
+            'http://52.79.146.213:5000/diaries/$userId/fetch/daily?date=$date'))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;

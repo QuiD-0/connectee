@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/screen/write_diary.dart';
 import 'package:http/http.dart' as http;
 import 'package:connectee/vars.dart';
 import 'package:connectee/widget/home/DetailCard/detail_contents.dart';
@@ -455,65 +456,3 @@ class ValueSelector extends StatelessWidget {
     );
   }
 }
-
-List emotionList = ["화남", "놀람", "기쁨", "슬픔", "역겨움", "공포", "중립"];
-List emotionColorList = [
-  Color(0xffFF9082),
-  Color(0xffFD7F8B),
-  Color(0xffFFD275),
-  Color(0xff7DDEF6),
-  Color(0xff79D3BA),
-  Color(0xffAE81A2),
-  Color(0xffAAB2BD),
-];
-List<List> detailColorList = [
-  [
-    Color(0xffFFE9E6),
-    Color(0xffFFE9E6),
-    Color(0xffFFBDB4),
-    Color(0xffFFA69B),
-    Color(0xffFF9082),
-  ],
-  [
-    Color(0xffFFE5E8),
-    Color(0xffFECCD1),
-    Color(0xffFEB2B9),
-    Color(0xffFD99A2),
-    Color(0xffFD7F8B),
-  ],
-  [
-    Color(0xffFFF6E3),
-    Color(0xffFFEDC8),
-    Color(0xffFFE4AC),
-    Color(0xffFFDB91),
-    Color(0xffFFD275),
-  ],
-  [
-    Color(0xffE5F8FD),
-    Color(0xffCBF2FB),
-    Color(0xffB1EBFA),
-    Color(0xff97E5F8),
-    Color(0xff97E5F8),
-  ],
-  [
-    Color(0xffE4F6F1),
-    Color(0xffC9EDE3),
-    Color(0xffAFE5D6),
-    Color(0xff94DCC8),
-    Color(0xff79D3BA),
-  ],
-  [
-    Color(0xffEFE6EC),
-    Color(0xffDFCDDA),
-    Color(0xffCEB3C7),
-    Color(0xffBE9AB5),
-    Color(0xffAE81A2),
-  ],
-  [
-    Color(0xffEEF0F2),
-    Color(0xffDDE0E5),
-    Color(0xffCCD1D7),
-    Color(0xffBBC1CA),
-    Color(0xffAAB2BD),
-  ],
-];
