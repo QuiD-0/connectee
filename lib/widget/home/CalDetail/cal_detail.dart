@@ -191,8 +191,10 @@ class _CalDetailState extends State<CalDetail> {
                                         ? Container(
                                       padding: EdgeInsets.only(
                                           top: 5, bottom: 10),
-                                      child: Image.network(
-                                        diary.Images[0],
+                                      child: FadeInImage.assetNetwork(
+                                        placeholder:
+                                        'assets/loading300.gif',
+                                        image: diary.Images[0],
                                         width: 300,
                                         height: 300,
                                         fit: BoxFit.cover,
@@ -203,8 +205,10 @@ class _CalDetailState extends State<CalDetail> {
                                         : Container(
                                       padding: EdgeInsets.only(
                                           top: 5, bottom: 10),
-                                      child: Image.network(
-                                        diary.linkImg,
+                                      child: FadeInImage.assetNetwork(
+                                        placeholder:
+                                        'assets/loading300.gif',
+                                        image: diary.imgLink,
                                         width: 300,
                                         height: 300,
                                         fit: BoxFit.cover,

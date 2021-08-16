@@ -21,12 +21,14 @@ class _ImageSliderState extends State<ImageSlider> {
     super.initState();
     movies = widget.images;
     imageWidget = movies
-        .map((m) => Image.network(
-              m,
-              fit: BoxFit.cover,
-              height: 300,
-              width: 300,
-            ))
+        .map((m) => FadeInImage.assetNetwork(
+      placeholder:
+      'assets/loading300.gif',
+      image: m,
+      width: 300,
+      height: 300,
+      fit: BoxFit.cover,
+    ))
         .toList();
   }
 

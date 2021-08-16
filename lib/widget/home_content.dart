@@ -41,375 +41,404 @@ class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      controller: _Scroll,
+        controller: _Scroll,
         child: Column(
-      children: [
-        SizedBox(
-          height: 15,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 14.0, bottom: 13),
-          child: Calendar(),
-        ),
-        GestureDetector(
-          onTap: () async{
-            var res = await Navigator.of(context, rootNavigator: true).push(
-              new CupertinoPageRoute(
-                builder: (BuildContext context) => new WriteDiary(),
-                fullscreenDialog: true,
-              ),
-            );
-            //스테이트 추가
-            print(res);
-          },
-          child: Container(
-            width: 360,
-            height: 150,
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(top: 3),
-            decoration: BoxDecoration(
-                color: Color(0xff2D2D2D), borderRadius: BorderRadius.circular(13)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/emoji.png',
-                  width: 200,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-                Column(
+          children: [
+            SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 14.0, bottom: 13),
+              child: Calendar(),
+            ),
+            GestureDetector(
+              onTap: () async {
+                var res = await Navigator.of(context, rootNavigator: true).push(
+                  new CupertinoPageRoute(
+                    builder: (BuildContext context) => new WriteDiary(),
+                    fullscreenDialog: true,
+                  ),
+                );
+                //스테이트 추가
+                print(res);
+              },
+              child: Container(
+                width: 360,
+                height: 150,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(top: 3),
+                decoration: BoxDecoration(
+                    color: Color(0xff2D2D2D),
+                    borderRadius: BorderRadius.circular(13)),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '오늘 다이어리 \n어떠세요?',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        height: 1.5,
-                      ),
+                    Image.asset(
+                      'assets/emoji.png',
+                      width: 200,
+                      height: 100,
+                      fit: BoxFit.cover,
                     ),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '오늘의 감정\n기록하러가기',
-                          style: TextStyle(color: Color(0xffababab), height: 1.5),
+                          '오늘 다이어리 \n어떠세요?',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            height: 1.5,
+                          ),
                         ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Color(0xffababab),
-                          size: 12,
+                        Row(
+                          children: [
+                            Text(
+                              '오늘의 감정\n기록하러가기',
+                              style: TextStyle(
+                                  color: Color(0xffababab), height: 1.5),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Color(0xffababab),
+                              size: 12,
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    SizedBox(
+                      width: 20,
+                    ),
                   ],
                 ),
-                SizedBox(width: 20,),
-              ],
+              ),
             ),
-          ),
-        ),
-        RecommendHeader(),
-        ListView.builder(
-            physics: ScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: _data.length + 1,
-            itemBuilder: (context, index) {
-              if (index == _data.length) {
-                return Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Center(child: CircularProgressIndicator(),),
-                );
-              }
-              Diary post = _data[index];
-              return Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xff3d3d3d),
+            RecommendHeader(),
+            ListView.builder(
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _data.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == _data.length) {
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                      child: Container(
-                        width: 360,
-                        decoration:
-                            BoxDecoration(color: Color(0xff3d3d3d), boxShadow: [
-                          BoxShadow(
-                            color: Color(0xd000000),
-                            spreadRadius: 0,
-                            blurRadius: 10,
-                            offset: Offset(0, 0),
-                          )
-                        ]),
-                        // 카드 제작
-                        child: Column(
-                          children: [
-                            RecCardHeader(
-                              data: post,
-                            ),
-                            GestureDetector(
-                              // 리액션 상태 변경
-                              onTap: () async {
-                                var prevEmotion = myEmotion[post.diaryId];
-                                var res = await Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (BuildContext context) =>
-                                        new DiaryDetail(
-                                            post: post,
-                                            myEmotion: myEmotion[post.diaryId]),
-                                    fullscreenDialog: true,
-                                  ),
-                                );
-                                if (res[0] != null) {
-                                  if (prevEmotion == null) {
-                                    setState(() {
-                                      _data[index].emotionCount += 1;
-                                      myEmotion[post.diaryId] = [
-                                        res[0],
-                                        res[1],
-                                        res[2],
-                                      ];
-                                    });
-                                  } else {
-                                    setState(() {
-                                      myEmotion[post.diaryId] = [
-                                        res[0],
-                                        res[1],
-                                        res[2],
-                                      ];
-                                    });
-                                  }
-                                }
-                                if (prevEmotion != null && res[0] == null) {
-                                  setState(() {
-                                    myEmotion.remove(post.diaryId);
-                                    _data[index].emotionCount -= 1;
-                                  });
-                                }
-                              },
-                              child: Container(
-                                width: 331,
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
+                    );
+                  }
+                  Diary post = _data[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xff3d3d3d),
+                          ),
+                          child: Container(
+                            width: 360,
+                            decoration: BoxDecoration(
+                                color: Color(0xff3d3d3d),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xd000000),
+                                    spreadRadius: 0,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 0),
+                                  )
+                                ]),
+                            // 카드 제작
+                            child: Column(
+                              children: [
+                                RecCardHeader(
+                                  data: post,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //이미지가 있는경우
-                                    post.category == 'diary' ||
-                                            post.category == 'trip'
-                                        ? post.Images.isNotEmpty
-                                            ? Container(
+                                GestureDetector(
+                                  // 리액션 상태 변경
+                                  onTap: () async {
+                                    var prevEmotion = myEmotion[post.diaryId];
+                                    var res = await Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (BuildContext context) =>
+                                            new DiaryDetail(
+                                                post: post,
+                                                myEmotion:
+                                                    myEmotion[post.diaryId]),
+                                        fullscreenDialog: true,
+                                      ),
+                                    );
+                                    if (res[0] != null) {
+                                      if (prevEmotion == null) {
+                                        setState(() {
+                                          _data[index].emotionCount += 1;
+                                          myEmotion[post.diaryId] = [
+                                            res[0],
+                                            res[1],
+                                            res[2],
+                                          ];
+                                        });
+                                      } else {
+                                        setState(() {
+                                          myEmotion[post.diaryId] = [
+                                            res[0],
+                                            res[1],
+                                            res[2],
+                                          ];
+                                        });
+                                      }
+                                    }
+                                    if (prevEmotion != null && res[0] == null) {
+                                      setState(() {
+                                        myEmotion.remove(post.diaryId);
+                                        _data[index].emotionCount -= 1;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 331,
+                                    padding:
+                                        EdgeInsets.fromLTRB(20, 10, 20, 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        //이미지가 있는경우
+                                        post.category == 'diary' ||
+                                                post.category == 'trip'
+                                            ? post.Images.isNotEmpty
+                                                ? Container(
+                                                    padding: EdgeInsets.only(
+                                                        top: 5, bottom: 10),
+                                                    child: FadeInImage.assetNetwork(
+                                                      placeholder:
+                                                      'assets/loading300.gif',
+                                                      image: post.Images[0],
+                                                      width: 300,
+                                                      height: 300,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : Container()
+                                            //영화, 책 이미지 부분
+                                            : Container(
                                                 padding: EdgeInsets.only(
                                                     top: 5, bottom: 10),
-                                                child: Image.network(
-                                                  post.Images[0],
+                                                child:
+                                          //       Image.network(
+                                          //   post.linkImg,
+                                          //   width: 300,
+                                          //   height: 300,
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                                FadeInImage.assetNetwork(
+                                                  placeholder:
+                                                      'assets/loading.gif',
+                                                  image: post.linkImg,
                                                   width: 300,
                                                   height: 300,
                                                   fit: BoxFit.cover,
                                                 ),
-                                              )
-                                            : Container()
-                                    //영화, 책 이미지 부분
-                                        : Container(
-                                      padding: EdgeInsets.only(
-                                          top: 5, bottom: 10),
-                                      child: Image.network(
-                                        post.linkImg,
-                                        width: 300,
-                                        height: 300,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Text(
-                                      post.content,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 5,
-                                      softWrap: false,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          height: 2,
-                                          fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //내 리액션리스트에 있는지 확인후 출력
-                                  Container(
-                                    // 내가 표현한 감정 표시
-                                    child: Row(
-                                      children: [
-                                        post.emotionCount == 0
-                                            ? Text(
-                                                '가장 먼저 감정을 보내보세요!',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10),
-                                              )
-                                            : myEmotion[post.diaryId] == null
-                                                ? Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 10.0),
-                                                        child: Image.asset(
-                                                          'assets/emotions/${post.maxEmotion}.png',
-                                                          width: 25,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '${post.emotionCount}명',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text(
-                                                        '의 커넥티가 감정을 표현했어요!',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 10),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 10.0),
-                                                        child: Image.asset(
-                                                          'assets/emotions/${myEmotion[post.diaryId][0]}.png',
-                                                          width: 25,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '${engToKor[myEmotion[post.diaryId][0]]}',
-                                                        style: TextStyle(
-                                                            color: emotionColorList[
-                                                                engToInt[myEmotion[
-                                                                            post.diaryId]
-                                                                        [0]] -
-                                                                    1],
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text(
-                                                        '의 감정을 보냈어요!',
-                                                        style: TextStyle(
-                                                            color: emotionColorList[
-                                                                engToInt[myEmotion[
-                                                                            post.diaryId]
-                                                                        [0]] -
-                                                                    1],
-                                                            fontSize: 10),
-                                                      ),
-                                                    ],
-                                                  )
+
+                                              ),
+                                        Text(
+                                          post.content,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 5,
+                                          softWrap: false,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              height: 2,
+                                              fontSize: 13),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      var prevEmotion = myEmotion[post.diaryId];
-                                      var res = await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (BuildContext context) =>
-                                              new DiaryDetail(
-                                                  post: post,
-                                                  myEmotion:
-                                                      myEmotion[post.diaryId]),
-                                          fullscreenDialog: true,
-                                        ),
-                                      );
-                                      if (res[0] != null) {
-                                        if (prevEmotion == null) {
-                                          setState(() {
-                                            _data[index].emotionCount += 1;
-                                            myEmotion[post.diaryId] = [
-                                              res[0],
-                                              res[1],
-                                              res[2],
-                                            ];
-                                          });
-                                        } else {
-                                          setState(() {
-                                            myEmotion[post.diaryId] = [
-                                              res[0],
-                                              res[1],
-                                              res[2],
-                                            ];
-                                          });
-                                        }
-                                      }
-                                      if (prevEmotion != null &&
-                                          res[0] == null) {
-                                        setState(() {
-                                          myEmotion.remove(post.diaryId);
-                                          _data[index].emotionCount -= 1;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      width: 90,
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          border: Border.all(
-                                              color: Colors.white, width: 1.5)),
-                                      child: Center(
-                                        child: Text(
-                                          '감정 보내기 >',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      //내 리액션리스트에 있는지 확인후 출력
+                                      Container(
+                                        // 내가 표현한 감정 표시
+                                        child: Row(
+                                          children: [
+                                            post.emotionCount == 0
+                                                ? Text(
+                                                    '가장 먼저 감정을 보내보세요!',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10),
+                                                  )
+                                                : myEmotion[post.diaryId] ==
+                                                        null
+                                                    ? Row(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right:
+                                                                        10.0),
+                                                            child: Image.asset(
+                                                              'assets/emotions/${post.maxEmotion}.png',
+                                                              width: 25,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '${post.emotionCount}명',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            '의 커넥티가 감정을 표현했어요!',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 10),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : Row(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right:
+                                                                        10.0),
+                                                            child: Image.asset(
+                                                              'assets/emotions/${myEmotion[post.diaryId][0]}.png',
+                                                              width: 25,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '${engToKor[myEmotion[post.diaryId][0]]}',
+                                                            style: TextStyle(
+                                                                color: emotionColorList[
+                                                                    engToInt[myEmotion[post.diaryId]
+                                                                            [
+                                                                            0]] -
+                                                                        1],
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            '의 감정을 보냈어요!',
+                                                            style: TextStyle(
+                                                                color: emotionColorList[
+                                                                    engToInt[myEmotion[post.diaryId]
+                                                                            [
+                                                                            0]] -
+                                                                        1],
+                                                                fontSize: 10),
+                                                          ),
+                                                        ],
+                                                      )
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                                      GestureDetector(
+                                        onTap: () async {
+                                          var prevEmotion =
+                                              myEmotion[post.diaryId];
+                                          var res = await Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  new DiaryDetail(
+                                                      post: post,
+                                                      myEmotion: myEmotion[
+                                                          post.diaryId]),
+                                              fullscreenDialog: true,
+                                            ),
+                                          );
+                                          if (res[0] != null) {
+                                            if (prevEmotion == null) {
+                                              setState(() {
+                                                _data[index].emotionCount += 1;
+                                                myEmotion[post.diaryId] = [
+                                                  res[0],
+                                                  res[1],
+                                                  res[2],
+                                                ];
+                                              });
+                                            } else {
+                                              setState(() {
+                                                myEmotion[post.diaryId] = [
+                                                  res[0],
+                                                  res[1],
+                                                  res[2],
+                                                ];
+                                              });
+                                            }
+                                          }
+                                          if (prevEmotion != null &&
+                                              res[0] == null) {
+                                            setState(() {
+                                              myEmotion.remove(post.diaryId);
+                                              _data[index].emotionCount -= 1;
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          width: 90,
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 1.5)),
+                                          child: Center(
+                                            child: Text(
+                                              '감정 보내기 >',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        Container(
+                          height: 15,
+                          width: 360,
+                          decoration: BoxDecoration(color: Color(0xff2d2d2d)),
+                        )
+                      ],
                     ),
-                    Container(
-                      height: 15,
-                      width: 360,
-                      decoration: BoxDecoration(color: Color(0xff2d2d2d)),
-                    )
-                  ],
-                ),
-              );
-            })
-      ],
-    ));
+                  );
+                })
+          ],
+        ));
   }
 
   _getId() async {
