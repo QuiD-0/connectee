@@ -1128,7 +1128,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     request.fields['category'] = type;
     request.fields['emotionType'] = engEmotionList[finalEmotion - 1];
     request.fields['emotionLevel'] = emotionValue.toString();
-    request.fields['userId'] = 1.toString();
+    request.fields['userId'] = userId;
     // 일기,여행-> 이미지 선택
     if (_image != null) {
       for (var i = 0; i < _image.length; i++) {
