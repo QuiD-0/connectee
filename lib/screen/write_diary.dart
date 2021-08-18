@@ -60,6 +60,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     _getId();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     String group = widget.groupName;
@@ -83,19 +84,28 @@ class _WriteDiaryState extends State<WriteDiary> {
                     return WillPopScope(
                       onWillPop: () async => false,
                       child: AlertDialog(
-                        titlePadding: EdgeInsets.fromLTRB(20,40,20,10),
+                        titlePadding: EdgeInsets.fromLTRB(20, 40, 20, 10),
                         elevation: 0,
                         backgroundColor: Color(0xff3D3D3D),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         title: Text(
-                          '작성을 종료하시겟습니까?',textAlign: TextAlign.center,
+                          '작성을 종료하시겟습니까?',
+                          textAlign: TextAlign.center,
                         ),
-                        titleTextStyle: TextStyle(fontSize: 18, color: Colors.white,fontFamily: 'GmarketSans',fontWeight: FontWeight.bold),
+                        titleTextStyle: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontFamily: 'GmarketSans',
+                            fontWeight: FontWeight.bold),
                         content: Text(
-                          '작성중인 일기는\n저장되지 않습니다',textAlign: TextAlign.center,
+                          '작성중인 일기는\n저장되지 않습니다',
+                          textAlign: TextAlign.center,
                         ),
-                        contentTextStyle: TextStyle(fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans'),
+                        contentTextStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontFamily: 'GmarketSans'),
                         actions: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -104,13 +114,17 @@ class _WriteDiaryState extends State<WriteDiary> {
                                 onPressed: () => Navigator.pop(context),
                                 child: Text('취소',
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans')),
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontFamily: 'GmarketSans')),
                               ),
                               FlatButton(
                                 onPressed: () => Navigator.pop(context, 'back'),
                                 child: Text('확인',
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.white,fontFamily: 'GmarketSans')),
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontFamily: 'GmarketSans')),
                               ),
                             ],
                           ),
@@ -146,16 +160,15 @@ class _WriteDiaryState extends State<WriteDiary> {
                     _toast('감정을 선택해 주세요');
                   }
                 },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width:80,
-                    height: 40,
-                    child: Text(
-                      '완료',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 80,
+                  height: 40,
+                  child: Text(
+                    '완료',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-
+                ),
               )
             ],
             centerTitle: true,
@@ -197,7 +210,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                     publisher = '';
                     publishDate = '';
                     imgLink = '';
-                    _image=null;
+                    _image = null;
                   });
                 },
                 color: Color(0xff2d2d2d),
@@ -251,46 +264,48 @@ class _WriteDiaryState extends State<WriteDiary> {
                       Padding(
                         padding: const EdgeInsets.only(top: 25, bottom: 20),
                         child: GestureDetector(
-                            onTap: () async {
-                              var bottomSheet = showModalBottomSheet(
-                                  useRootNavigator: true,
-                                  isDismissible: true,
-                                  isScrollControlled: true,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(13.0)),
-                                  backgroundColor: Color(0xff2d2d2d),
-                                  context: context,
-                                  builder: (context) => Container(
-                                        child: emotionSelector(),
-                                      ));
-                              // Detect when it closes
-                              await bottomSheet.then((onValue) {
-                                if (onValue == null) {
-                                  setState(() {
-                                    finalEmotion = null;
-                                    emotionValue = null;
-                                  });
-                                  print('cancel');
-                                } else {
-                                  setState(() {
-                                    finalEmotion = onValue[0];
-                                    emotionValue = onValue[1];
-                                  });
-                                }
-                                print("value: $onValue");
-                              });
-                            },
-                            child: finalEmotion == null
-                                ? Container(
-                                    width: 90,
-                                    height: 90,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff5d5d5d),
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                  )
-                                : Image.asset('assets/emotions/${intToEng[finalEmotion]}_big.png',width: 90,),),
+                          onTap: () async {
+                            var bottomSheet = showModalBottomSheet(
+                                useRootNavigator: true,
+                                isDismissible: true,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(13.0)),
+                                backgroundColor: Color(0xff2d2d2d),
+                                context: context,
+                                builder: (context) => Container(
+                                      child: emotionSelector(),
+                                    ));
+                            // Detect when it closes
+                            await bottomSheet.then((onValue) {
+                              if (onValue == null) {
+                                setState(() {
+                                  finalEmotion = null;
+                                  emotionValue = null;
+                                });
+                                print('cancel');
+                              } else {
+                                setState(() {
+                                  finalEmotion = onValue[0];
+                                  emotionValue = onValue[1];
+                                });
+                              }
+                              print("value: $onValue");
+                            });
+                          },
+                          child: finalEmotion == null
+                              ? Container(
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff5d5d5d),
+                                      borderRadius: BorderRadius.circular(50)),
+                                )
+                              : Image.asset(
+                                  'assets/emotions/${intToEng[finalEmotion]}_big.png',
+                                  width: 90,
+                                ),
+                        ),
                       ),
                       finalEmotion != null
                           ? Row(
@@ -1088,6 +1103,7 @@ class _WriteDiaryState extends State<WriteDiary> {
           )),
     );
   }
+
   _getId() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -1112,7 +1128,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     request.fields['category'] = type;
     request.fields['emotionType'] = engEmotionList[finalEmotion - 1];
     request.fields['emotionLevel'] = emotionValue.toString();
-    request.fields['userId'] = userId;
+    request.fields['userId'] = 1.toString();
     // 일기,여행-> 이미지 선택
     if (_image != null) {
       for (var i = 0; i < _image.length; i++) {
@@ -1141,9 +1157,9 @@ class _WriteDiaryState extends State<WriteDiary> {
     var resJson = json.decode(respStr.body);
     if (resJson["result"] == true) {
       _toast('오늘의 일기가 기록되었습니다.');
+      _postMainEmotion();
       Navigator.of(context).pop(request.fields);
-    }
-    else if (resJson["success"] == false){
+    } else if (resJson["success"] == false) {
       _toast('다시 시도해 주세요');
     }
   }
@@ -1156,6 +1172,21 @@ class _WriteDiaryState extends State<WriteDiary> {
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
     );
+  }
+
+  void _postMainEmotion() async {
+    String day = DateTime.now().year.toString() +
+        '-' +
+        DateTime.now().month.toString() +
+        '-' +
+        DateTime.now().day.toString();
+    var body = {
+      "date": day,
+      "mainEmotionType": selectEmotion,
+      "userId": userId
+    };
+    await http.post(Uri.parse('http://52.79.146.213:5000/daily-infos/create'),
+        body: json.encode(body));
   }
 
   Widget emotionSelector() {
@@ -1201,27 +1232,31 @@ class _WriteDiaryState extends State<WriteDiary> {
                       child: Container(
                         child: Wrap(
                           alignment: WrapAlignment.center,
-                          children: [for (var i in [1,2,3,4,5,6,7]) Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectEmotion = i;
-                                      });
-                                    },
-                                    child: Image.asset(
-                                        'assets/emotions/${intToEng[i]}_big.png',width:60)),
-                                SizedBox(height: 15),
-                                Text(
-                                  engToKor[intToEng[i]],
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                )
-                              ],
-                            ),
-                          ),],
+                          children: [
+                            for (var i in [1, 2, 3, 4, 5, 6, 7])
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectEmotion = i;
+                                          });
+                                        },
+                                        child: Image.asset(
+                                            'assets/emotions/${intToEng[i]}_big.png',
+                                            width: 60)),
+                                    SizedBox(height: 15),
+                                    Text(
+                                      engToKor[intToEng[i]],
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14),
+                                    )
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     )
@@ -1251,33 +1286,35 @@ class _WriteDiaryState extends State<WriteDiary> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              for (var i in [1,2,3,4,5]) GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop([selectEmotion, i]);
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      // 이모티콘 표정 적용
-                                      child: Image.asset('assets/emotions/${selectEmotion}.png'),
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color:
-                                          detailColorList[selectEmotion - 1]
-                                          [i-1],
-                                          borderRadius:
-                                          BorderRadius.circular(50)),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      i.toString(),
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    )
-                                  ],
-                                ),
-                              )
+                              for (var i in [1, 2, 3, 4, 5])
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .pop([selectEmotion, i]);
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        // 이모티콘 표정 적용
+                                        child: Image.asset(
+                                            'assets/emotions/${selectEmotion}.png'),
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: detailColorList[
+                                                selectEmotion - 1][i - 1],
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        i.toString(),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                      )
+                                    ],
+                                  ),
+                                )
                             ],
                           ),
                         )
@@ -1287,10 +1324,7 @@ class _WriteDiaryState extends State<WriteDiary> {
           ));
     });
   }
-
 }
-
-
 
 List emotionColorList = [
   Color(0xffFF9082),

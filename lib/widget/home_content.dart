@@ -11,6 +11,7 @@ import 'home/diary_detail.dart';
 import 'home/recommend_header.dart';
 import 'home/tabelCalendar.dart';
 
+
 class HomeContent extends StatefulWidget {
   @override
   _HomeContentState createState() => _HomeContentState();
@@ -59,8 +60,6 @@ class _HomeContentState extends State<HomeContent> {
                     fullscreenDialog: true,
                   ),
                 );
-                //스테이트 추가
-                print(res);
               },
               child: Container(
                 width: 360,
@@ -168,10 +167,10 @@ class _HomeContentState extends State<HomeContent> {
                                       context,
                                       CupertinoPageRoute(
                                         builder: (BuildContext context) =>
-                                            new DiaryDetail(
-                                                post: post,
-                                                myEmotion:
-                                                    myEmotion[post.diaryId]),
+                                        new DiaryDetail(
+                                            post: post,
+                                            myEmotion:
+                                            myEmotion[post.diaryId]),
                                         fullscreenDialog: true,
                                       ),
                                     );
@@ -205,53 +204,53 @@ class _HomeContentState extends State<HomeContent> {
                                   child: Container(
                                     width: 331,
                                     padding:
-                                        EdgeInsets.fromLTRB(20, 10, 20, 15),
+                                    EdgeInsets.fromLTRB(20, 10, 20, 15),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         //이미지가 있는경우
                                         post.category == 'diary' ||
-                                                post.category == 'trip'
+                                            post.category == 'trip'
                                             ? post.Images.isNotEmpty
-                                                ? Container(
-                                                    padding: EdgeInsets.only(
-                                                        top: 5, bottom: 10),
-                                                    child: FadeInImage.assetNetwork(
-                                                      placeholder:
-                                                      'assets/loading300.gif',
-                                                      image: post.Images[0],
-                                                      width: 300,
-                                                      height: 300,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : Container()
-                                            //영화, 책 이미지 부분
+                                            ? Container(
+                                          padding: EdgeInsets.only(
+                                              top: 5, bottom: 10),
+                                          child: FadeInImage.assetNetwork(
+                                            placeholder:
+                                            'assets/loading300.gif',
+                                            image: post.Images[0],
+                                            width: 300,
+                                            height: 300,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                            : Container()
+                                        //영화, 책 이미지 부분
                                             : Container(
-                                                padding: EdgeInsets.only(
-                                                    top: 5, bottom: 10),
-                                                child:
+                                          padding: EdgeInsets.only(
+                                              top: 5, bottom: 10),
+                                          child:
                                           //       Image.network(
                                           //   post.linkImg,
                                           //   width: 300,
                                           //   height: 300,
                                           //   fit: BoxFit.cover,
                                           // ),
-                                                FadeInImage.assetNetwork(
-                                                  placeholder:
-                                                      'assets/loading.gif',
-                                                  image: post.linkImg,
-                                                  width: 300,
-                                                  height: 300,
-                                                  fit: BoxFit.cover,
-                                                ),
+                                          FadeInImage.assetNetwork(
+                                            placeholder:
+                                            'assets/loading.gif',
+                                            image: post.linkImg,
+                                            width: 300,
+                                            height: 300,
+                                            fit: BoxFit.cover,
+                                          ),
 
-                                              ),
+                                        ),
                                         Text(
                                           post.content,
                                           overflow: TextOverflow.ellipsis,
@@ -270,7 +269,7 @@ class _HomeContentState extends State<HomeContent> {
                                   margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       //내 리액션리스트에 있는지 확인후 출력
                                       Container(
@@ -279,98 +278,98 @@ class _HomeContentState extends State<HomeContent> {
                                           children: [
                                             post.emotionCount == 0
                                                 ? Text(
-                                                    '가장 먼저 감정을 보내보세요!',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10),
-                                                  )
+                                              '가장 먼저 감정을 보내보세요!',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10),
+                                            )
                                                 : myEmotion[post.diaryId] ==
-                                                        null
-                                                    ? Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right:
-                                                                        10.0),
-                                                            child: Image.asset(
-                                                              'assets/emotions/${post.maxEmotion}.png',
-                                                              width: 25,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            '${post.emotionCount}명',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            '의 커넥티가 감정을 표현했어요!',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 10),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right:
-                                                                        10.0),
-                                                            child: Image.asset(
-                                                              'assets/emotions/${myEmotion[post.diaryId][0]}.png',
-                                                              width: 25,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            '${engToKor[myEmotion[post.diaryId][0]]}',
-                                                            style: TextStyle(
-                                                                color: emotionColorList[
-                                                                    engToInt[myEmotion[post.diaryId]
-                                                                            [
-                                                                            0]] -
-                                                                        1],
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            '의 감정을 보냈어요!',
-                                                            style: TextStyle(
-                                                                color: emotionColorList[
-                                                                    engToInt[myEmotion[post.diaryId]
-                                                                            [
-                                                                            0]] -
-                                                                        1],
-                                                                fontSize: 10),
-                                                          ),
-                                                        ],
-                                                      )
+                                                null
+                                                ? Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .only(
+                                                      right:
+                                                      10.0),
+                                                  child: Image.asset(
+                                                    'assets/emotions/${post.maxEmotion}.png',
+                                                    width: 25,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${post.emotionCount}명',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .white,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold),
+                                                ),
+                                                Text(
+                                                  '의 커넥티가 감정을 표현했어요!',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .white,
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            )
+                                                : Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .only(
+                                                      right:
+                                                      10.0),
+                                                  child: Image.asset(
+                                                    'assets/emotions/${myEmotion[post.diaryId][0]}.png',
+                                                    width: 25,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${engToKor[myEmotion[post.diaryId][0]]}',
+                                                  style: TextStyle(
+                                                      color: emotionColorList[
+                                                      engToInt[myEmotion[post.diaryId]
+                                                      [
+                                                      0]] -
+                                                          1],
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold),
+                                                ),
+                                                Text(
+                                                  '의 감정을 보냈어요!',
+                                                  style: TextStyle(
+                                                      color: emotionColorList[
+                                                      engToInt[myEmotion[post.diaryId]
+                                                      [
+                                                      0]] -
+                                                          1],
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            )
                                           ],
                                         ),
                                       ),
                                       GestureDetector(
                                         onTap: () async {
                                           var prevEmotion =
-                                              myEmotion[post.diaryId];
+                                          myEmotion[post.diaryId];
                                           var res = await Navigator.push(
                                             context,
                                             CupertinoPageRoute(
                                               builder: (BuildContext context) =>
-                                                  new DiaryDetail(
-                                                      post: post,
-                                                      myEmotion: myEmotion[
-                                                          post.diaryId]),
+                                              new DiaryDetail(
+                                                  post: post,
+                                                  myEmotion: myEmotion[
+                                                  post.diaryId]),
                                               fullscreenDialog: true,
                                             ),
                                           );
@@ -407,7 +406,7 @@ class _HomeContentState extends State<HomeContent> {
                                           height: 25,
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(30),
+                                              BorderRadius.circular(30),
                                               border: Border.all(
                                                   color: Colors.white,
                                                   width: 1.5)),

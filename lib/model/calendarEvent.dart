@@ -2,13 +2,11 @@ import 'package:flutter/foundation.dart';
 
 class Event {
   final String emotionType;
-  final bool isMain;
+  int id;
 
-  Event({@required this.emotionType, this.isMain});
+  Event({@required this.emotionType});
 
   Event.formMap(Map<String, dynamic> map)
-      : emotionType = map["emotionType"],
-  // DB에서 온 값으로 바꾸기
-        isMain = true;
-
+      : emotionType = map["mainEmotionType"],
+        id = map['id'];
 }

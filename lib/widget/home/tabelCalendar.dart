@@ -1,21 +1,18 @@
 import 'dart:convert';
-
 import 'package:connectee/model/calendarEvent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import 'package:http/http.dart' as http;
-
 import 'CalDetail/cal_detail.dart';
 
 
 class Calendar extends StatefulWidget {
   const Calendar({Key key}) : super(key: key);
+
   @override
   _CalendarState createState() => _CalendarState();
-
 }
 
 class _CalendarState extends State<Calendar> {
@@ -27,15 +24,16 @@ class _CalendarState extends State<Calendar> {
   TextEditingController _eventController = TextEditingController();
   String userId;
 
-
   @override
   void initState() {
-    if(DateTime.now().day==1){
-      selectedDay =DateTime.utc(DateTime.now().year,DateTime.now().month,DateTime.now().day+1);
-    }else{
-      selectedDay =DateTime.utc(DateTime.now().year,DateTime.now().month,DateTime.now().day-1);
+    if (DateTime.now().day == 1) {
+      selectedDay = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day + 1);
+    } else {
+      selectedDay = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day - 1);
     }
-    _getId().then((res){
+    _getId().then((res) {
       _fetchEvent();
     });
     super.initState();
@@ -65,28 +63,29 @@ class _CalendarState extends State<Calendar> {
             daysOfWeekVisible: true,
 
             //Day Changed
-            onDaySelected: (DateTime selectDay, DateTime focusDay) async{
-              if (selectedEvents[selectDay]!=null){
+            onDaySelected: (DateTime selectDay, DateTime focusDay) async {
+              if (selectedEvents[selectDay] != null) {
                 var res = await Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
-                    builder: (BuildContext context) =>
-                    CalDetail(date:selectDay,emotion:selectedEvents[selectDay][0].emotionType,),
+                    builder: (BuildContext context) => CalDetail(
+                        date: selectDay,
+                        emotion: selectedEvents[selectDay][0].emotionType,
+                        id: selectedEvents[selectDay][0].id),
                     fullscreenDialog: true,
                   ),
                 );
-                print(res);
-                if (selectedEvents[selectDay][0].emotionType!=res[1]){
-                  //db 업데이트
-
-                  //스테이트 변경
-                  setState(() {
-                    Event a = Event.formMap({"emotionType":res[1],"isMain":true});
-                    selectedEvents[res[0]] = [a];
-                  });
-                }
+                //db 업데이트
+                patchMainEmotion(res);
+                //스테이트 변경
+                setState(() {
+                  Event a =
+                      Event.formMap({"mainEmotionType": res[1], "id": res[2]});
+                  selectedEvents[DateTime.utc(
+                      res[0].year, res[0].month, res[0].day)] = [a];
+                });
               }
-              DateTime day=DateTime.now();
-              if(DateTime.utc(day.year, day.month, day.day)!=selectDay){
+              DateTime day = DateTime.now();
+              if (DateTime.utc(day.year, day.month, day.day) != selectDay) {
                 setState(() {
                   selectedDay = selectDay;
                   focusedDay = focusDay;
@@ -111,10 +110,10 @@ class _CalendarState extends State<Calendar> {
                     color = Color(0xffFD7F8B);
                     break;
                   case "sad":
-                    color =Color(0xff7DDEF6);
+                    color = Color(0xff7DDEF6);
                     break;
                   case "disgusting":
-                    color =Color(0xff79D3BA);
+                    color = Color(0xff79D3BA);
                     break;
                   case "terrified":
                     color = Color(0xffAE81A2);
@@ -250,19 +249,17 @@ class _CalendarState extends State<Calendar> {
   Future _fetchEvent() async {
     //데이터 받아오기
     await http
-        .get(Uri.parse("http://52.79.146.213:5000/diaries/getall?userId=$userId"))
+        .get(Uri.parse("http://52.79.146.213:5000/daily-infos/findAll/$userId"))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;
         List data = jsonDecode(jsonString);
         for (var i = 0; i < data.length; i++) {
           Event a = Event.formMap(data[i]);
-          DateTime day = DateTime.parse(data[i]["createdAt"]);
-          if(a.isMain==true){
-            setState(() {
-              selectedEvents[DateTime.utc(day.year, day.month, day.day)] = [a];
-            });
-          }
+          DateTime day = DateTime.parse(data[i]["date"]);
+          setState(() {
+            selectedEvents[DateTime.utc(day.year, day.month, day.day)] = [a];
+          });
         }
       }
     });
@@ -278,4 +275,16 @@ class _CalendarState extends State<Calendar> {
     super.dispose();
   }
 
+  void patchMainEmotion(res) async {
+    var body = {
+      "date": "${res[0].toString().split(' ')[0]}",
+      "mainEmotionType": "${res[1]}",
+      "userId": userId
+    };
+    await http
+        .patch(Uri.parse('http://52.79.146.213:5000/daily-infos/${res[2]}'),
+            body: body)
+        .then((res) {
+    });
+  }
 }

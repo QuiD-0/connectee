@@ -11,9 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CalDetail extends StatefulWidget {
   final date;
+  final id;
   final emotion;
 
-  const CalDetail({Key key, this.date, this.emotion}) : super(key: key);
+  const CalDetail({Key key, this.date, this.emotion,this.id}) : super(key: key);
 
   @override
   _CalDetailState createState() => _CalDetailState();
@@ -53,7 +54,7 @@ class _CalDetailState extends State<CalDetail> {
               size: 16,
             ),
             onPressed: () async {
-              Navigator.of(context).pop([widget.date, mainEmotion]);
+              Navigator.of(context).pop([widget.date, mainEmotion,widget.id]);
             },
           ),
         ),
@@ -87,7 +88,7 @@ class _CalDetailState extends State<CalDetail> {
                       ),
                     ),
                     Image.asset('assets/emotions/${mainEmotion}_big.png'),
-                    emotions.length != 1
+                    emotions.length > 1
                         ? GestureDetector(
                             onTap: () async {
                               var bottomSheet = showModalBottomSheet(
@@ -208,7 +209,7 @@ class _CalDetailState extends State<CalDetail> {
                                       child: FadeInImage.assetNetwork(
                                         placeholder:
                                         'assets/loading300.gif',
-                                        image: diary.imgLink,
+                                        image: diary.linkImg,
                                         width: 300,
                                         height: 300,
                                         fit: BoxFit.cover,
