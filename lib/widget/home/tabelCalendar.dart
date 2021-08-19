@@ -171,11 +171,11 @@ class _CalendarState extends State<Calendar> {
                   fontSize: 17,
                   fontWeight: FontWeight.normal),
               todayTextStyle: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.normal),
               todayDecoration: BoxDecoration(
-                color: Colors.white,
+                // color: Colors.white,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(30.0),
               ),

@@ -1181,12 +1181,12 @@ class _WriteDiaryState extends State<WriteDiary> {
         '-' +
         DateTime.now().day.toString();
     var body = {
-      "date": day,
-      "mainEmotionType": selectEmotion,
+      "date": "$day",
+      "mainEmotionType": "${engEmotionList[finalEmotion - 1]}",
       "userId": userId
     };
     await http.post(Uri.parse('http://52.79.146.213:5000/daily-infos/create'),
-        body: json.encode(body));
+        body: body);
   }
 
   Widget emotionSelector() {
