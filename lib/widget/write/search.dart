@@ -74,7 +74,7 @@ class _SearchState extends State<Search> {
                         width: 300,
                         child: TextField(
                           controller: txt,
-                          onSubmitted: (value){
+                          onSubmitted: (value) {
                             //검색어 저장
                             _saveList(txt.text);
                             //최근 검색어 끄기
@@ -122,194 +122,217 @@ class _SearchState extends State<Search> {
                 ),
               ),
               // 최근 검색어
-              visibleRecent
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
-                      child: Container(
-                        constraints: BoxConstraints(minHeight: 100),
-                        decoration: BoxDecoration(
-                          color: Color(0xff2d2d2d),
-                          borderRadius: BorderRadius.circular(13),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+              widget.type == 'movie'
+                  ? visibleRecent && movieRecent.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
+                          child: Container(
+                            constraints: BoxConstraints(minHeight: 100),
+                            decoration: BoxDecoration(
+                              color: Color(0xff2d2d2d),
+                              borderRadius: BorderRadius.circular(13),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '최근 검색어',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '최근 검색어',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(12, 5, 12, 5),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff4d4d4d),
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            _deleteAll();
+                                            _getList();
+                                          },
+                                          child: Text('전체삭제',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12)),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(12, 5, 12, 5),
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff4d4d4d),
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        _deleteAll();
-                                        _getList();
-                                      },
-                                      child: Text('전체삭제',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12)),
-                                    ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Wrap(
+                                    alignment: WrapAlignment.start,
+                                    children: movieRecent.reversed
+                                        .map((item) => GestureDetector(
+                                              onTap: () {
+                                                print(item);
+                                                txt.text = item;
+                                                txt
+                                                  ..selection = TextSelection
+                                                      .fromPosition(
+                                                    TextPosition(
+                                                        offset:
+                                                            txt.text.length),
+                                                  );
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.all(5),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    13, 5, 10, 5),
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff9D9D9D),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            13)),
+                                                child: Wrap(
+                                                  alignment:
+                                                      WrapAlignment.center,
+                                                  children: [
+                                                    Text(item),
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 3,
+                                                                top: 1),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            _delete(item);
+                                                          },
+                                                          child: Icon(
+                                                            Icons.clear_rounded,
+                                                            size: 14,
+                                                          ),
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                            ))
+                                        .toList()
+                                        .cast<Widget>(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container()
+                  : visibleRecent && bookRecent.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
+                          child: Container(
+                            constraints: BoxConstraints(minHeight: 100),
+                            decoration: BoxDecoration(
+                              color: Color(0xff2d2d2d),
+                              borderRadius: BorderRadius.circular(13),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '최근 검색어',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(12, 5, 12, 5),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff4d4d4d),
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            _deleteAll();
+                                            _getList();
+                                          },
+                                          child: Text('전체삭제',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12)),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Wrap(
+                                    alignment: WrapAlignment.start,
+                                    children: bookRecent.reversed
+                                        .map((item) => GestureDetector(
+                                              onTap: () {
+                                                print(item);
+                                                txt.text = item;
+                                                txt
+                                                  ..selection = TextSelection
+                                                      .fromPosition(
+                                                    TextPosition(
+                                                        offset:
+                                                            txt.text.length),
+                                                  );
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.all(5),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    13, 5, 10, 5),
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff9D9D9D),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            13)),
+                                                child: Wrap(
+                                                  alignment:
+                                                      WrapAlignment.center,
+                                                  children: [
+                                                    Text(item),
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 3,
+                                                                top: 1),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            _delete(item);
+                                                          },
+                                                          child: Icon(
+                                                            Icons.clear_rounded,
+                                                            size: 14,
+                                                          ),
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                            ))
+                                        .toList()
+                                        .cast<Widget>(),
                                   )
                                 ],
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              widget.type == "movie"
-                                  ? movieRecent.isNotEmpty
-                                      ? Wrap(
-                                          alignment: WrapAlignment.start,
-                                          children: movieRecent.reversed
-                                              .map((item) => GestureDetector(
-                                                    onTap: () {
-                                                      print(item);
-                                                      txt.text = item;
-                                                      txt
-                                                        ..selection =
-                                                            TextSelection
-                                                                .fromPosition(
-                                                          TextPosition(
-                                                              offset: txt
-                                                                  .text.length),
-                                                        );
-                                                    },
-                                                    child: Container(
-                                                      margin: EdgeInsets.all(5),
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              13, 5, 10, 5),
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xff9D9D9D),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      13)),
-                                                      child: Wrap(
-                                                        alignment: WrapAlignment
-                                                            .center,
-                                                        children: [
-                                                          Text(item),
-                                                          Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 3,
-                                                                      top: 1),
-                                                              child:
-                                                                  GestureDetector(
-                                                                onTap: () {
-                                                                  _delete(item);
-                                                                },
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .clear_rounded,
-                                                                  size: 14,
-                                                                ),
-                                                              ))
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ))
-                                              .toList()
-                                              .cast<Widget>(),
-                                        )
-                                      : Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Text('최근 검색어가 없습니다.',
-                                              style: TextStyle(
-                                                color: Color(0xffcdcdcd),
-                                              ),),
-                                        ),
-                                      )
-                                  : bookRecent.isNotEmpty
-                                      ? Wrap(
-                                          alignment: WrapAlignment.start,
-                                          children: bookRecent.reversed
-                                              .map((item) => GestureDetector(
-                                                    onTap: () {
-                                                      print(item);
-                                                      txt.text = item;
-                                                      txt
-                                                        ..selection =
-                                                            TextSelection
-                                                                .fromPosition(
-                                                          TextPosition(
-                                                              offset: txt
-                                                                  .text.length),
-                                                        );
-                                                    },
-                                                    child: Container(
-                                                      margin: EdgeInsets.all(5),
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              13, 5, 10, 5),
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xff9D9D9D),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      13)),
-                                                      child: Wrap(
-                                                        alignment: WrapAlignment
-                                                            .center,
-                                                        children: [
-                                                          Text(item),
-                                                          Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 3,
-                                                                      top: 1),
-                                                              child:
-                                                                  GestureDetector(
-                                                                onTap: () {
-                                                                  _delete(item);
-                                                                },
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .clear_rounded,
-                                                                  size: 14,
-                                                                ),
-                                                              ))
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ))
-                                              .toList()
-                                              .cast<Widget>(),
-                                        )
-                                      : Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text('최근 검색어가 없습니다.',
-                                    style: TextStyle(
-                                      color: Color(0xffcdcdcd),
-                                    ),),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                  : Container(),
+                        )
+                      : Container(),
               SizedBox(
                 height: 10,
               ),
@@ -451,8 +474,7 @@ class _SearchState extends State<Search> {
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12),
-                                                overflow:
-                                                TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                             SizedBox(
@@ -569,8 +591,7 @@ class _SearchState extends State<Search> {
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12),
-                                                overflow:
-                                                TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                             SizedBox(
@@ -651,12 +672,12 @@ class _SearchState extends State<Search> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (widget.type == "movie") {
       setState(() {
-        movieRecent=[];
+        movieRecent = [];
       });
       await prefs.setStringList("movieRecent", movieRecent);
     } else {
       setState(() {
-        bookRecent=[];
+        bookRecent = [];
       });
       await prefs.setStringList("bookRecent", bookRecent);
     }
