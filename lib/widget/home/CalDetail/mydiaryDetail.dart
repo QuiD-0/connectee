@@ -1,5 +1,6 @@
 import 'package:connectee/widget/home/CalDetail/myDiaryHeader.dart';
 import 'package:connectee/widget/home/DetailCard/detail_contents.dart';
+import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
 import 'package:flutter/material.dart';
 
 class MyDiaryDetail extends StatefulWidget {
@@ -47,8 +48,8 @@ class _MyDiaryDetailState extends State<MyDiaryDetail> {
                       borderRadius: BorderRadius.circular(13)),
                   child: Column(
                     children: [
-                      MyDiaryHeader(
-                        post: post,
+                      RecCardHeader(
+                        data: post,
                       ),
                       DetailContents(
                         data: post,

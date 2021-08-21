@@ -183,6 +183,7 @@ class _HomeContentState extends State<HomeContent> {
                                             res[1],
                                             res[2],
                                           ];
+                                          prevEmotion = myEmotion[post.diaryId];
                                         });
                                       } else {
                                         setState(() {
@@ -191,13 +192,19 @@ class _HomeContentState extends State<HomeContent> {
                                             res[1],
                                             res[2],
                                           ];
+                                          prevEmotion = myEmotion[post.diaryId];
                                         });
                                       }
+                                    }
+                                    if (prevEmotion==null && res[0]==null){
+                                      print('클릭 업데이트');//아무것도 안하고 나온경우
+                                      _clickTest(post.diaryId);
                                     }
                                     if (prevEmotion != null && res[0] == null) {
                                       setState(() {
                                         myEmotion.remove(post.diaryId);
                                         _data[index].emotionCount -= 1;
+                                        prevEmotion = null;
                                       });
                                     }
                                   },
@@ -494,6 +501,20 @@ class _HomeContentState extends State<HomeContent> {
           });
         }
       }
+    });
+  }
+
+  _clickTest(diaryId)async{
+    var body={
+      "accessType": "string",
+      "diaryId": diaryId,
+      "userId": int.parse(userId)
+    };
+    await http
+        .post(Uri.parse(
+        'http://52.79.146.213:5000/clicks/update'),body: json.encode(body))
+        .then((res) {
+      print(res.body);
     });
   }
 }

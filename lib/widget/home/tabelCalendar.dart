@@ -65,7 +65,7 @@ class _CalendarState extends State<Calendar> {
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) async {
               if (selectedEvents[selectDay] != null) {
-                var res = await Navigator.of(context, rootNavigator: true).push(
+                var res = await Navigator.of(context).push(
                   new CupertinoPageRoute(
                     builder: (BuildContext context) => CalDetail(
                         date: selectDay,

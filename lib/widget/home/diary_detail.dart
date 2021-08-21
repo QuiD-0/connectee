@@ -93,10 +93,11 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                 children: [
                                   //내 리액션리스트에 있는지 확인후 출력
                                   Container(
+                                    height: 30,
                                     // 내가 표현한 감정 표시
                                     child: Row(
                                       children: [
-                                        post.emotionCount == 0
+                                        post.emotionCount == 0 && selectedEmotion==null
                                             ? Text(
                                                 '가장 먼저 감정을 보내보세요!',
                                                 style: TextStyle(
@@ -111,10 +112,10 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                                             const EdgeInsets
                                                                     .only(
                                                                 right: 10.0),
-                                                        child: Image.asset(
+                                                        child: post.maxEmotion!=null?Image.asset(
                                                           'assets/emotions/${post.maxEmotion}.png',
                                                           width: 25,
-                                                        ),
+                                                        ):Container(),
                                                       ),
                                                       Text(
                                                         '${post.emotionCount.toString()}명',
@@ -318,11 +319,12 @@ class _DiaryDetailState extends State<DiaryDetail> {
             headers: {'Content-Type': 'application/json'},
             body: json.encode(body))
         .then((res) {
-      print(res.body);
+      //print(res.body);
     });
   }
 
   void update() async {
+    print('update');
     var body = {
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,
@@ -334,16 +336,15 @@ class _DiaryDetailState extends State<DiaryDetail> {
             headers: {'Content-Type': 'application/json'},
             body: json.encode(body))
         .then((res) {
-      print(res.body);
+     // print(res.body);
     });
   }
 
   void delete() async {
-    print('delete');
     await http
         .delete(Uri.parse('http://52.79.146.213:5000/comments/$myCommentId'))
         .then((res) {
-      print(res.body);
+      //print(res.body);
     });
   }
 
@@ -367,7 +368,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
           emotionValue = null;
         });
       } else {
-        print('cancel');
+        //print('cancel');
       }
     }
     //
