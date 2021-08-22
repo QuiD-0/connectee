@@ -237,6 +237,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                       Icons.add_box_outlined,
                                       color: Colors.white,
                                     ),
+                                    SizedBox(height: 5,),
                                     Text(
                                       '새로운 그룹 만들기',
                                       style: TextStyle(

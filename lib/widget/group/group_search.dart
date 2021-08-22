@@ -254,6 +254,7 @@ class _GroupSearchState extends State<GroupSearch> {
                         ),
                       );
                     } else {
+                      //검색결과 카드
                       return Text('test',style: TextStyle(color: Colors.white),);
                     }
                   })
