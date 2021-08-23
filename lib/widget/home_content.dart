@@ -170,7 +170,7 @@ class _HomeContentState extends State<HomeContent> {
                                         new DiaryDetail(
                                             post: post,
                                             myEmotion:
-                                            myEmotion[post.diaryId]),
+                                            myEmotion[post.diaryId],groupName: null,),
                                         fullscreenDialog: true,
                                       ),
                                     );

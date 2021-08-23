@@ -1,5 +1,6 @@
 import 'package:connectee/widget/group/group_detail.dart';
 import 'package:connectee/widget/group/group_search.dart';
+import 'package:connectee/widget/group/makeGroup.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -17,33 +18,33 @@ class _GroupScreenState extends State<GroupScreen> {
   String userId;
   List likedGroup = [1, 3];
   List myGroup = [
-    {
-      'title': '개발자를 위한 그룹',
-      'private': true,
-      'topic': ['주제1', '주제2'],
-      'img':
-          'https://images.unsplash.com/photo-1629521446236-fd258987fd24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80',
-      'NOP': 12,
-      'groupId': 1
-    },
-    {
-      'title': '같이 고민공유해요!',
-      'private': false,
-      'topic': ['topic', '주제주제'],
-      'img':
-          'https://images.unsplash.com/photo-1629504802112-cfc6f2da557e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2002&q=80',
-      'NOP': 100,
-      'groupId': 2
-    },
-    {
-      'title': '소마 그룹',
-      'private': true,
-      'topic': ['태그', '태그태그태그'],
-      'img':
-          'https://images.unsplash.com/photo-1629470044108-834e7a057e25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
-      'NOP': 1,
-      'groupId': 3
-    },
+    // {
+    //   'title': '개발자를 위한 그룹',
+    //   'private': true,
+    //   'topic': ['주제1', '주제2'],
+    //   'img':
+    //       'https://images.unsplash.com/photo-1629521446236-fd258987fd24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80',
+    //   'NOP': 12,
+    //   'groupId': 1
+    // },
+    // {
+    //   'title': '같이 고민공유해요!',
+    //   'private': false,
+    //   'topic': ['topic', '주제주제'],
+    //   'img':
+    //       'https://images.unsplash.com/photo-1629504802112-cfc6f2da557e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2002&q=80',
+    //   'NOP': 100,
+    //   'groupId': 2
+    // },
+    // {
+    //   'title': '소마 그룹',
+    //   'private': true,
+    //   'topic': ['태그', '태그태그태그'],
+    //   'img':
+    //       'https://images.unsplash.com/photo-1629470044108-834e7a057e25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+    //   'NOP': 1,
+    //   'groupId': 3
+    // },
   ];
 
   @override
@@ -100,11 +101,11 @@ class _GroupScreenState extends State<GroupScreen> {
                     Icons.add_box_outlined,
                     size: 22,
                   ),
-                  // 내 리액션 뒤로 넘기기
                   onPressed: () async {
-                    print("tabbed");
-                    //그룹 생성 후 사라짐
-                    //그룹 생성 버튼
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return MakeGroup();
+                    }));
                   },
                 )
               : null,
@@ -224,7 +225,10 @@ class _GroupScreenState extends State<GroupScreen> {
                             padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
                             child: GestureDetector(
                               onTap: () {
-                                print('그룹 만들기 버튼');
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return MakeGroup();
+                                }));
                               },
                               child: Container(
                                 alignment: Alignment.center,

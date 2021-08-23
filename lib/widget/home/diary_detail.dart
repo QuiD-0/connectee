@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DiaryDetail extends StatefulWidget {
   final post;
   final myEmotion;
-
-  const DiaryDetail({Key key, this.post, this.myEmotion}) : super(key: key);
+  final groupName;
+  const DiaryDetail({Key key, this.post, this.myEmotion,this.groupName}) : super(key: key);
 
   @override
   _DiaryDetailState createState() => _DiaryDetailState();
@@ -45,7 +45,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            '추천 다이어리',
+            widget.groupName??'추천 다이어리',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           centerTitle: true,
