@@ -46,32 +46,36 @@ class MyDiaryHeader extends StatelessWidget {
                     color: Colors.white,
                     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   ),
-                  Container(
-                      width: 110,
-                      child: Row(
-                        children: [
-                          Text(
-                            post.group == "null" ? '개인' : post.group,
-                            style: TextStyle(fontSize: 12, color: Colors.white),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          post.group == "null"
-                              ? Row(
-                                  children: [
-                                    Container(
-                                      width: 1,
-                                      height: 12,
-                                      color: Colors.white,
-                                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                    ),
-                                    Text(post.private == 1 ? '비공개' : '공개',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.white)),
-                                  ],
-                                )
-                              : Container(),
-                        ],
-                      )),
+                  Text(post.private == 1 ? '비공개' : '공개',
+                                          style: TextStyle(
+                                              fontSize: 12, color: Colors.white)),
+                  //그룹 정보 수정
+                  // Container(
+                  //     width: 110,
+                  //     child: Row(
+                  //       children: [
+                  //         Text(
+                  //           post.group == "null" ? '개인' : post.group,
+                  //           style: TextStyle(fontSize: 12, color: Colors.white),
+                  //           overflow: TextOverflow.ellipsis,
+                  //         ),
+                  //         post.group == "null"
+                  //             ? Row(
+                  //                 children: [
+                  //                   Container(
+                  //                     width: 1,
+                  //                     height: 12,
+                  //                     color: Colors.white,
+                  //                     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  //                   ),
+                  //                   Text(post.private == 1 ? '비공개' : '공개',
+                  //                       style: TextStyle(
+                  //                           fontSize: 12, color: Colors.white)),
+                  //                 ],
+                  //               )
+                  //             : Container(),
+                  //       ],
+                  //     )),
                 ],
               ),
             ],

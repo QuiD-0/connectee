@@ -1,8 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MakeGroup extends StatefulWidget {
   const MakeGroup({Key key}) : super(key: key);
@@ -12,7 +16,29 @@ class MakeGroup extends StatefulWidget {
 }
 
 class _MakeGroupState extends State<MakeGroup> {
+  List topics = ['취미', '여행', '공부', '운동', '맛집', '영화', '사랑', '책', '애완동물', '고민'];
   File _image;
+  String groupName;
+  String description;
+  int num;
+  List selectTopics = [];
+  List finalSelectTopics = [];
+  String private;  // open, close 
+  String userId;
+  TextEditingController name = TextEditingController();
+  TextEditingController desc = TextEditingController();
+  TextEditingController NOP = TextEditingController();
+  bool topicVisible = false;
+  bool privateVisible = false;
+  TextEditingController pass = TextEditingController();
+  TextEditingController check = TextEditingController();//패스워드 확인용
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getId();
+    NOP.text = "1";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +116,23 @@ class _MakeGroupState extends State<MakeGroup> {
             res == 'back' ? Navigator.of(context).pop() : null;
           },
         ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              print('make');
+              //밸리데이션 후 post
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: 80,
+              height: 40,
+              child: Text(
+                '완료',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          )
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -97,11 +140,14 @@ class _MakeGroupState extends State<MakeGroup> {
             padding: const EdgeInsets.all(10),
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(color: Color(0xff2D2D2D),borderRadius: BorderRadius.circular(13)),
+              decoration: BoxDecoration(
+                  color: Color(0xff2D2D2D),
+                  borderRadius: BorderRadius.circular(13)),
               child: Column(
                 children: [
+                  //그룹 대표 사진
                   Padding(
-                    padding: const EdgeInsets.only(top: 30,bottom: 20),
+                    padding: const EdgeInsets.only(top: 30, bottom: 20),
                     child: GestureDetector(
                         onTap: () async {
                           var status = Platform.isIOS
@@ -168,14 +214,523 @@ class _MakeGroupState extends State<MakeGroup> {
                                 ),
                         )),
                   ),
-                  Text('그룹 대표 사진 바꾸기',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
-                  SizedBox(height: 30,),
+                  Text(
+                    '그룹 대표 사진 바꾸기',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
                   //디바이더
-                  Container(height: 1,width: double.infinity,color: Color(0xff4D4D4D),),
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Color(0xff4D4D4D),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
                   //그룹 내용 세팅
-
+                  Container(
+                    child: Column(
+                      children: [
+                        //그룹명
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 35,
+                                child: Text(
+                                  '그룹명',
+                                  textAlign: TextAlign.start,
+                                  style: textStyle,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 35,
+                                    width: 250,
+                                    child: TextField(
+                                      controller: name,
+                                      maxLength: 12,
+                                      cursorColor: Colors.white,
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white),
+                                      decoration: InputDecoration(
+                                        counterText: '',
+                                        filled: true,
+                                        fillColor: Color(0xff565656),
+                                        hintText: '그룹명을 입력해주세요',
+                                        hintStyle: TextStyle(
+                                            fontSize: 13,
+                                            color: Color(0xffD0D0D0)),
+                                        contentPadding: const EdgeInsets.only(
+                                            left: 10.0, bottom: 13, top: 0),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(width: 0),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(width: 0),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: 10, left: 2),
+                                    child: Text(
+                                      '최대 12자까지 입력이 가능합니다',
+                                      style: descStyle,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        //그룹 설명
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 85,
+                                child: Text(
+                                  '그룹 설명',
+                                  textAlign: TextAlign.start,
+                                  style: textStyle,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 85,
+                                    width: 250,
+                                    child: TextField(
+                                      controller: desc,
+                                      maxLength: 54,
+                                      maxLines: 3,
+                                      cursorColor: Colors.white,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          height: 1.8),
+                                      decoration: InputDecoration(
+                                        counterText: '',
+                                        filled: true,
+                                        fillColor: Color(0xff565656),
+                                        hintText: '그룹에 대한 간단한 설명을 입력해주세요',
+                                        hintStyle: TextStyle(
+                                            fontSize: 13,
+                                            color: Color(0xffD0D0D0)),
+                                        contentPadding: const EdgeInsets.only(
+                                            left: 10.0, bottom: 15, top: 0),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(width: 0),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(width: 0),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: 10, left: 2),
+                                    child: Text(
+                                      '최대 54자까지 입력이 가능합니다',
+                                      style: descStyle,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        //인원수
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 35,
+                                child: Text(
+                                  '인원수',
+                                  textAlign: TextAlign.start,
+                                  style: textStyle,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: NOP.text.isNotEmpty
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  int.parse(NOP.text) > 1
+                                                      ? changeNOP('-')
+                                                      : null;
+                                                },
+                                                child: Icon(
+                                                  Icons.remove_circle,
+                                                  color: int.parse(NOP.text) > 1
+                                                      ? Colors.white
+                                                      : Color(0xff565656),
+                                                ),
+                                              )
+                                            : GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    NOP.text = '1';
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  Icons.remove_circle,
+                                                  color: Color(0xff565656),
+                                                ),
+                                              ),
+                                      ),
+                                      Container(
+                                        height: 35,
+                                        width: 50,
+                                        child: TextField(
+                                          onEditingComplete: () {
+                                            if (NOP.text.isEmpty) {
+                                              setState(() {
+                                                NOP.text = "1";
+                                              });
+                                            }
+                                          },
+                                          onChanged: (res) {
+                                            if (NOP.text.isNotEmpty) {
+                                              int n = int.parse(NOP.text);
+                                              if (n < 1) {
+                                                setState(() {
+                                                  NOP.text = "1";
+                                                });
+                                              }
+                                              if (n > 100) {
+                                                setState(() {
+                                                  NOP.text = "100";
+                                                });
+                                              }
+                                            }
+                                          },
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                                          controller: NOP,
+                                          maxLength: 3,
+                                          maxLines: 1,
+                                          showCursor: false,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              height: 1.8),
+                                          decoration: InputDecoration(
+                                            counterText: '',
+                                            filled: true,
+                                            fillColor: Color(0xff565656),
+                                            contentPadding:
+                                                const EdgeInsets.only(
+                                                    bottom: 20),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(width: 0),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(width: 0),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: NOP.text.isNotEmpty
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  int.parse(NOP.text) < 100
+                                                      ? changeNOP('+')
+                                                      : null;
+                                                },
+                                                child: Icon(
+                                                  Icons.add_circle,
+                                                  color:
+                                                      int.parse(NOP.text) < 100
+                                                          ? Colors.white
+                                                          : Color(0xff565656),
+                                                ),
+                                              )
+                                            : GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    NOP.text = '1';
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  Icons.add_circle,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: 10, left: 2),
+                                    child: Text(
+                                      '최대 100명까지 가능합니다',
+                                      style: descStyle,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        //그룹 주제
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                child: Text(
+                                  '그룹 주제',
+                                  textAlign: TextAlign.start,
+                                  style: textStyle,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    topicVisible = !topicVisible;
+                                    selectTopics = [];
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    finalSelectTopics.isNotEmpty
+                                        ? Wrap(
+                                            children: [
+                                              for (var i in finalSelectTopics)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30)),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            10, 5, 10, 5),
+                                                    child: Text(
+                                                      i,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 12),
+                                                    ),
+                                                  ),
+                                                )
+                                            ],
+                                          )
+                                        : Text(
+                                            '주제선택',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xffd0d0d0)),
+                                          ),
+                                    Icon(
+                                      topicVisible
+                                          ? Icons.arrow_drop_up_sharp
+                                          : Icons.arrow_drop_down_sharp,
+                                      color: Color(0xffd0d0d0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        //그룹 주제 선택 박스
+                        Visibility(
+                          visible: topicVisible,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 80,
+                                ),
+                                Container(
+                                    padding: EdgeInsets.all(10),
+                                    width: 250,
+                                    height: 165,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xff565656),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Column(
+                                      children: [
+                                        Wrap(
+                                          alignment: WrapAlignment.start,
+                                          children: [
+                                            for (var i in topics)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                child: selectTopics.contains(i)
+                                                    ? GestureDetector(
+                                                        onTap: () {
+                                                          _setTopic(i);
+                                                        },
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  width: 1,
+                                                                  color: Colors
+                                                                      .white),
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30)),
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  10, 5, 10, 5),
+                                                          child: Text(
+                                                            i,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 12),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : GestureDetector(
+                                                        onTap: () {
+                                                          _setTopic(i);
+                                                        },
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  width: 1),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30)),
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  10, 5, 10, 5),
+                                                          child: Text(
+                                                            i,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 12),
+                                                          ),
+                                                        ),
+                                                      ),
+                                              )
+                                          ],
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  topicVisible=false;
+                                                });
+                                              },
+                                              child: Container(
+                                                width:43,
+                                                height: 25,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '취소',
+                                                  style: TextStyle(
+                                                      color: Color(0xff2D2D2D)),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff9d9d9d),borderRadius: BorderRadius.circular(30)),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10,),
+                                            GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  finalSelectTopics=selectTopics;
+                                                  topicVisible=false;
+                                                });
+                                              },
+                                              child: Container(
+                                                width:43,
+                                                height: 25,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '확인',
+                                                  style: TextStyle(
+                                                      color: Color(0xff2D2D2D)),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff9d9d9d),borderRadius: BorderRadius.circular(30)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ),
+                        //공개 비공개
+                      ],
+                    ),
+                  ),
                   //마지막 빈공간
-                  SizedBox(height: 40,),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
@@ -183,5 +738,49 @@ class _MakeGroupState extends State<MakeGroup> {
         ),
       ),
     );
+  }
+
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
+
+  var descStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 9,
+  );
+  var textStyle =
+      TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
+
+  changeNOP(String s) {
+    int n = int.parse(NOP.text);
+    switch (s) {
+      case '-':
+        setState(() {
+          NOP.text = (n - 1).toString();
+        });
+        break;
+      case '+':
+        setState(() {
+          NOP.text = (n + 1).toString();
+        });
+        break;
+    }
+  }
+
+  void _setTopic(i) {
+    if (selectTopics.contains(i)) {
+      setState(() {
+        selectTopics.remove(i);
+      });
+    } else {
+      if (selectTopics.length < 2) {
+        setState(() {
+          selectTopics.add(i);
+        });
+      }
+    }
   }
 }
