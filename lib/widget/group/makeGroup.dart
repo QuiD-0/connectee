@@ -1,12 +1,14 @@
-import 'dart:developer';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class MakeGroup extends StatefulWidget {
   const MakeGroup({Key key}) : super(key: key);
@@ -18,12 +20,9 @@ class MakeGroup extends StatefulWidget {
 class _MakeGroupState extends State<MakeGroup> {
   List topics = ['취미', '여행', '공부', '운동', '맛집', '영화', '사랑', '책', '애완동물', '고민'];
   File _image;
-  String groupName;
-  String description;
-  int num;
   List selectTopics = [];
   List finalSelectTopics = [];
-  String private;  // open, close 
+  String private; // open, close
   String userId;
   TextEditingController name = TextEditingController();
   TextEditingController desc = TextEditingController();
@@ -31,7 +30,7 @@ class _MakeGroupState extends State<MakeGroup> {
   bool topicVisible = false;
   bool privateVisible = false;
   TextEditingController pass = TextEditingController();
-  TextEditingController check = TextEditingController();//패스워드 확인용
+  TextEditingController check = TextEditingController(); //패스워드 확인용
   @override
   void initState() {
     // TODO: implement initState
@@ -121,6 +120,7 @@ class _MakeGroupState extends State<MakeGroup> {
             onTap: () {
               print('make');
               //밸리데이션 후 post
+              _postData();
             },
             child: Container(
               alignment: Alignment.center,
@@ -137,7 +137,7 @@ class _MakeGroupState extends State<MakeGroup> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10,10,10,30),
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -439,7 +439,10 @@ class _MakeGroupState extends State<MakeGroup> {
                                             }
                                           },
                                           keyboardType: TextInputType.number,
-                                          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                                          inputFormatters: [
+                                            WhitelistingTextInputFormatter
+                                                .digitsOnly
+                                          ],
                                           controller: NOP,
                                           maxLength: 3,
                                           maxLines: 1,
@@ -516,7 +519,7 @@ class _MakeGroupState extends State<MakeGroup> {
                         ),
                         //그룹 주제
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                           child: Row(
                             children: [
                               Container(
@@ -670,19 +673,21 @@ class _MakeGroupState extends State<MakeGroup> {
                                               )
                                           ],
                                         ),
-                                        SizedBox(height: 10,),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
                                             GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
-                                                  topicVisible=false;
+                                                  topicVisible = false;
                                                 });
                                               },
                                               child: Container(
-                                                width:43,
+                                                width: 43,
                                                 height: 25,
                                                 alignment: Alignment.center,
                                                 child: Text(
@@ -691,19 +696,25 @@ class _MakeGroupState extends State<MakeGroup> {
                                                       color: Color(0xff2D2D2D)),
                                                 ),
                                                 decoration: BoxDecoration(
-                                                    color: Color(0xff9d9d9d),borderRadius: BorderRadius.circular(30)),
+                                                    color: Color(0xff9d9d9d),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30)),
                                               ),
                                             ),
-                                            SizedBox(width: 10,),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
                                             GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
-                                                  finalSelectTopics=selectTopics;
-                                                  topicVisible=false;
+                                                  finalSelectTopics =
+                                                      selectTopics;
+                                                  topicVisible = false;
                                                 });
                                               },
                                               child: Container(
-                                                width:43,
+                                                width: 43,
                                                 height: 25,
                                                 alignment: Alignment.center,
                                                 child: Text(
@@ -712,7 +723,10 @@ class _MakeGroupState extends State<MakeGroup> {
                                                       color: Color(0xff2D2D2D)),
                                                 ),
                                                 decoration: BoxDecoration(
-                                                    color: Color(0xff9d9d9d),borderRadius: BorderRadius.circular(30)),
+                                                    color: Color(0xff9d9d9d),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30)),
                                               ),
                                             ),
                                           ],
@@ -723,13 +737,227 @@ class _MakeGroupState extends State<MakeGroup> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 10,),
                         //공개 비공개
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                child: Text(
+                                  '공개 여부',
+                                  textAlign: TextAlign.start,
+                                  style: textStyle,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    privateVisible = !privateVisible;
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    private!=null
+                                        ? private=='open'?
+                                        Text('공개', style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12),
+                                              ):Text('비공개',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 12),)
+                                        : Text(
+                                            '공개 여부 선택',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xffd0d0d0)),
+                                          ),
+                                    Icon(
+                                      topicVisible
+                                          ? Icons.arrow_drop_up_sharp
+                                          : Icons.arrow_drop_down_sharp,
+                                      color: Color(0xffd0d0d0),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        //공개 비공개 선택창
+                        Visibility(
+                          visible: privateVisible,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 80,
+                                ),
+                                Container(
+                                    padding: EdgeInsets.all(10),
+                                    width: 250,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xff565656),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: (){
+                                            setState(() {
+                                              private='open';
+                                              privateVisible=false;
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 40,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  child: Text('공개',style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold),),
+                                                ),
+                                                Text('비밀번호 없이 누구나 입장할 수 있어요',style: TextStyle(color: Color(0xffd0d0d0),fontSize: 9),)
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: (){
+                                            setState(() {
+                                              private='close';
+                                              privateVisible=false;
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 40,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  child: Text('비공개',style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold),),
+                                                ),
+                                                Text('비밀번호를 아는 사람만 입장할 수 있어요',style: TextStyle(color: Color(0xffd0d0d0),fontSize: 9),)
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ),
+                        //비밀번호 입력창
+                        private=='close' && privateVisible==false? Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                              ),
+                              Container(
+                                  width: 250,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 40,
+                                        child: TextField(
+                                          controller: pass,
+                                          maxLength: 6,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            WhitelistingTextInputFormatter
+                                                .digitsOnly
+                                          ],
+                                          cursorColor: Colors.white,
+                                          style: TextStyle(
+                                              fontSize: 12, color: Colors.white),
+                                          decoration: InputDecoration(
+                                            counterText: '',
+                                            filled: true,
+                                            fillColor: Color(0xff565656),
+                                            hintText: '비밀번호를 설정해주세요',
+                                            hintStyle: TextStyle(
+                                                fontSize: 13,
+                                                color: Color(0xffD0D0D0)),
+
+                                            contentPadding: const EdgeInsets.only(
+                                                left: 10.0, bottom: 10, top: 0),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(width: 0),
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(width: 0),
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10,),
+                                      Container(
+                                        height: 40,
+                                        child: TextField(
+                                          controller: check,
+                                          maxLength: 6,
+                                          cursorColor: Colors.white,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            WhitelistingTextInputFormatter
+                                                .digitsOnly
+                                          ],
+                                          style: TextStyle(
+                                              fontSize: 12, color: Colors.white),
+                                          decoration: InputDecoration(
+                                            counterText: '',
+                                            filled: true,
+                                            fillColor: Color(0xff565656),
+                                            hintText: '비밀번호를 확인해주세요',
+                                            hintStyle: TextStyle(
+                                                fontSize: 13,
+                                                color: Color(0xffD0D0D0)),
+                                            contentPadding: const EdgeInsets.only(
+                                                left: 10.0, bottom: 10, top: 0),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(width: 0),
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(width: 0),
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(top: 10, left: 2),
+                                        child: Text(
+                                          '숫자만 입력 가능합니다 (최대 6글자 입력가능)',
+                                          style: descStyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ))
+                            ],
+                          ),
+                        ):Container(),
                       ],
                     ),
                   ),
                   //마지막 빈공간
                   SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
                 ],
               ),
@@ -782,5 +1010,71 @@ class _MakeGroupState extends State<MakeGroup> {
         });
       }
     }
+  }
+
+  void _postData() async{
+    //그룹명 체크
+    if(validate()==true){
+      _toast('성공');
+      //데이터 보내기
+      // var request = new http.MultipartRequest(
+      //   "POST",
+      //   Uri.parse(''),
+      // );
+      // request.fields['groupName'] = name.text;
+      // request.fields['userId'] = userId;
+      // if (_image != null) {
+      //   request.files
+      //       .add(await http.MultipartFile.fromPath('image', _image.path));
+      // }
+      // var res = await request.send();
+      // var respStr = await http.Response.fromStream(res);
+      // var resJson = json.decode(respStr.body);
+      // if (resJson["result"] == true) {
+      //   _toast('그룹생성이 완료되었습니다.');
+      //   Navigator.of(context).pop();
+      // } else if (resJson["success"] == false) {
+      //   _toast('다시 시도해 주세요');
+      // }
+    }
+  }
+
+  bool validate() {
+    if(name.text==''){
+      _toast('그룹명을 입력해주세요');
+      return false;
+    }
+    if(desc.text==''){
+      _toast('그룹 설명을 입력해주세요');
+      return false;
+    }
+    if(finalSelectTopics.isEmpty){
+      _toast('주제를 선택해주세요');
+      return false;
+    }
+    if(private==null){
+      _toast('공개여부를 선택해주세요');
+      return false;
+    }
+    if(private=='close'){
+      if(pass.text!=check.text){
+        _toast('비밀번호를 확인해주세요');
+        return false;
+      }else if(pass.text==''){
+        _toast('비밀번호를 입력해주세요');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  _toast(msg) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+    );
   }
 }

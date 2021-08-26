@@ -1,6 +1,7 @@
 import 'package:connectee/widget/group/group_detail.dart';
 import 'package:connectee/widget/group/group_search.dart';
 import 'package:connectee/widget/group/makeGroup.dart';
+import 'package:connectee/widget/group/recommand_group.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -615,12 +616,7 @@ class _GroupScreenState extends State<GroupScreen> {
               ),
             ),
             //추천그룹 탭
-            Center(
-              child: Text(
-                "recommand group",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            RecommandGroup(),
           ],
         ),
       ),
