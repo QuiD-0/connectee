@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:connectee/screen/myPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -95,74 +96,92 @@ class _MyAppState extends State<MyApp> {
                         SizedBox(
                           height: 500,
                         ),
-                        FlatButton(
-                          child: Text('kakao auth',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black)),
-                          onPressed: () async {
-                            try {
-                              final installed = await isKakaoTalkInstalled();
-                              installed
-                                  ? await UserApi.instance.loginWithKakaoTalk()
-                                  : await UserApi.instance
-                                      .loginWithKakaoAccount();
-                              dynamic token =
-                                  await AccessTokenStore.instance.fromStore();
-                              if (token.refreshToken == null) {
-                                print('token error');
-                              } else {
-                                User user = await UserApi.instance.me();
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                var data = {
-                                  "password": token.accessToken.toString(),
-                                  "username": user.id.toString(),
-                                };
-                                var res = await http.post(
-                                    Uri.parse(
-                                        "http://52.79.146.213:5000/users/login"),
-                                    body: data);
-                                var result = json.decode(res.body);
-                                print(result);
-                                if (result["success"] == true) {
-                                  prefs.setString(
-                                      'userId',
-                                      res.headers["set-cookie"]
-                                          .split(";")[0]
-                                          .split("=")[1]
-                                          .toString());
-                                  setState(() {
-                                    userId = prefs.getString('userId');
-                                  });
-                                }
-                              }
-                              // perform actions after login
-                            } catch (e) {
-                              print('error on login: $e');
-                            }
-                          },
-                          color: Colors.yellow,
-                          textColor: Colors.white,
-                        ),
                         Container(
                           width: 250,
-                          child: SignInWithAppleButton(
-                            onPressed: () async {
-                              final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                scopes: [
-                                  AppleIDAuthorizationScopes.email,
-                                  AppleIDAuthorizationScopes.fullName,
-                                ],
-                              );
-
-                              print(credential);
-
-                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
-                            },
-                          ),
+                          height: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(9),
+                              color: Colors.yellow),
+                          child: GestureDetector(
+                              onTap: () async {
+                                try {
+                                  final installed =
+                                      await isKakaoTalkInstalled();
+                                  installed
+                                      ? await UserApi.instance
+                                          .loginWithKakaoTalk()
+                                      : await UserApi.instance
+                                          .loginWithKakaoAccount();
+                                  dynamic token = await AccessTokenStore
+                                      .instance
+                                      .fromStore();
+                                  if (token.refreshToken == null) {
+                                    print('token error');
+                                  } else {
+                                    User user = await UserApi.instance.me();
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    var data = {
+                                      "password": token.accessToken.toString(),
+                                      "username": user.id.toString(),
+                                    };
+                                    var res = await http.post(
+                                        Uri.parse(
+                                            "http://52.79.146.213:5000/users/login"),
+                                        body: data);
+                                    var result = json.decode(res.body);
+                                    print(result);
+                                    if (result["success"] == true) {
+                                      prefs.setString(
+                                          'userId',
+                                          res.headers["set-cookie"]
+                                              .split(";")[0]
+                                              .split("=")[1]
+                                              .toString());
+                                      setState(() {
+                                        userId = prefs.getString('userId');
+                                      });
+                                    }
+                                  }
+                                  // perform actions after login
+                                } catch (e) {
+                                  print('error on login: $e');
+                                }
+                              },
+                              child: Center(
+                                  child: Row(
+                                    children: [
+                                      
+                                      Text(
+                                'Sign in with kakao',
+                                style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,decoration: TextDecoration.none),
+                              ),
+                                    ],
+                                  ))),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Platform.isIOS
+                            ? Container(
+                                width: 250,
+                                child: SignInWithAppleButton(
+                                  onPressed: () async {
+                                    final credential = await SignInWithApple
+                                        .getAppleIDCredential(
+                                      scopes: [
+                                        AppleIDAuthorizationScopes.email,
+                                        AppleIDAuthorizationScopes.fullName,
+                                      ],
+                                    );
+                                    print(credential);
+                                  },
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
