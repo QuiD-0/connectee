@@ -23,7 +23,7 @@ class _GroupDetailState extends State<GroupDetail> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   String userId;
-  int page=2;
+  int page=1;
   List _data = [];
   Map<int, List<dynamic>> myEmotion = {};
 
@@ -41,6 +41,7 @@ class _GroupDetailState extends State<GroupDetail> {
 
   @override
   Widget build(BuildContext context) {
+    var group=widget.group;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -54,7 +55,7 @@ class _GroupDetailState extends State<GroupDetail> {
           },
         ),
         title: Text(
-          widget.group['title'],
+          group.name,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -78,9 +79,11 @@ class _GroupDetailState extends State<GroupDetail> {
           },
           enablePullUp: true,
           onLoading: () async{
+            //테스트용 링크 바꾸기
+            // http://52.79.146.213:5000/diaries/${group.groupId}/group/getAll?page=$page&limit=5
             await http
                 .get(Uri.parse(
-                'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=10'))
+                'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
                 .then((res) {
               if (res.statusCode == 200) {
                 String jsonString = res.body;
@@ -122,20 +125,30 @@ class _GroupDetailState extends State<GroupDetail> {
                             //그룹 이미지
                             Padding(
                               padding: const EdgeInsets.only(bottom: 20),
-                              child: Container(
+                              child: group.imageUrl!=null?Container(
                                 width: 100,
                                 child: Center(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
                                     child: Image.network(
-                                      widget.group['img'],
+                                      group.imageUrl,
                                       height: 100,
                                       width: 100,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                              ),
+                              ):Container(width:100,child: Center(
+                                child: ClipRRect(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    color: Color(0xffFF9082),
+                                  ),
+                                ),
+                              ),),
                             ),
                             //그룹 정보
                             Padding(
@@ -147,7 +160,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      widget.group['title'],
+                                      group.name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -183,7 +196,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                           fit: BoxFit.contain,
                                         ),
                                         Text(
-                                          '  (${widget.group['NOP'].toString()}/100)',
+                                          '  (1/${group.limitMembers.toString()})',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12),
@@ -197,7 +210,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                         height: 60,
                                         width: 210,
                                         child: Text(
-                                          '그룹 설명 설명그룹 룹 설명그룹 설명그룹 설명',
+                                          group.description,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
@@ -228,7 +241,7 @@ class _GroupDetailState extends State<GroupDetail> {
                           Navigator.of(context, rootNavigator: true)
                               .push(MaterialPageRoute(builder: (context) {
                             return WriteDiary(
-                              groupName: widget.group['title'],
+                              groupName:group.name,groupId:group.groupId,
                             );
                           }));
                         },
@@ -293,20 +306,30 @@ class _GroupDetailState extends State<GroupDetail> {
                             //그룹 이미지
                             Padding(
                               padding: const EdgeInsets.only(bottom: 20),
-                              child: Container(
+                              child: group.imageUrl!=null?Container(
                                 width: 100,
                                 child: Center(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
                                     child: Image.network(
-                                      widget.group['img'],
+                                      group.imageUrl,
                                       height: 100,
                                       width: 100,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                              ),
+                              ):Container(width:100,child: Center(
+                                child: ClipRRect(
+                                  borderRadius:
+                                  BorderRadius.circular(50),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    color: Color(0xffFF9082),
+                                  ),
+                                ),
+                              ),),
                             ),
                             //그룹 정보
                             Padding(
@@ -318,7 +341,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      widget.group['title'],
+                                      group.name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -354,7 +377,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                           fit: BoxFit.contain,
                                         ),
                                         Text(
-                                          '  (${widget.group['NOP'].toString()}/100)',
+                                          '  (1/${group.limitMembers.toString()})',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12),
@@ -368,7 +391,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                         height: 60,
                                         width: 210,
                                         child: Text(
-                                          '그룹 설명 설명그룹 룹 설명그룹 설명그룹 설명',
+                                          group.description,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
@@ -399,7 +422,7 @@ class _GroupDetailState extends State<GroupDetail> {
                           Navigator.of(context, rootNavigator: true)
                               .push(MaterialPageRoute(builder: (context) {
                             return WriteDiary(
-                              groupName: widget.group['title'],
+                              groupName: group.name,groupId:group.groupId,
                             );
                           }));
                         },
@@ -472,7 +495,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                           new DiaryDetail(
                                             post: post,
                                             myEmotion:
-                                            myEmotion[post.diaryId],groupName: widget.group['title'],),
+                                            myEmotion[post.diaryId],groupName: group.name,),
                                           fullscreenDialog: true,
                                         ),
                                       );
@@ -770,7 +793,6 @@ class _GroupDetailState extends State<GroupDetail> {
                   ],
                 );
               }
-
               //카드
               return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
@@ -810,7 +832,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                     new DiaryDetail(
                                       post: post,
                                       myEmotion:
-                                      myEmotion[post.diaryId],groupName: widget.group['title'],),
+                                      myEmotion[post.diaryId],groupName: group.name,),
                                     fullscreenDialog: true,
                                   ),
                                 );
@@ -1014,9 +1036,9 @@ class _GroupDetailState extends State<GroupDetail> {
                                         CupertinoPageRoute(
                                           builder: (BuildContext context) =>
                                           new DiaryDetail(
-                                              post: post,
-                                              myEmotion: myEmotion[
-                                              post.diaryId]),
+                                            post: post,
+                                            myEmotion:
+                                            myEmotion[post.diaryId],groupName: widget.group['title'],),
                                           fullscreenDialog: true,
                                         ),
                                       );
@@ -1135,7 +1157,7 @@ class _GroupDetailState extends State<GroupDetail> {
   void _fetchGroupDiarys() async{
     await http
         .get(Uri.parse(
-        'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=1&limit=5'))
+        'http://52.79.146.213:5000/diaries/${widget.group.groupId}/group/getAll?page=1&limit=5'))
         .then((res) {
       if (res.statusCode == 200) {
         setState(() {
@@ -1150,9 +1172,6 @@ class _GroupDetailState extends State<GroupDetail> {
             _data.add(diaryToAdd);
           });
         }
-        setState(() {
-          page++;
-        });
       } else {
         print('error');
         print(res.body);

@@ -15,8 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class WriteDiary extends StatefulWidget {
   final groupName;
-
-  const WriteDiary({Key key, this.groupName}) : super(key: key);
+  final groupId;
+  const WriteDiary({Key key, this.groupName,this.groupId}) : super(key: key);
 
   @override
   _WriteDiaryState createState() => _WriteDiaryState();
@@ -1124,6 +1124,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     request.fields['title'] = inputValues['title'];
     request.fields['content'] = inputValues['content'];
     request.fields['group'] = group ?? "null";
+    request.fields['groupId'] = widget.groupId.toString() ?? "null";
     request.fields['private'] = isPublic == "open" ? 'false' : 'true';
     request.fields['category'] = type;
     request.fields['emotionType'] = engEmotionList[finalEmotion - 1];

@@ -118,8 +118,6 @@ class _MakeGroupState extends State<MakeGroup> {
         actions: [
           GestureDetector(
             onTap: () {
-              print('make');
-              //밸리데이션 후 post
               _postData();
             },
             child: Container(
@@ -1017,25 +1015,30 @@ class _MakeGroupState extends State<MakeGroup> {
     if(validate()==true){
       _toast('성공');
       //데이터 보내기
-      // var request = new http.MultipartRequest(
-      //   "POST",
-      //   Uri.parse(''),
-      // );
-      // request.fields['groupName'] = name.text;
-      // request.fields['userId'] = userId;
-      // if (_image != null) {
-      //   request.files
-      //       .add(await http.MultipartFile.fromPath('image', _image.path));
-      // }
-      // var res = await request.send();
-      // var respStr = await http.Response.fromStream(res);
-      // var resJson = json.decode(respStr.body);
-      // if (resJson["result"] == true) {
-      //   _toast('그룹생성이 완료되었습니다.');
-      //   Navigator.of(context).pop();
-      // } else if (resJson["success"] == false) {
-      //   _toast('다시 시도해 주세요');
-      // }
+      var request = new http.MultipartRequest(
+        "POST",
+        Uri.parse('http://52.79.146.213:5000/groups/create'),
+      );
+      request.fields['title'] = name.text;
+      request.fields['OwnerId'] = userId;
+      request.fields['description'] = desc.text;
+      request.fields['limitMembers'] = NOP.toString();
+      request.fields['private'] = private=="open"?"false":"true";
+      request.fields['password'] = pass.text;
+      request.fields['theme'] = finalSelectTopics.join(",");
+      if (_image != null) {
+        request.files
+            .add(await http.MultipartFile.fromPath('image', _image.path));
+      }
+      var res = await request.send();
+      var respStr = await http.Response.fromStream(res);
+      var resJson = json.decode(respStr.body);
+      if (resJson["success"] == true) {
+        _toast('그룹생성이 완료되었습니다.');
+        Navigator.of(context).pop();
+      } else if (resJson["success"] == false) {
+        _toast('다시 시도해 주세요');
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/screen/myPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screen/group.dart';
@@ -7,10 +8,11 @@ import 'screen/write_diary.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Phoenix(child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -40,7 +42,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   _tokenCheck() async {
-    //토큰 리프레시확인하기
+    //카카오 토큰 리프레시확인하기
     if (userId != null) {
       final prefs = await SharedPreferences.getInstance();
       dynamic token = await AccessTokenStore.instance.fromStore();
@@ -95,7 +97,8 @@ class _MyAppState extends State<MyApp> {
                         ),
                         FlatButton(
                           child: Text('kakao auth',
-                              style: TextStyle(fontSize: 16,color: Colors.black)),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black)),
                           onPressed: () async {
                             try {
                               final installed = await isKakaoTalkInstalled();
@@ -141,6 +144,25 @@ class _MyAppState extends State<MyApp> {
                           color: Colors.yellow,
                           textColor: Colors.white,
                         ),
+                        Container(
+                          width: 250,
+                          child: SignInWithAppleButton(
+                            onPressed: () async {
+                              final credential =
+                                  await SignInWithApple.getAppleIDCredential(
+                                scopes: [
+                                  AppleIDAuthorizationScopes.email,
+                                  AppleIDAuthorizationScopes.fullName,
+                                ],
+                              );
+
+                              print(credential);
+
+                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -162,12 +184,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        onTap: (index){
-          if (index==2){
+        onTap: (index) {
+          if (index == 2) {
             Navigator.of(context, rootNavigator: true).push(
               new CupertinoPageRoute(
                 builder: (BuildContext context) =>
-                new WriteDiary(groupName: null),
+                    new WriteDiary(groupName: null),
                 fullscreenDialog: true,
               ),
             );
@@ -205,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
                     builder: (BuildContext context) =>
-                    new WriteDiary(groupName: null),
+                        new WriteDiary(groupName: null),
                     fullscreenDialog: true,
                   ),
                 );
@@ -228,7 +250,10 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: 6,
                     ),
-                    Text('CONNECT',style: TextStyle(color: Colors.white60),),
+                    Text(
+                      'CONNECT',
+                      style: TextStyle(color: Colors.white60),
+                    ),
                   ],
                 ),
               ),
@@ -281,7 +306,7 @@ class _HomePageState extends State<HomePage> {
           case 4:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: Container(),
+                child: MyPage(),
               );
             });
           default:
@@ -295,8 +320,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
 
 class NoGlowScrollBehavior extends ScrollBehavior {
   @override

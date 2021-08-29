@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:connectee/model/groupModel.dart';
+import 'package:http/http.dart' as http;
 import 'package:connectee/widget/group/group_detail.dart';
 import 'package:connectee/widget/group/group_search.dart';
 import 'package:connectee/widget/group/makeGroup.dart';
@@ -18,41 +21,14 @@ class _GroupScreenState extends State<GroupScreen> {
       RefreshController(initialRefresh: false);
   String userId;
   List likedGroup = [1, 3];
-  List myGroup = [
-    // {
-    //   'title': '개발자를 위한 그룹',
-    //   'private': true,
-    //   'topic': ['주제1', '주제2'],
-    //   'img':
-    //       'https://images.unsplash.com/photo-1629521446236-fd258987fd24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80',
-    //   'NOP': 12,
-    //   'groupId': 1
-    // },
-    // {
-    //   'title': '같이 고민공유해요!',
-    //   'private': false,
-    //   'topic': ['topic', '주제주제'],
-    //   'img':
-    //       'https://images.unsplash.com/photo-1629504802112-cfc6f2da557e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2002&q=80',
-    //   'NOP': 100,
-    //   'groupId': 2
-    // },
-    // {
-    //   'title': '소마 그룹',
-    //   'private': true,
-    //   'topic': ['태그', '태그태그태그'],
-    //   'img':
-    //       'https://images.unsplash.com/photo-1629470044108-834e7a057e25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
-    //   'NOP': 1,
-    //   'groupId': 3
-    // },
-  ];
+  List myGroup = [];
 
   @override
   void initState() {
     // TODO: implement initState
     _getId().then((res) {
       //내그룹, 좋아요한 그룹 받아오기
+      _fetchMyGroup();
     });
     super.initState();
   }
@@ -140,24 +116,14 @@ class _GroupScreenState extends State<GroupScreen> {
               onRefresh: () {
                 setState(() {
                   //내그룹리스트 새로 받아오기
-                  myGroup.add(
-                    {
-                      'title': '개발자를 위한 그룹',
-                      'private': true,
-                      'topic': ['주제1', '주제2'],
-                      'img':
-                          'https://images.unsplash.com/photo-1629521446236-fd258987fd24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80',
-                      'NOP': 12,
-                      'groupId': 1
-                    },
-                  );
+                  _fetchMyGroup();
                 });
                 _refreshController.refreshCompleted();
               },
               child: ListView.builder(
                 itemBuilder: (c, i) {
                   var group;
-                  if (i != myGroup.length) {
+                  if (i!=myGroup.length){
                     group = myGroup[i];
                   }
                   //그룹이 없을경우
@@ -296,21 +262,31 @@ class _GroupScreenState extends State<GroupScreen> {
                                           MainAxisAlignment.start,
                                           children: [
                                             //그룹 이미지
-                                            Container(
+                                            group.imageUrl!=null?Container(
                                               width:120,
                                               child: Center(
                                                 child: ClipRRect(
                                                   borderRadius:
                                                   BorderRadius.circular(50),
                                                   child: Image.network(
-                                                    group['img'],
+                                                    group.imageUrl,
                                                     height: 80,
                                                     width: 80,
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ):Container(width:120,child: Center(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(50),
+                                                child: Container(
+                                                  height: 80,
+                                                  width: 80,
+                                                  color: Color(0xffFF9082),
+                                                ),
+                                              ),
+                                            ),),
                                             //그룹 정보
                                             Container(
                                               width: 250,
@@ -323,7 +299,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                                   //그룹이름
                                                   Container(width: 200,
                                                     child: Text(
-                                                      group['title'],
+                                                      group.name,
                                                       maxLines: 1,
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
@@ -345,13 +321,13 @@ class _GroupScreenState extends State<GroupScreen> {
                                                         fit: BoxFit.contain,
                                                       ),
                                                       Text(
-                                                        '   (${group['NOP']}/100)  |  ',
+                                                        '   (${group.limitMembers}/100)  |  ',
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 14),
                                                       ),
                                                       Text(
-                                                        group['private'] ? '비공개' : '공개',
+                                                        group.private ? '비공개' : '공개',
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 14),
@@ -362,68 +338,68 @@ class _GroupScreenState extends State<GroupScreen> {
                                                     height: 12,
                                                   ),
                                                   //그룹 토픽
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 200,
-                                                        child: Row(
-                                                          children: [
-                                                            for (var i
-                                                            in group['topic'])
-                                                              Padding(
-                                                                padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    right: 10),
-                                                                child: Container(
-                                                                  padding: EdgeInsets
-                                                                      .fromLTRB(
-                                                                      11, 3, 11, 3),
-                                                                  decoration: BoxDecoration(
-                                                                      color:
-                                                                      Colors.white,
-                                                                      borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                          30)),
-                                                                  child: Text(
-                                                                    "#${i.toString()}",
-                                                                    style: TextStyle(
-                                                                        fontSize: 13,
-                                                                        fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          _like(group['groupId']);
-                                                        },
-                                                        child:Padding(
-                                                          padding: EdgeInsets.only(right: 10),
-                                                          child: likedGroup.contains(
-                                                              group['groupId'])
-                                                              ? Image.asset(
-                                                            'assets/icons/heart_fill.png',
-                                                            height: 18,
-                                                            width: 20,
-                                                            fit: BoxFit.contain,
-                                                          )
-                                                              : Image.asset(
-                                                            'assets/icons/heart.png',
-                                                            height: 18,
-                                                            width: 20,
-                                                            fit: BoxFit.contain,
-                                                          ),
-                                                        )
-                                                      )
-                                                    ],
-                                                  )
+                                                  // Row(
+                                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  //   children: [
+                                                  //     Container(
+                                                  //       width: 200,
+                                                  //       child: Row(
+                                                  //         children: [
+                                                  //           for (var i
+                                                  //           in group['topic'])
+                                                  //             Padding(
+                                                  //               padding:
+                                                  //               const EdgeInsets
+                                                  //                   .only(
+                                                  //                   right: 10),
+                                                  //               child: Container(
+                                                  //                 padding: EdgeInsets
+                                                  //                     .fromLTRB(
+                                                  //                     11, 3, 11, 3),
+                                                  //                 decoration: BoxDecoration(
+                                                  //                     color:
+                                                  //                     Colors.white,
+                                                  //                     borderRadius:
+                                                  //                     BorderRadius
+                                                  //                         .circular(
+                                                  //                         30)),
+                                                  //                 child: Text(
+                                                  //                   "#${i.toString()}",
+                                                  //                   style: TextStyle(
+                                                  //                       fontSize: 13,
+                                                  //                       fontWeight:
+                                                  //                       FontWeight
+                                                  //                           .bold),
+                                                  //                 ),
+                                                  //               ),
+                                                  //             )
+                                                  //         ],
+                                                  //       ),
+                                                  //     ),
+                                                  //     GestureDetector(
+                                                  //       onTap: () {
+                                                  //         _like(group['groupId']);
+                                                  //       },
+                                                  //       child:Padding(
+                                                  //         padding: EdgeInsets.only(right: 10),
+                                                  //         child: likedGroup.contains(
+                                                  //             group['groupId'])
+                                                  //             ? Image.asset(
+                                                  //           'assets/icons/heart_fill.png',
+                                                  //           height: 18,
+                                                  //           width: 20,
+                                                  //           fit: BoxFit.contain,
+                                                  //         )
+                                                  //             : Image.asset(
+                                                  //           'assets/icons/heart.png',
+                                                  //           height: 18,
+                                                  //           width: 20,
+                                                  //           fit: BoxFit.contain,
+                                                  //         ),
+                                                  //       )
+                                                  //     )
+                                                  //   ],
+                                                  // )
                                                 ],
                                               ),
                                             ),
@@ -465,21 +441,31 @@ class _GroupScreenState extends State<GroupScreen> {
                                   MainAxisAlignment.start,
                                   children: [
                                     //그룹 이미지
-                                    Container(
+                                    group.imageUrl!=null?Container(
                                       width:120,
                                       child: Center(
                                         child: ClipRRect(
                                           borderRadius:
                                           BorderRadius.circular(50),
                                           child: Image.network(
-                                            group['img'],
+                                            group.imageUrl,
                                             height: 80,
                                             width: 80,
                                             fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ):Container(width:120,child: Center(
+                                      child: ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(50),
+                                        child: Container(
+                                          height: 80,
+                                          width: 80,
+                                          color: Color(0xffFF9082),
+                                        ),
+                                      ),
+                                    ),),
                                     //그룹 정보
                                     Container(
                                       width: 250,
@@ -492,7 +478,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                           //그룹이름
                                           Container(width: 200,
                                             child: Text(
-                                              group['title'],
+                                              group.name,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -514,13 +500,13 @@ class _GroupScreenState extends State<GroupScreen> {
                                                 fit: BoxFit.contain,
                                               ),
                                               Text(
-                                                '   (${group['NOP']}/100)  |  ',
+                                                '   (${group.limitMembers}/100)  |  ',
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 14),
                                               ),
                                               Text(
-                                                group['private'] ? '비공개' : '공개',
+                                                group.private ? '비공개' : '공개',
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 14),
@@ -531,68 +517,68 @@ class _GroupScreenState extends State<GroupScreen> {
                                             height: 12,
                                           ),
                                           //그룹 토픽
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                width: 200,
-                                                child: Row(
-                                                  children: [
-                                                    for (var i
-                                                    in group['topic'])
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsets
-                                                            .only(
-                                                            right: 10),
-                                                        child: Container(
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(
-                                                              11, 3, 11, 3),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                              Colors.white,
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  30)),
-                                                          child: Text(
-                                                            "#${i.toString()}",
-                                                            style: TextStyle(
-                                                                fontSize: 13,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                          ),
-                                                        ),
-                                                      )
-                                                  ],
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    _like(group['groupId']);
-                                                  },
-                                                  child:Padding(
-                                                    padding: EdgeInsets.only(right: 10),
-                                                    child: likedGroup.contains(
-                                                        group['groupId'])
-                                                        ? Image.asset(
-                                                      'assets/icons/heart_fill.png',
-                                                      height: 18,
-                                                      width: 20,
-                                                      fit: BoxFit.contain,
-                                                    )
-                                                        : Image.asset(
-                                                      'assets/icons/heart.png',
-                                                      height: 18,
-                                                      width: 20,
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  )
-                                              )
-                                            ],
-                                          )
+                                          // Row(
+                                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          //   children: [
+                                          //     Container(
+                                          //       width: 200,
+                                          //       child: Row(
+                                          //         children: [
+                                          //           for (var i
+                                          //           in group['topic'])
+                                          //             Padding(
+                                          //               padding:
+                                          //               const EdgeInsets
+                                          //                   .only(
+                                          //                   right: 10),
+                                          //               child: Container(
+                                          //                 padding: EdgeInsets
+                                          //                     .fromLTRB(
+                                          //                     11, 3, 11, 3),
+                                          //                 decoration: BoxDecoration(
+                                          //                     color:
+                                          //                     Colors.white,
+                                          //                     borderRadius:
+                                          //                     BorderRadius
+                                          //                         .circular(
+                                          //                         30)),
+                                          //                 child: Text(
+                                          //                   "#${i.toString()}",
+                                          //                   style: TextStyle(
+                                          //                       fontSize: 13,
+                                          //                       fontWeight:
+                                          //                       FontWeight
+                                          //                           .bold),
+                                          //                 ),
+                                          //               ),
+                                          //             )
+                                          //         ],
+                                          //       ),
+                                          //     ),
+                                          //     GestureDetector(
+                                          //       onTap: () {
+                                          //         _like(group['groupId']);
+                                          //       },
+                                          //       child:Padding(
+                                          //         padding: EdgeInsets.only(right: 10),
+                                          //         child: likedGroup.contains(
+                                          //             group['groupId'])
+                                          //             ? Image.asset(
+                                          //           'assets/icons/heart_fill.png',
+                                          //           height: 18,
+                                          //           width: 20,
+                                          //           fit: BoxFit.contain,
+                                          //         )
+                                          //             : Image.asset(
+                                          //           'assets/icons/heart.png',
+                                          //           height: 18,
+                                          //           width: 20,
+                                          //           fit: BoxFit.contain,
+                                          //         ),
+                                          //       )
+                                          //     )
+                                          //   ],
+                                          // )
                                         ],
                                       ),
                                     ),
@@ -644,6 +630,24 @@ class _GroupScreenState extends State<GroupScreen> {
         likedGroup.add(group);
       });
     }
+  }
+
+  void _fetchMyGroup() async{
+    await http
+        .get(Uri.parse(
+        'http://52.79.146.213:5000/groups/$userId/getAll'))
+        .then((res) {
+      if (res.statusCode == 200) {
+        String jsonString = res.body;
+        var result = json.decode(jsonString);
+        for (var i = 0; i < result.length; i++) {
+          var group=Group.fromMap(result[i]);
+          setState(() {
+            myGroup.add(group);
+          });
+        }
+      }
+    });
   }
 }
 
