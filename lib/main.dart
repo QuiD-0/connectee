@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:connectee/screen/myPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 void main() {
   runApp(Phoenix(child: MyApp()));
@@ -182,34 +182,11 @@ class _MyAppState extends State<MyApp> {
                                 ),
                               );
                               print(credential);
+                              var data=JwtDecoder.decode(credential.identityToken);
+                              print(data);
                             },
                           ),
                         )
-                        //     :  Container(
-                        //   width: 250,
-                        //   child: SignInWithAppleButton(
-                        //     onPressed: () async {
-                        //       final clientState = Uuid().v4();
-                        //       final url = Uri.https('appleid.apple.com', '/auth/authorize', {
-                        //         'response_type': 'code id_token',
-                        //         'client_id': "com.swMaestro.connectee",
-                        //         'response_mode': 'form_post',
-                        //         'redirect_uri':
-                        //         'https://plausible-tangy-shoulder.glitch.me/callbacks/apple/sign_in',
-                        //         'scope': 'email name',
-                        //         'state': clientState,
-                        //       });
-                        //
-                        //       final result = await FlutterWebAuth.authenticate(
-                        //           url: url.toString(), callbackUrlScheme: "intent");
-                        //       print('=======================result============================');
-                        //       print(result);
-                        //       final credential = Uri.parse(result).queryParameters;
-                        //       print('=======================credential============================');
-                        //       print(credential);
-                        //     },
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
