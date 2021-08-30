@@ -149,39 +149,67 @@ class _MyAppState extends State<MyApp> {
                                 }
                               },
                               child: Center(
-                                  child: Row(
-                                    children: [
-                                      
-                                      Text(
-                                'Sign in with kakao',
-                                style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,decoration: TextDecoration.none),
-                              ),
-                                    ],
-                                  ))),
+                                child: Text(
+                                  'Sign in with kakao',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: TextDecoration.none),
+                                ),
+                              )),
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        Platform.isIOS
-                            ? Container(
-                                width: 250,
-                                child: SignInWithAppleButton(
-                                  onPressed: () async {
-                                    final credential = await SignInWithApple
-                                        .getAppleIDCredential(
-                                      scopes: [
-                                        AppleIDAuthorizationScopes.email,
-                                        AppleIDAuthorizationScopes.fullName,
-                                      ],
-                                    );
-                                    print(credential);
-                                  },
+                        // Platform.isIOS
+                        //     ?
+                        Container(
+                          width: 250,
+                          child: SignInWithAppleButton(
+                            onPressed: () async {
+                              final credential =
+                                  await SignInWithApple.getAppleIDCredential(
+                                scopes: [
+                                  AppleIDAuthorizationScopes.email,
+                                  AppleIDAuthorizationScopes.fullName,
+                                ],
+                                webAuthenticationOptions:
+                                    WebAuthenticationOptions(
+                                  clientId: "com.swMaestro.connectee",
+                                  redirectUri: Uri.parse(
+                                      "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
                                 ),
-                              )
-                            : Container(),
+                              );
+                              print(credential);
+                            },
+                          ),
+                        )
+                        //     :  Container(
+                        //   width: 250,
+                        //   child: SignInWithAppleButton(
+                        //     onPressed: () async {
+                        //       final clientState = Uuid().v4();
+                        //       final url = Uri.https('appleid.apple.com', '/auth/authorize', {
+                        //         'response_type': 'code id_token',
+                        //         'client_id': "com.swMaestro.connectee",
+                        //         'response_mode': 'form_post',
+                        //         'redirect_uri':
+                        //         'https://plausible-tangy-shoulder.glitch.me/callbacks/apple/sign_in',
+                        //         'scope': 'email name',
+                        //         'state': clientState,
+                        //       });
+                        //
+                        //       final result = await FlutterWebAuth.authenticate(
+                        //           url: url.toString(), callbackUrlScheme: "intent");
+                        //       print('=======================result============================');
+                        //       print(result);
+                        //       final credential = Uri.parse(result).queryParameters;
+                        //       print('=======================credential============================');
+                        //       print(credential);
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
