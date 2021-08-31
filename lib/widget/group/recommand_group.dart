@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class RecommandGroup extends StatefulWidget {
   const RecommandGroup({Key key}) : super(key: key);
@@ -26,13 +29,14 @@ class _RecommandGroupState extends State<RecommandGroup> {
     },
   ];
   String userId;
+  String nickname;
 
   @override
   void initState() {
     // TODO: implement initState
     _getId().then((res) {
       //사용자 닉네임 받아오기
-
+      _getUserNickname();
       //추천그룹 리스트 받아오기
     });
     super.initState();
@@ -74,7 +78,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
             child: Padding(
               padding: const EdgeInsets.only(top: 16, left: 16),
               child: Text(
-                'oo님에게 추천해요!',
+                '$nickname님에게 추천해요!',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -404,6 +408,18 @@ class _RecommandGroupState extends State<RecommandGroup> {
               )
             ],
           ));
+    });
+  }
+
+  void _getUserNickname() async{
+    await http.get(Uri.parse('http://52.79.146.213:5000/users/$userId')).then((value){
+      if (value.statusCode == 200) {
+        String jsonString = value.body;
+        var result = json.decode(jsonString);
+        setState(() {
+          nickname=result['nickname'];
+        });
+      }
     });
   }
 

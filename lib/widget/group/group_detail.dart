@@ -196,7 +196,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                           fit: BoxFit.contain,
                                         ),
                                         Text(
-                                          '  (1/${group.limitMembers.toString()})',
+                                          '  (${group.groupUserCount.toString()}/${group.limitMembers.toString()})',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12),
@@ -1155,6 +1155,10 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   void _fetchGroupDiarys() async{
+    setState(() {
+      //그룹 연결후 2로 바꾸기
+      page=1;
+    });
     await http
         .get(Uri.parse(
         'http://52.79.146.213:5000/diaries/${widget.group.groupId}/group/getAll?page=1&limit=5'))

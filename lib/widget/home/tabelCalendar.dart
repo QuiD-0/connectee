@@ -64,6 +64,7 @@ class _CalendarState extends State<Calendar> {
 
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) async {
+              _fetchEvent();
               if (selectedEvents[selectDay] != null) {
                 var res = await Navigator.of(context).push(
                   new CupertinoPageRoute(
@@ -112,7 +113,7 @@ class _CalendarState extends State<Calendar> {
                   case "sad":
                     color = Color(0xff7DDEF6);
                     break;
-                  case "disgusting":
+                  case "disgusted":
                     color = Color(0xff79D3BA);
                     break;
                   case "terrified":

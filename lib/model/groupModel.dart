@@ -7,6 +7,8 @@ class Group {
   String password;
   int OwnerId;
   String imageUrl;
+  int groupUserCount;
+  List themes;
 
   Group.fromMap(Map<String, dynamic> map)
       :groupId=map['id'],
@@ -16,5 +18,11 @@ class Group {
         private=map['private'],
         password=map['password'],
         OwnerId=map['OwnerId'],
-        imageUrl=map['imageUrl'];
+        imageUrl=map['imageUrl'],
+        groupUserCount=map['groupUserCount'],
+        themes=[
+          // for(var i in map['themes']){
+          //   i['name']
+          // }
+        ];
 }
