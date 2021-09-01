@@ -54,7 +54,7 @@ class _HomeContentState extends State<HomeContent> {
             ),
             GestureDetector(
               onTap: () async {
-                var res = await Navigator.of(context, rootNavigator: true).push(
+                await Navigator.of(context, rootNavigator: true).push(
                   new CupertinoPageRoute(
                     builder: (BuildContext context) => new WriteDiary(),
                     fullscreenDialog: true,
