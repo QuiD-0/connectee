@@ -26,14 +26,14 @@ class Diary {
         nickname = map["User"]['nickname'],
         maxEmotion = map['maxEmotion'],
         emotionLevel = map['emotionLevel'],
-        emotionCount = 1,//map['Comments'].length,
+        emotionCount = map['Comments'].length,
         group = map['group'],
         private = map['private'],
-        Images=[],
-        // Images = [
-        //   for (var i = 0; i < map["Images"].length; i++)
-        //     map["Images"][i]["location"]
-        // ],
+        // Images=[],
+        Images = [
+          for (var i = 0; i < map["Images"].length; i++)
+            map["Images"][i]["location"]
+        ],
         linkImg = getImg(map);
 
   static getImg(Map<String, dynamic> map) {

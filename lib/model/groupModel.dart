@@ -8,7 +8,7 @@ class Group {
   int OwnerId;
   String imageUrl;
   int groupUserCount;
-  List themes;
+  List topic;
 
   Group.fromMap(Map<String, dynamic> map)
       :groupId=map['id'],
@@ -20,9 +20,13 @@ class Group {
         OwnerId=map['OwnerId'],
         imageUrl=map['imageUrl'],
         groupUserCount=map['groupUserCount'],
-        themes=[
-          // for(var i in map['themes']){
-          //   i['name']
-          // }
-        ];
+        topic=getThemes(map);
+
+  static getThemes(map) {
+    var topics=[];
+      for(var i in map['themes']){
+        topics.add(i['name']);
+      }
+      return topics;
+  }
 }
