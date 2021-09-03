@@ -250,7 +250,7 @@ class _HomeContentState extends State<HomeContent> {
                                           // ),
                                           FadeInImage.assetNetwork(
                                             placeholder:
-                                            'assets/loading.gif',
+                                            'assets/loading300.gif',
                                             image: post.linkImg,
                                             width: 300,
                                             height: 300,
@@ -505,10 +505,13 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   _clickTest(diaryId)async{
+    print(1);
     var body={
-      "accessType": "string",
+      "accessType": 1,
       "diaryId": diaryId,
-      "userId": int.parse(userId)
+      "userId": int.parse(userId),
+      "emotionType": "happy",
+      "emotionLevel": 5
     };
     await http
         .post(Uri.parse(

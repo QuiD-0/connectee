@@ -13,6 +13,7 @@ class Calendar extends StatefulWidget {
 
   @override
   _CalendarState createState() => _CalendarState();
+
 }
 
 class _CalendarState extends State<Calendar> {
@@ -34,7 +35,7 @@ class _CalendarState extends State<Calendar> {
           DateTime.now().year, DateTime.now().month, DateTime.now().day - 1);
     }
     _getId().then((res) {
-      _fetchEvent();
+      fetchEvent();
     });
     super.initState();
   }
@@ -64,7 +65,7 @@ class _CalendarState extends State<Calendar> {
 
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) async {
-              _fetchEvent();
+              //fetchEvent();
               if (selectedEvents[selectDay] != null) {
                 var res = await Navigator.of(context).push(
                   new CupertinoPageRoute(
@@ -247,7 +248,7 @@ class _CalendarState extends State<Calendar> {
     });
   }
 
-  Future _fetchEvent() async {
+  Future fetchEvent() async {
     //데이터 받아오기
     await http
         .get(Uri.parse("http://52.79.146.213:5000/daily-infos/findAll/$userId"))

@@ -79,7 +79,7 @@ class _GroupScreenState extends State<GroupScreen> {
                     size: 22,
                   ),
                   onPressed: () async {
-                    Navigator.of(context)
+                    Navigator.of(context,rootNavigator: true)
                         .push(MaterialPageRoute(builder: (context) {
                       return MakeGroup();
                     }));
@@ -168,7 +168,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                   const EdgeInsets.fromLTRB(10, 30, 10, 10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(
+                                  Navigator.of(context,rootNavigator: true).push(
                                       MaterialPageRoute(builder: (context) {
                                     return MakeGroup();
                                   }));

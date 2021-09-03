@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/main.dart';
 import 'package:connectee/vars.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -16,7 +17,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 class WriteDiary extends StatefulWidget {
   final groupName;
   final groupId;
-  const WriteDiary({Key key, this.groupName,this.groupId}) : super(key: key);
+
+  const WriteDiary({Key key, this.groupName, this.groupId}) : super(key: key);
 
   @override
   _WriteDiaryState createState() => _WriteDiaryState();
@@ -24,6 +26,7 @@ class WriteDiary extends StatefulWidget {
 
 class _WriteDiaryState extends State<WriteDiary> {
   GlobalKey<FormBuilderState> fbkey = GlobalKey<FormBuilderState>();
+
   String userId;
   String type = "diary"; //default
   Map<String, String> types = {
@@ -65,7 +68,7 @@ class _WriteDiaryState extends State<WriteDiary> {
   Widget build(BuildContext context) {
     String group = widget.groupName;
     return WillPopScope(
-      onWillPop: () {},
+      onWillPop: _onBackPress,
       child: Scaffold(
           backgroundColor: Color(0xff3d3d3d),
           appBar: AppBar(
@@ -76,64 +79,8 @@ class _WriteDiaryState extends State<WriteDiary> {
                 color: Colors.white,
               ),
               onPressed: () async {
-                var res = await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  barrierColor: Color(0x99000000),
-                  builder: (BuildContext context) {
-                    return WillPopScope(
-                      onWillPop: () async => false,
-                      child: AlertDialog(
-                        titlePadding: EdgeInsets.fromLTRB(20, 40, 20, 10),
-                        elevation: 0,
-                        backgroundColor: Color(0xff3D3D3D),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        title: Text(
-                          '작성을 종료하시겟습니까?',
-                          textAlign: TextAlign.center,
-                        ),
-                        titleTextStyle: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontFamily: 'GmarketSans',
-                            fontWeight: FontWeight.bold),
-                        content: Text(
-                          '작성중인 일기는\n저장되지 않습니다',
-                          textAlign: TextAlign.center,
-                        ),
-                        contentTextStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: 'GmarketSans'),
-                        actions: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('취소',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontFamily: 'GmarketSans')),
-                              ),
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context, 'back'),
-                                child: Text('확인',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontFamily: 'GmarketSans')),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-                res == 'back' ? Navigator.of(context).pop() : null;
+                var res = await _onBackPress();
+                res == true ? Navigator.of(context).pop() : null;
               },
             ),
             actions: [
@@ -1113,7 +1060,7 @@ class _WriteDiaryState extends State<WriteDiary> {
 
   post(group) async {
     final inputValues = fbkey.currentState.value;
-
+    showLoaderDialog(context);
     //실제 url
     var request = new http.MultipartRequest(
       "POST",
@@ -1123,13 +1070,13 @@ class _WriteDiaryState extends State<WriteDiary> {
     //기본 필드값
     request.fields['title'] = inputValues['title'];
     request.fields['content'] = inputValues['content'];
-    request.fields['group'] = group ?? "null";
-    request.fields['groupId'] = widget.groupId.toString() ?? "null";
+    request.fields['groupId'] = widget.groupId.toString() ?? "";
     request.fields['private'] = isPublic == "open" ? 'false' : 'true';
     request.fields['category'] = type;
     request.fields['emotionType'] = engEmotionList[finalEmotion - 1];
     request.fields['emotionLevel'] = emotionValue.toString();
     request.fields['userId'] = userId;
+    request.fields['isMyDiary'] = widget.groupId == null ? 'true' : 'false';
     // 일기,여행-> 이미지 선택
     if (_image != null) {
       for (var i = 0; i < _image.length; i++) {
@@ -1159,9 +1106,17 @@ class _WriteDiaryState extends State<WriteDiary> {
     if (resJson["result"] == true) {
       _toast('오늘의 일기가 기록되었습니다.');
       _postMainEmotion();
-      Navigator.of(context).pop(request.fields);
-    } else if (resJson["success"] == false) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  WillPopScope(onWillPop: () {}, child: HomePage())),
+          (route) => false);
+    } else {
       _toast('다시 시도해 주세요');
+      Navigator.of(context).pop();
     }
   }
 
@@ -1188,6 +1143,9 @@ class _WriteDiaryState extends State<WriteDiary> {
     };
     await http.post(Uri.parse('http://52.79.146.213:5000/daily-infos/create'),
         body: body);
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString(day, '${engEmotionList[finalEmotion - 1]},${emotionValue.toString()}');
+    print(prefs.getString(day));
   }
 
   Widget emotionSelector() {
@@ -1324,6 +1282,86 @@ class _WriteDiaryState extends State<WriteDiary> {
             ],
           ));
     });
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.white24,
+      insetPadding: EdgeInsets.symmetric(horizontal: 150),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      content: Builder(
+        builder: (context) {
+          // Get available height and width of the build area of this widget. Make a choice depending on the size.
+          return Container(
+            height: 50,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future<bool> _onBackPress() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Color(0x99000000),
+      builder: (context) => AlertDialog(
+        titlePadding: EdgeInsets.fromLTRB(20, 40, 20, 10),
+        elevation: 0,
+        backgroundColor: Color(0xff3D3D3D),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        title: Text(
+          '작성을 종료하시겟습니까?',
+          textAlign: TextAlign.center,
+        ),
+        titleTextStyle: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+            fontFamily: 'GmarketSans',
+            fontWeight: FontWeight.bold),
+        content: Text(
+          '작성중인 일기는\n저장되지 않습니다',
+          textAlign: TextAlign.center,
+        ),
+        contentTextStyle: TextStyle(
+            fontSize: 16, color: Colors.white, fontFamily: 'GmarketSans'),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              FlatButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('취소',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontFamily: 'GmarketSans')),
+              ),
+              FlatButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text('확인',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontFamily: 'GmarketSans')),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
