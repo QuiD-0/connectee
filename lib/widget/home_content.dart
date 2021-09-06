@@ -505,19 +505,33 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   _clickTest(diaryId)async{
-    print(1);
+    String day = DateTime.now().year.toString() +
+        '-' +
+        DateTime.now().month.toString() +
+        '-' +
+        DateTime.now().day.toString();
+    var prefs = await SharedPreferences.getInstance();
+    var data=prefs.getString(day);
+    String emotion;
+    String value;
+    if(data=null){
+      emotion= null;
+      value=null;
+    }else{
+      emotion= data.split(',')[0];
+      value=data.split(',')[1];
+    }
     var body={
-      "accessType": 1,
+      "accessType": 1, //변경 예정
       "diaryId": diaryId,
       "userId": int.parse(userId),
-      "emotionType": "happy",
-      "emotionLevel": 5
+      "emotionType": "$emotion",
+      "emotionLevel": int.parse(value),
     };
     await http
         .post(Uri.parse(
-        'http://52.79.146.213:5000/clicks/update'),body: json.encode(body))
+        'http://52.79.146.213:5000/clicks/update'),headers: {"Content-Type": "application/json"},body: json.encode(body))
         .then((res) {
-      print(res.body);
     });
   }
 }

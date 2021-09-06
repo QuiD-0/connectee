@@ -522,8 +522,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                         }
                                       }
                                       if (prevEmotion==null && res[0]==null){
-                                        print('클릭 업데이트');//아무것도 안하고 나온경우
-                                        _clickTest(post.diaryId);
+                                        //아무것도 안하고 나온경우
                                       }
                                       if (prevEmotion != null && res[0] == null) {
                                         setState(() {
@@ -859,8 +858,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                   }
                                 }
                                 if (prevEmotion==null && res[0]==null){
-                                  print('클릭 업데이트');//아무것도 안하고 나온경우
-                                  _clickTest(post.diaryId);
+                                  //아무것도 안하고 나온경우
                                 }
                                 if (prevEmotion != null && res[0] == null) {
                                   setState(() {

@@ -25,6 +25,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   int prevEmotionValue;
   String userId;
   int myCommentId;
+  var data;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
       myCommentId = widget.myEmotion[2];
     }
     _getId();
+    _getData();
     super.initState();
   }
 
@@ -269,6 +271,17 @@ class _DiaryDetailState extends State<DiaryDetail> {
         ));
   }
 
+  _getMainEmotion() {
+    if (data[0]==null){
+      return [null,null];
+    }else{
+      String emotion= data.split(',')[0];
+      String value=data.split(',')[1];
+      return [emotion,value];
+    }
+  }
+
+
   void _postEmotion() {
     if (prevEmotion == null) {
       if (selectedEmotion != null) {
@@ -308,7 +321,11 @@ class _DiaryDetailState extends State<DiaryDetail> {
   }
 
   void create() async {
+    var data = _getMainEmotion();
     var body = {
+      "userEmotionType": data[0],
+      "userEmotionLevel": int.parse(data[1]),
+      "accessType": 1,
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,
       "userId": int.parse(userId),
@@ -319,13 +336,15 @@ class _DiaryDetailState extends State<DiaryDetail> {
             headers: {'Content-Type': 'application/json'},
             body: json.encode(body))
         .then((res) {
-      //print(res.body);
     });
   }
 
   void update() async {
-    print('update');
+    var data=_getMainEmotion();
     var body = {
+      "userEmotionType": data[0],
+      "userEmotionLevel": int.parse(data[1]),
+      "accessType": 1,
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,
       "userId": int.parse(userId),
@@ -372,6 +391,16 @@ class _DiaryDetailState extends State<DiaryDetail> {
       }
     }
     //
+  }
+
+  void _getData() async{
+    String day = DateTime.now().year.toString() +
+        '-' +
+        DateTime.now().month.toString() +
+        '-' +
+        DateTime.now().day.toString();
+    var prefs = await SharedPreferences.getInstance();
+    data=prefs.getString(day);
   }
 }
 

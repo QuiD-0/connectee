@@ -18,14 +18,43 @@ class _RecommandGroupState extends State<RecommandGroup> {
       RefreshController(initialRefresh: false);
   List recGroup = [
     {
-      'title': '개발자를 위한 그룹',
-      'private': true,
-      'topic': ['주제1', '주제2'],
-      'img':
-          'https://images.unsplash.com/photo-1629521446236-fd258987fd24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80',
-      'NOP': 12,
-      'groupId': 1,
-      'description': '그룹설명그룹설명그룹설명그룹설명그룹설명그룹설명그룹설명그룹설명'
+      "id": 7,
+      "title": "테스트그룹",
+      "description": "그룹 설명",
+      "limitMembers": 10,
+      "private": false,
+      "password": "1234",
+      "OwnerId": 2,
+      "createdAt": "2021-08-29T05:27:02.441Z",
+      "updatedAt": "2021-08-29T05:27:02.441Z",
+      "deletedAt": null,
+      "imageUrl": "https://sw-connectee-s3.s3.ap-northeast-2.amazonaws.com/original/image_cropper_1630215202837.jpg",
+      "GroupUsers": [
+        {
+          "GroupId": 7,
+          "UserId": 2,
+          "createdAt": "2021-08-29T05:27:02.476Z",
+          "updatedAt": "2021-08-29T05:27:02.476Z",
+          "deletedAt": null
+        }
+      ],
+      "groupUserCount": 1,
+      "themes": [
+        {
+          "id": 2,
+          "name": "여행",
+          "createdAt": "2021-08-23T04:30:07.031Z",
+          "updatedAt": "2021-08-23T04:30:07.031Z",
+          "deletedAt": null
+        },
+        {
+          "id": 4,
+          "name": "운동",
+          "createdAt": "2021-08-23T04:30:07.069Z",
+          "updatedAt": "2021-08-23T04:30:07.069Z",
+          "deletedAt": null
+        }
+      ]
     },
   ];
   String userId;
@@ -54,19 +83,8 @@ class _RecommandGroupState extends State<RecommandGroup> {
       enablePullUp: false,
       onRefresh: () {
         setState(() {
-          //내그룹리스트 새로 받아오기
-          recGroup.add(
-            {
-              'title': '개발자를 위한 그룹2',
-              'private': true,
-              'topic': ['주제1', '주제2'],
-              'img':
-                  'https://images.unsplash.com/photo-1629521446236-fd258987fd24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80',
-              'NOP': 12,
-              'groupId': 1,
-              'description': '그룹설명그룹설명그룹설명그룹설명그룹설명그룹설명그룹설명그룹설명'
-            },
-          );
+          //추천 그룹리스트 새로 받아오기
+
         });
         _refreshController.refreshCompleted();
       },
@@ -114,8 +132,8 @@ class _RecommandGroupState extends State<RecommandGroup> {
                               child: ConnectSheet(group),
                             ));
                     bottomSheet.then((value) {
-                      //가입 완료 토스트 메시지
-                      if (value!=null){
+                      if (value==true){
+                        //그룹 체크인 완료후 디테일 페이지로 가기
                         _toast('참여완료!');
                       }
                     });
@@ -135,7 +153,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: Image.network(
-                                group['img'],
+                                group['imageUrl'],
                                 height: 80,
                                 width: 80,
                                 fit: BoxFit.cover,
@@ -176,7 +194,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                     fit: BoxFit.contain,
                                   ),
                                   Text(
-                                    '   (${group['NOP']}/100)  |  ',
+                                    '   (${group['groupUserCount']}/${group['limitMembers']})  |  ',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 14),
                                   ),
@@ -199,7 +217,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                     width: 200,
                                     child: Row(
                                       children: [
-                                        for (var i in group['topic'])
+                                        for (var i in group['themes'])
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 10),
@@ -212,7 +230,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                                       BorderRadius.circular(
                                                           30)),
                                               child: Text(
-                                                "#${i.toString()}",
+                                                "#${i['name']}",
                                                 style: TextStyle(
                                                     fontSize: 13,
                                                     fontWeight:
@@ -301,7 +319,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: Image.network(
-                      group['img'],
+                      group['imageUrl'],
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
@@ -332,7 +350,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (var i in group['topic'])
+                  for (var i in group['themes'])
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: Container(
@@ -341,7 +359,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(30)),
                         child: Text(
-                          "#${i.toString()}",
+                          "#${i['name']}",
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
@@ -377,7 +395,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                     fit: BoxFit.contain,
                   ),
                   Text(
-                    '  (${group['NOP'].toString()}/100)',
+                    '  (${group['groupUserCount'].toString()}/${group['limitMembers'].toString()})',
                     style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ],
@@ -396,6 +414,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                   )),
               GestureDetector(
                 onTap: (){
+                  //그룹 참가
                   Navigator.pop(context,true);
                 },
                 child: Container(

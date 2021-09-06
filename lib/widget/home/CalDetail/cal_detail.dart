@@ -25,6 +25,7 @@ class _CalDetailState extends State<CalDetail> {
   List emotions = [];
   List diarys = [];
   String userId;
+  int emotionValue;
 
   @override
   void initState() {
@@ -54,7 +55,7 @@ class _CalDetailState extends State<CalDetail> {
               size: 16,
             ),
             onPressed: () async {
-              Navigator.of(context).pop([widget.date, mainEmotion,widget.id]);
+              Navigator.of(context).pop([widget.date, mainEmotion,widget.id,emotionValue]);
             },
           ),
         ),
@@ -104,12 +105,15 @@ class _CalDetailState extends State<CalDetail> {
                                         child: ValueSelector(
                                           emotions: emotions,
                                           mainEmotion: mainEmotion,
+                                          userId: userId,
+                                          day: widget.date.toString().split(' ')[0],
                                         ),
                                       ));
                               await bottomSheet.then((onValue) {
                                 if (onValue != null) {
                                   setState(() {
-                                    mainEmotion = onValue;
+                                    mainEmotion = onValue[0];
+                                    emotionValue= onValue[1];
                                   });
                                 }
                               });
@@ -373,14 +377,15 @@ class _CalDetailState extends State<CalDetail> {
       });
     }
   }
-
 }
 
 class ValueSelector extends StatelessWidget {
   final emotions;
   final mainEmotion;
+  final userId;
+  final day;
 
-  const ValueSelector({Key key, this.emotions, this.mainEmotion})
+  const ValueSelector({Key key, this.emotions, this.mainEmotion,this.userId,this.day})
       : super(key: key);
 
   @override
@@ -428,7 +433,8 @@ class ValueSelector extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(10.0, 20, 10, 0),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pop(i);
+                          int level=_getValue(i);
+                          Navigator.of(context).pop([i,level]);
                         },
                         child: Column(
                           children: [
@@ -437,32 +443,32 @@ class ValueSelector extends StatelessWidget {
                               // 이모티콘 표정 적용
                               child: i != mainEmotion
                                   ? Image.asset(
-                                      'assets/emotions/${i}_big.png',
-                                      width: 66,
-                                      fit: BoxFit.fitWidth,
-                                    )
+                                'assets/emotions/${i}_big.png',
+                                width: 66,
+                                fit: BoxFit.fitWidth,
+                              )
                                   : Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Color(0xff2d2d2d),
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            border: Border.all(
-                                              width: 1,
-                                              color: emotionColorList[
-                                                  engToInt[i] - 1],
-                                            ),
-                                          ),
-                                        ),
-                                        Image.asset(
-                                          'assets/emotions/${i}.png',
-                                          width: 59,
-                                          fit: BoxFit.fitWidth,
-                                        ),
-                                      ],
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xff2d2d2d),
+                                      borderRadius:
+                                      BorderRadius.circular(50),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: emotionColorList[
+                                        engToInt[i] - 1],
+                                      ),
                                     ),
+                                  ),
+                                  Image.asset(
+                                    'assets/emotions/$i.png',
+                                    width: 59,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ],
+                              ),
                               width: 66,
                               height: 66,
                               decoration: BoxDecoration(
@@ -472,7 +478,7 @@ class ValueSelector extends StatelessWidget {
                             Text(
                               engToKor[i],
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                              TextStyle(color: Colors.white, fontSize: 14),
                             )
                           ],
                         ),
@@ -491,4 +497,23 @@ class ValueSelector extends StatelessWidget {
       ),
     );
   }
-}
+
+  _getValue(emotion) async{
+        await http
+            .get(Uri.parse(
+            'http://52.79.146.213:5000/diaries/$userId/fetch/daily?date=$day'))
+            .then((res) {
+          if (res.statusCode == 200) {
+            String jsonString = res.body;
+            List data = jsonDecode(jsonString);
+            for (int i = 0; i < data.length; i++) {
+              if (data[i]['emotionType']==emotion){
+                return data[i]['emotionLevel'];
+              }
+            }
+          }
+        });
+
+    }
+  }
+

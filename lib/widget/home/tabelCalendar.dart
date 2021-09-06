@@ -78,6 +78,14 @@ class _CalendarState extends State<Calendar> {
                 );
                 //db 업데이트
                 patchMainEmotion(res);
+                //메인감정 업데이트
+                DateTime now = DateTime.now();
+                DateTime date = DateTime.utc(now.year, now.month, now.day);
+                if(selectDay==date){
+                  if (res[3]!=selectedEvents[selectDay][0].emotionType){
+                    _changeMainEmotion(res);
+                  }
+                }
                 //스테이트 변경
                 setState(() {
                   Event a =
@@ -229,13 +237,6 @@ class _CalendarState extends State<Calendar> {
             ),
             daysOfWeekHeight: 38,
           ),
-          // ..._getEventsfromDay(selectedDay).map(
-          //   (Event event) => ListTile(
-          //     title: Text(
-          //       event.emotionType,
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -284,9 +285,18 @@ class _CalendarState extends State<Calendar> {
       "userId": userId
     };
     await http
-        .patch(Uri.parse('http://52.79.146.213:5000/daily-infos/${res[2]}'),
-            body: body)
-        .then((res) {
-    });
+        .patch(Uri.parse('http://52.79.146.213:5000/daily-infos/$userId'),
+            body: body);
+  }
+
+  void _changeMainEmotion(res) async{
+    String day = DateTime.now().year.toString() +
+        '-' +
+        DateTime.now().month.toString() +
+        '-' +
+        DateTime.now().day.toString();
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString(day,"${res[1]},${res[3]}");
+    print(prefs.getString(day));
   }
 }
