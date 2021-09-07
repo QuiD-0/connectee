@@ -17,7 +17,7 @@ class _MyPageState extends State<MyPage> {
       body: GestureDetector(
         onTap: () async{
           final prefs = await SharedPreferences.getInstance();
-          prefs.remove('userId');
+          prefs.clear();
           await AccessTokenStore.instance.clear();
           Phoenix.rebirth(context);
         },

@@ -26,12 +26,14 @@ class _GroupDetailState extends State<GroupDetail> {
   int page=1;
   List _data = [];
   Map<int, List<dynamic>> myEmotion = {};
+  int diaryCount;
 
   @override
   void initState() {
     // TODO: implement initState
     _getId().then((res) {
       // 해당그룹 글 가져오기
+      _fetchDiaryInfo(widget.group.groupId);
       _fetchGroupDiarys();
       // 내 이모션 리스트 가져오기
       _fetchMyEmotion();
@@ -171,7 +173,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                     Row(
                                       children: [
                                         Text(
-                                          '100+ ',
+                                          '${diaryCount.toString()}+ ',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
@@ -352,7 +354,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                     Row(
                                       children: [
                                         Text(
-                                          '100+ ',
+                                          '${diaryCount.toString()}+ ',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
@@ -1117,19 +1119,6 @@ class _GroupDetailState extends State<GroupDetail> {
     });
   }
 
-  _clickTest(diaryId)async{
-    var body={
-      "accessType": "string",
-      "diaryId": diaryId,
-      "userId": int.parse(userId)
-    };
-    await http
-        .post(Uri.parse(
-        'http://52.79.146.213:5000/clicks/update'),body: json.encode(body))
-        .then((res) {
-      print(res.body);
-    });
-  }
 
   void _fetchMyEmotion() async {
     await http
@@ -1176,8 +1165,19 @@ class _GroupDetailState extends State<GroupDetail> {
         }
       } else {
         print('error');
-        print(res.body);
       }
     });
+  }
+
+  void _fetchDiaryInfo(groupId) async{
+    await http
+        .get(Uri.parse(
+        'http://52.79.146.213:5000/groups/$groupId/getOne'))
+        .then((res) {
+      String jsonString = res.body;
+       var info = jsonDecode(jsonString);
+      diaryCount=info['groupDiaryCount'];
+    });
+
   }
 }

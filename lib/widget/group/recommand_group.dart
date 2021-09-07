@@ -58,6 +58,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
     },
   ];
   String userId;
+  String token;
   String nickname;
 
   @override
@@ -280,6 +281,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getString('userId');
+      token= prefs.getString('access_token');
     });
   }
 
@@ -431,7 +433,9 @@ class _RecommandGroupState extends State<RecommandGroup> {
   }
 
   void _getUserNickname() async{
-    await http.get(Uri.parse('http://52.79.146.213:5000/users/$userId')).then((value){
+    await http.get(Uri.parse('http://52.79.146.213:5000/users/myInfo'),headers: {
+      "Authorization": "Bearer $token"
+    } ).then((value){
       if (value.statusCode == 200) {
         String jsonString = value.body;
         var result = json.decode(jsonString);

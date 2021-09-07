@@ -514,7 +514,7 @@ class _HomeContentState extends State<HomeContent> {
     var data=prefs.getString(day);
     String emotion;
     String value;
-    if(data=null){
+    if(data==null){
       emotion= null;
       value=null;
     }else{

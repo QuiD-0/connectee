@@ -717,7 +717,7 @@ class _MakeGroupState extends State<MakeGroup> {
                                                   color: Color(0xffd0d0d0)),
                                             ),
                                       Icon(
-                                        topicVisible
+                                        privateVisible
                                             ? Icons.arrow_drop_up_sharp
                                             : Icons.arrow_drop_down_sharp,
                                         color: Color(0xffd0d0d0),

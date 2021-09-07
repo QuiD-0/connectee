@@ -1108,12 +1108,14 @@ class _WriteDiaryState extends State<WriteDiary> {
       _postMainEmotion().then((res){
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    WillPopScope(onWillPop: () {}, child: HomePage())),
-                (route) => false);
+        if (group==null){
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      WillPopScope(onWillPop: () {}, child: HomePage())),
+                  (route) => false);
+        }
       });
     } else {
       _toast('다시 시도해 주세요');

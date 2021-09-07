@@ -53,11 +53,16 @@ class _MyAppState extends State<MyApp> {
         "username": user.id.toString(),
       };
       var res = await http
-          .post(Uri.parse("http://52.79.146.213:5000/users/login"), body: data);
+          .post(Uri.parse("http://52.79.146.213:5000/auth/login"), body: data);
       var result = json.decode(res.body);
       if (result["success"] == true) {
-        prefs.setString('userId',
-            res.headers["set-cookie"].split(";")[0].split("=")[1].toString());
+        var token=JwtDecoder.decode(result['access_token']);
+        prefs.setString(
+            'userId',
+            token['sub'].toString());
+        prefs.setString(
+            'access_token',
+            result['access_token']);
         setState(() {
           userId = prefs.getString('userId');
         });
@@ -118,26 +123,26 @@ class _MyAppState extends State<MyApp> {
                                   if (token.refreshToken == null) {
                                     print('token error');
                                   } else {
-                                    User user = await UserApi.instance.me();
                                     final prefs =
                                         await SharedPreferences.getInstance();
                                     var data = {
                                       "password": token.accessToken.toString(),
-                                      "username": user.id.toString(),
+                                      "username": "kakao",
                                     };
                                     var res = await http.post(
                                         Uri.parse(
-                                            "http://52.79.146.213:5000/users/login"),
+                                            "http://52.79.146.213:5000/auth/login"),
                                         body: data);
                                     var result = json.decode(res.body);
                                     print(result);
                                     if (result["success"] == true) {
+                                      var token=JwtDecoder.decode(result['access_token']);
                                       prefs.setString(
                                           'userId',
-                                          res.headers["set-cookie"]
-                                              .split(";")[0]
-                                              .split("=")[1]
-                                              .toString());
+                                          token['sub'].toString());
+                                      prefs.setString(
+                                          'access_token',
+                                          result['access_token']);
                                       setState(() {
                                         userId = prefs.getString('userId');
                                       });
@@ -181,8 +186,29 @@ class _MyAppState extends State<MyApp> {
                                       "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
                                 ),
                               );
-                              var data=JwtDecoder.decode(credential.identityToken);
-                              print(data);
+                              var data = {
+                                "password": credential.identityToken.toString(),
+                                "username": "apple",
+                              };
+                              var res = await http.post(
+                                  Uri.parse(
+                                      "http://52.79.146.213:5000/auth/login"),
+                                  body: data);
+                              var result = json.decode(res.body);
+                              print(result);
+                              final prefs = await SharedPreferences.getInstance();
+                              if (result["success"] == true) {
+                                var token=JwtDecoder.decode(result['access_token']);
+                                prefs.setString(
+                                    'userId',
+                                    token['sub'].toString());
+                                prefs.setString(
+                                    'access_token',
+                                    result['access_token']);
+                                setState(() {
+                                  userId = prefs.getString('userId');
+                                });
+                              }
                             },
                           ),
                         )

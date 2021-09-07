@@ -20,6 +20,7 @@ class _GroupScreenState extends State<GroupScreen> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   String userId;
+  String token;
   List likedGroup = [1, 3];
   List myGroup = [];
 
@@ -454,6 +455,7 @@ class _GroupScreenState extends State<GroupScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getString('userId');
+      token= prefs.getString('access_token');
     });
   }
 
@@ -474,7 +476,9 @@ class _GroupScreenState extends State<GroupScreen> {
 
   void _fetchMyGroup() async {
     await http
-        .get(Uri.parse('http://52.79.146.213:5000/groups/$userId/getAll'))
+        .get(Uri.parse('http://52.79.146.213:5000/groups/getAll'),headers: {
+      "Authorization": "Bearer $token"
+    })
         .then((res) {
       if (res.statusCode == 200) {
         myGroup = [];
