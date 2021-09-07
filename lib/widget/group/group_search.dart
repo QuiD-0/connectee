@@ -145,13 +145,14 @@ class _GroupSearchState extends State<GroupSearch> {
                         child: TextField(
                           controller: txt,
                           onSubmitted: (value) {
-                            //검색어 저장
-                            _saveList(txt.text);
-                            //최근 검색어 끄기
-                            setState(() {
-                              visibleRecent = false;
-                            });
-                            //api통신
+                            if(txt.text !=''){
+                              _saveList(txt.text);
+                              //최근 검색어 끄기
+                              setState(() {
+                                visibleRecent = false;
+                              });
+                              //api통신, 빈칸이면 보내기 X
+                            }
                           },
                           onChanged: (text) {
                             if (text == "") {
@@ -171,12 +172,14 @@ class _GroupSearchState extends State<GroupSearch> {
                         splashColor: Colors.transparent,
                         onPressed: () {
                           //검색어 저장
-                          _saveList(txt.text);
-                          //최근 검색어 끄기
-                          setState(() {
-                            visibleRecent = false;
-                          });
-                          //api통신
+                          if(txt.text !=''){
+                            _saveList(txt.text);
+                            //최근 검색어 끄기
+                            setState(() {
+                              visibleRecent = false;
+                            });
+                            //api통신, 빈칸이면 보내기 X
+                          }
                         },
                         icon: Icon(
                           Icons.search_rounded,

@@ -181,7 +181,6 @@ class _MyAppState extends State<MyApp> {
                                       "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
                                 ),
                               );
-                              print(credential);
                               var data=JwtDecoder.decode(credential.identityToken);
                               print(data);
                             },
