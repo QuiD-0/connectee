@@ -1,6 +1,6 @@
 class Group {
   int groupId;
-  String name;
+  String title;
   String description;
   int limitMembers;
   bool private;
@@ -12,7 +12,7 @@ class Group {
 
   Group.fromMap(Map<String, dynamic> map)
       :groupId=map['id'],
-        name=map['title'],
+        title=map['title'],
         description=map['description'],
         limitMembers=map['limitMembers'],
         private=map['private'],

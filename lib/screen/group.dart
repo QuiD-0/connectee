@@ -297,7 +297,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                               Container(
                                                 width: 200,
                                                 child: Text(
-                                                  group.name,
+                                                  group.title,
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -378,29 +378,29 @@ class _GroupScreenState extends State<GroupScreen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  //좋아요
-                                                  // GestureDetector(
-                                                  //   onTap: () {
-                                                  //     _like(group['groupId']);
-                                                  //   },
-                                                  //   child:Padding(
-                                                  //     padding: EdgeInsets.only(right: 10),
-                                                  //     child: likedGroup.contains(
-                                                  //         group['groupId'])
-                                                  //         ? Image.asset(
-                                                  //       'assets/icons/heart_fill.png',
-                                                  //       height: 18,
-                                                  //       width: 20,
-                                                  //       fit: BoxFit.contain,
-                                                  //     )
-                                                  //         : Image.asset(
-                                                  //       'assets/icons/heart.png',
-                                                  //       height: 18,
-                                                  //       width: 20,
-                                                  //       fit: BoxFit.contain,
-                                                  //     ),
-                                                  //   )
-                                                  // )
+                                                  // 좋아요
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      _like(group.groupId);
+                                                    },
+                                                    child:Padding(
+                                                      padding: EdgeInsets.only(right: 10),
+                                                      child: likedGroup.contains(
+                                                          group.groupId)
+                                                          ? Image.asset(
+                                                        'assets/icons/heart_fill.png',
+                                                        height: 18,
+                                                        width: 20,
+                                                        fit: BoxFit.contain,
+                                                      )
+                                                          : Image.asset(
+                                                        'assets/icons/heart.png',
+                                                        height: 18,
+                                                        width: 20,
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    )
+                                                  )
                                                 ],
                                               )
                                             ],

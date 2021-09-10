@@ -25,50 +25,52 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String userId;
+  String kakaoId;
+  String appleId;
 
   @override
   void initState() {
     // TODO: implement initState
-    _getId().then((res) {
-      _tokenCheck();
+    _getPrefs().then((res){
+      _getToken();
     });
     super.initState();
   }
 
-  _getId() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString('userId');
-    });
-  }
+  // _getId() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     userId = prefs.getString('userId');
+  //   });
+  // }
 
-  _tokenCheck() async {
-    //카카오 토큰 리프레시확인하기
-    if (userId != null) {
-      final prefs = await SharedPreferences.getInstance();
-      dynamic token = await AccessTokenStore.instance.fromStore();
-      User user = await UserApi.instance.me();
-      var data = {
-        "password": token.accessToken.toString(),
-        "username": user.id.toString(),
-      };
-      var res = await http
-          .post(Uri.parse("http://52.79.146.213:5000/auth/login"), body: data);
-      var result = json.decode(res.body);
-      if (result["success"] == true) {
-        var token=JwtDecoder.decode(result['access_token']);
-        prefs.setString(
-            'userId',
-            token['sub'].toString());
-        prefs.setString(
-            'access_token',
-            result['access_token']);
-        setState(() {
-          userId = prefs.getString('userId');
-        });
-      }
-    }
-  }
+  // _tokenCheck() async {
+  //   //카카오 토큰 리프레시확인하기
+  //   if (userId != null) {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     dynamic token = await AccessTokenStore.instance.fromStore();
+  //     User user = await UserApi.instance.me();
+  //     var data = {
+  //       "password": token.accessToken.toString(),
+  //       "username": user.id.toString(),
+  //     };
+  //     var res = await http
+  //         .post(Uri.parse("http://52.79.146.213:5000/auth/login"), body: data);
+  //     var result = json.decode(res.body);
+  //     if (result["success"] == true) {
+  //       var token=JwtDecoder.decode(result['access_token']);
+  //       prefs.setString(
+  //           'userId',
+  //           token['sub'].toString());
+  //       prefs.setString(
+  //           'access_token',
+  //           result['access_token']);
+  //       setState(() {
+  //         userId = prefs.getString('userId');
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +131,9 @@ class _MyAppState extends State<MyApp> {
                                       "password": token.accessToken.toString(),
                                       "username": "kakao",
                                     };
+                                    prefs.setString(
+                                        'kakao',
+                                        token.accessToken.toString());
                                     var res = await http.post(
                                         Uri.parse(
                                             "http://52.79.146.213:5000/auth/login"),
@@ -190,13 +195,16 @@ class _MyAppState extends State<MyApp> {
                                 "password": credential.identityToken.toString(),
                                 "username": "apple",
                               };
+                              final prefs = await SharedPreferences.getInstance();
+                              prefs.setString(
+                                  'apple',
+                                  credential.identityToken.toString());
                               var res = await http.post(
                                   Uri.parse(
                                       "http://52.79.146.213:5000/auth/login"),
                                   body: data);
                               var result = json.decode(res.body);
                               print(result);
-                              final prefs = await SharedPreferences.getInstance();
                               if (result["success"] == true) {
                                 var token=JwtDecoder.decode(result['access_token']);
                                 prefs.setString(
@@ -219,6 +227,51 @@ class _MyAppState extends State<MyApp> {
           onWillPop: () {},
         ));
   }
+
+  void _getToken() async{
+    final prefs =
+    await SharedPreferences.getInstance();
+    var data;
+    if (kakaoId!=null){
+      data = {
+        "password": kakaoId,
+        "username": "kakao",
+      };
+    }else{
+      data = {
+        "password": appleId,
+        "username": "apple",
+      };
+    }
+    var res = await http.post(
+        Uri.parse(
+            "http://52.79.146.213:5000/auth/login"),
+        body: data);
+    var result = json.decode(res.body);
+    print(result);
+    if (result["success"] == true) {
+      var token=JwtDecoder.decode(result['access_token']);
+      prefs.setString(
+          'userId',
+          token['sub'].toString());
+      prefs.setString(
+          'access_token',
+          result['access_token']);
+      setState(() {
+        userId = prefs.getString('userId');
+      });
+    }
+
+  }
+
+  _getPrefs() async{
+    final prefs =
+    await SharedPreferences.getInstance();
+    kakaoId = prefs.getString('kakao');
+    appleId = prefs.getString('apple');
+  }
+
+
 }
 
 class HomePage extends StatefulWidget {

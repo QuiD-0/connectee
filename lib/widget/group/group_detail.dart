@@ -57,7 +57,7 @@ class _GroupDetailState extends State<GroupDetail> {
           },
         ),
         title: Text(
-          group.name,
+          group.title,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -162,7 +162,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      group.name,
+                                      group.title,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -243,7 +243,7 @@ class _GroupDetailState extends State<GroupDetail> {
                           Navigator.of(context, rootNavigator: true)
                               .push(MaterialPageRoute(builder: (context) {
                             return WriteDiary(
-                              groupName:group.name,groupId:group.groupId,
+                              groupName:group.title,groupId:group.groupId,
                             );
                           }));
                         },
@@ -343,7 +343,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      group.name,
+                                      group.title,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -424,7 +424,7 @@ class _GroupDetailState extends State<GroupDetail> {
                           Navigator.of(context, rootNavigator: true)
                               .push(MaterialPageRoute(builder: (context) {
                             return WriteDiary(
-                              groupName: group.name,groupId:group.groupId,
+                              groupName: group.title,groupId:group.groupId,
                             );
                           }));
                         },
@@ -497,7 +497,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                           new DiaryDetail(
                                             post: post,
                                             myEmotion:
-                                            myEmotion[post.diaryId],groupName: group.name,),
+                                            myEmotion[post.diaryId],groupName: group.title,),
                                           fullscreenDialog: true,
                                         ),
                                       );
@@ -833,7 +833,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                     new DiaryDetail(
                                       post: post,
                                       myEmotion:
-                                      myEmotion[post.diaryId],groupName: group.name,),
+                                      myEmotion[post.diaryId],groupName: group.title,),
                                     fullscreenDialog: true,
                                   ),
                                 );

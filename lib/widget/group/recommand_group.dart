@@ -16,47 +16,7 @@ class RecommandGroup extends StatefulWidget {
 class _RecommandGroupState extends State<RecommandGroup> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  List recGroup = [
-    {
-      "id": 7,
-      "title": "테스트그룹",
-      "description": "그룹 설명",
-      "limitMembers": 10,
-      "private": false,
-      "password": "1234",
-      "OwnerId": 2,
-      "createdAt": "2021-08-29T05:27:02.441Z",
-      "updatedAt": "2021-08-29T05:27:02.441Z",
-      "deletedAt": null,
-      "imageUrl": "https://sw-connectee-s3.s3.ap-northeast-2.amazonaws.com/original/image_cropper_1630215202837.jpg",
-      "GroupUsers": [
-        {
-          "GroupId": 7,
-          "UserId": 2,
-          "createdAt": "2021-08-29T05:27:02.476Z",
-          "updatedAt": "2021-08-29T05:27:02.476Z",
-          "deletedAt": null
-        }
-      ],
-      "groupUserCount": 1,
-      "themes": [
-        {
-          "id": 2,
-          "name": "여행",
-          "createdAt": "2021-08-23T04:30:07.031Z",
-          "updatedAt": "2021-08-23T04:30:07.031Z",
-          "deletedAt": null
-        },
-        {
-          "id": 4,
-          "name": "운동",
-          "createdAt": "2021-08-23T04:30:07.069Z",
-          "updatedAt": "2021-08-23T04:30:07.069Z",
-          "deletedAt": null
-        }
-      ]
-    },
-  ];
+  List recGroup = [];
   String userId;
   String token;
   String nickname;
@@ -68,6 +28,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
       //사용자 닉네임 받아오기
       _getUserNickname();
       //추천그룹 리스트 받아오기
+      _getRecGroup();
     });
     super.initState();
   }
@@ -442,6 +403,21 @@ class _RecommandGroupState extends State<RecommandGroup> {
         setState(() {
           nickname=result['nickname'];
         });
+      }
+    });
+  }
+
+  void _getRecGroup() async{
+    await http.get(Uri.parse('http://52.79.146.213:5000/groups/recommand?accessType=timeline'),
+        headers: {"Authorization": "Bearer $token"}).then((value) {
+      if (value.statusCode == 200) {
+        String jsonString = value.body;
+        var result = json.decode(jsonString);
+        for( var i in result){
+          setState(() {
+            recGroup.add(i);
+          });
+        }
       }
     });
   }
