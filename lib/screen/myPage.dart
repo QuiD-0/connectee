@@ -57,7 +57,7 @@ class _MyPageState extends State<MyPage> {
         ),
         GestureDetector(
           onTap: () async {
-            await http.get(Uri.parse('http://52.79.146.213:5000/groups/getMyPreferringGroups'),
+            await http.get(Uri.parse('http://52.79.146.213:5000/users/getOne/1'),
                 headers: {"Authorization": "Bearer $token"}).then((value) {
                   print(value.body);
               if (value.statusCode == 200) {
