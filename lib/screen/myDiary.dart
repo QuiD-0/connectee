@@ -656,8 +656,8 @@ class _MyDiaryState extends State<MyDiary> {
                                                     CupertinoPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          new MyDiaryDetail(
-                                                              post: diary),
+                                                      new MyDiaryDetail(
+                                                        post: diary,edit: true,),
                                                       fullscreenDialog: true,
                                                     ),
                                                   );
@@ -824,8 +824,7 @@ class _MyDiaryState extends State<MyDiary> {
                                                 builder: (BuildContext
                                                 context) =>
                                                 new MyDiaryDetail(
-                                                    post: diary),
-                                                fullscreenDialog: true,
+                                                  post: diary,edit: true,),
                                               ),
                                             );
                                           },
