@@ -104,1009 +104,507 @@ class _GroupDetailState extends State<GroupDetail> {
             });
             _refreshController.loadComplete();
           },
-          child: ListView.builder(
-            itemCount: _data.length + 1,
-            itemBuilder: (c, index) {
-              var post;
-              if(index!=_data.length){
-                post=_data[index];
-              }
-              //아무글이 없을경우
-              if (_data.length == 0) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: Column(
-                    children: [
-                      //그룹 정보 박스
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        width: double.infinity,
-                        height: 190,
-                        child: Row(
-                          children: [
-                            //그룹 이미지
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: group.imageUrl!=null?Container(
-                                width: 100,
-                                child: Center(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.network(
-                                      group.imageUrl,
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+          child: ListView(children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: Column(
+                children: [
+                  //그룹 정보 박스
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: double.infinity,
+                    height: 190,
+                    child: Row(
+                      children: [
+                        //그룹 이미지
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: group.imageUrl!=null?Container(
+                            width: 100,
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.network(
+                                  group.imageUrl,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
                                 ),
-                              ):Container(width:100,child: Center(
-                                child: ClipRRect(
-                                  borderRadius:
-                                  BorderRadius.circular(50),
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    color: Color(0xffFF9082),
-                                  ),
-                                ),
-                              ),),
+                              ),
                             ),
-                            //그룹 정보
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                          ):Container(width:100,child: Center(
+                            child: ClipRRect(
+                              borderRadius:
+                              BorderRadius.circular(50),
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                color: Color(0xffFF9082),
+                              ),
+                            ),
+                          ),),
+                        ),
+                        //그룹 정보
+                        Padding(
+                            padding:
+                            const EdgeInsets.only(left: 20, top: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  group.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Row(
                                   children: [
                                     Text(
-                                      group.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                      '${diaryCount.toString()}+ ',
                                       style: TextStyle(
-                                          fontSize: 16,
                                           color: Colors.white,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${diaryCount.toString()}+ ',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          'diary',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                        Text(
-                                          '   |   ',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                        Image.asset(
-                                          'assets/icons/user.png',
-                                          height: 14,
-                                          width: 12,
-                                          fit: BoxFit.contain,
-                                        ),
-                                        Text(
-                                          '  (${group.groupUserCount.toString()}/${group.limitMembers.toString()})',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 10),
-                                      child: Container(
-                                        height: 60,
-                                        width: 210,
-                                        child: Text(
-                                          group.description,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              height: 1.5),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ))
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(0xff2D2D2D),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(13),
-                              topRight: Radius.circular(13)),
-                        ),
-                      ),
-                      Container(
-                        height: 1,
-                        color: Color(0xff4D4D4D),
-                      ),
-                      //그룹 다이어리 작성버튼
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return WriteDiary(
-                              groupName:group.title,groupId:group.groupId,
-                            );
-                          }));
-                        },
-                        child: Container(
-                          height: 170,
-                          width: double.infinity,
-                          color: Color(0xff2D2D2D),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(13),
-                                color: Color(0xff3D3D3D),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add_box_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    '그룹 다이어리 작성하기',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                          width: double.infinity,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            color: Color(0xff2d2d2d),
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(13),
-                                bottomRight: Radius.circular(13)),
-                          )),
-                    ],
-                  ),
-                );
-              }
-              if (index == 0) {
-                //글이 있을경우 최상단
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: Column(
-                    children: [
-                      //그룹 정보 박스
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        width: double.infinity,
-                        height: 190,
-                        child: Row(
-                          children: [
-                            //그룹 이미지
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: group.imageUrl!=null?Container(
-                                width: 100,
-                                child: Center(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.network(
-                                      group.imageUrl,
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ):Container(width:100,child: Center(
-                                child: ClipRRect(
-                                  borderRadius:
-                                  BorderRadius.circular(50),
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    color: Color(0xffFF9082),
-                                  ),
-                                ),
-                              ),),
-                            ),
-                            //그룹 정보
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
                                     Text(
-                                      group.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                      'diary',
                                       style: TextStyle(
-                                          fontSize: 16,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                          fontSize: 12),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${diaryCount.toString()}+ ',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          'diary',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                        Text(
-                                          '   |   ',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                        Image.asset(
-                                          'assets/icons/user.png',
-                                          height: 14,
-                                          width: 12,
-                                          fit: BoxFit.contain,
-                                        ),
-                                        Text(
-                                          '  (1/${group.limitMembers.toString()})',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                      ],
+                                    Text(
+                                      '   |   ',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12),
                                     ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 10),
-                                      child: Container(
-                                        height: 60,
-                                        width: 210,
-                                        child: Text(
-                                          group.description,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              height: 1.5),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    )
+                                    Image.asset(
+                                      'assets/icons/user.png',
+                                      height: 14,
+                                      width: 12,
+                                      fit: BoxFit.contain,
+                                    ),
+                                    Text(
+                                      '  (1/${group.limitMembers.toString()})',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12),
+                                    ),
                                   ],
-                                ))
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(0xff2D2D2D),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(13),
-                              topRight: Radius.circular(13)),
-                        ),
-                      ),
-                      Container(
-                        height: 1,
-                        color: Color(0xff4D4D4D),
-                      ),
-                      //그룹 다이어리 작성버튼
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return WriteDiary(
-                              groupName: group.title,groupId:group.groupId,
-                            );
-                          }));
-                        },
-                        child: Container(
-                          height: 170,
-                          width: double.infinity,
-                          color: Color(0xff2D2D2D),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(13),
-                                color: Color(0xff3D3D3D),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add_box_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    '그룹 다이어리 작성하기',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      //카드 테스트후 수정
-                      Column(
-                        children: [
-                          //카드
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xff3d3d3d),
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: Color(0xff3d3d3d),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xd000000),
-                                      spreadRadius: 0,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 0),
-                                    )
-                                  ]),
-                              // 카드 제작
-                              child: Column(
-                                children: [
-                                  RecCardHeader(
-                                    data: post,
-                                  ),
-                                  GestureDetector(
-                                    // 리액션 상태 변경
-                                    onTap: () async {
-                                      var prevEmotion = myEmotion[post.diaryId];
-                                      var res = await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (BuildContext context) =>
-                                          new DiaryDetail(
-                                            post: post,
-                                            myEmotion:
-                                            myEmotion[post.diaryId],groupName: group.title,),
-                                          fullscreenDialog: true,
-                                        ),
-                                      );
-                                      if (res[0] != null) {
-                                        if (prevEmotion == null) {
-                                          setState(() {
-                                            _data[index].emotionCount += 1;
-                                            myEmotion[post.diaryId] = [
-                                              res[0],
-                                              res[1],
-                                              res[2],
-                                            ];
-                                            prevEmotion = myEmotion[post.diaryId];
-                                          });
-                                        } else {
-                                          setState(() {
-                                            myEmotion[post.diaryId] = [
-                                              res[0],
-                                              res[1],
-                                              res[2],
-                                            ];
-                                            prevEmotion = myEmotion[post.diaryId];
-                                          });
-                                        }
-                                      }
-                                      if (prevEmotion==null && res[0]==null){
-                                        //아무것도 안하고 나온경우
-                                      }
-                                      if (prevEmotion != null && res[0] == null) {
-                                        setState(() {
-                                          myEmotion.remove(post.diaryId);
-                                          _data[index].emotionCount -= 1;
-                                          prevEmotion = null;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      width: 331,
-                                      padding:
-                                      EdgeInsets.fromLTRB(20, 10, 20, 15),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          //이미지가 있는경우
-                                          post.category == 'diary' ||
-                                              post.category == 'trip'
-                                              ? post.Images.isNotEmpty
-                                              ? Container(
-                                            padding: EdgeInsets.only(
-                                                top: 5, bottom: 10),
-                                            child: FadeInImage.assetNetwork(
-                                              placeholder:
-                                              'assets/loading300.gif',
-                                              image: post.Images[0],
-                                              width: 300,
-                                              height: 300,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                              : Container()
-                                          //영화, 책 이미지 부분
-                                              : Container(
-                                            padding: EdgeInsets.only(
-                                                top: 5, bottom: 10),
-                                            child:
-                                            //       Image.network(
-                                            //   post.linkImg,
-                                            //   width: 300,
-                                            //   height: 300,
-                                            //   fit: BoxFit.cover,
-                                            // ),
-                                            FadeInImage.assetNetwork(
-                                              placeholder:
-                                              'assets/loading.gif',
-                                              image: post.linkImg,
-                                              width: 300,
-                                              height: 300,
-                                              fit: BoxFit.cover,
-                                            ),
-
-                                          ),
-                                          Text(
-                                            post.content,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 5,
-                                            softWrap: false,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                height: 2,
-                                                fontSize: 13),
-                                          ),
-                                        ],
-                                      ),
+                                ),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.only(bottom: 10),
+                                  child: Container(
+                                    height: 60,
+                                    width: 210,
+                                    child: Text(
+                                      group.description,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          height: 1.5),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        //내 리액션리스트에 있는지 확인후 출력
-                                        Container(
-                                          // 내가 표현한 감정 표시
-                                          child: Row(
-                                            children: [
-                                              post.emotionCount == 0
-                                                  ? Text(
-                                                '가장 먼저 감정을 보내보세요!',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10),
-                                              )
-                                                  : myEmotion[post.diaryId] ==
-                                                  null
-                                                  ? Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .only(
-                                                        right:
-                                                        10.0),
-                                                    child: Image.asset(
-                                                      'assets/emotions/${post.maxEmotion}.png',
-                                                      width: 25,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '${post.emotionCount}명',
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .white,
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  Text(
-                                                    '의 커넥티가 감정을 표현했어요!',
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .white,
-                                                        fontSize: 10),
-                                                  ),
-                                                ],
-                                              )
-                                                  : Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .only(
-                                                        right:
-                                                        10.0),
-                                                    child: Image.asset(
-                                                      'assets/emotions/${myEmotion[post.diaryId][0]}.png',
-                                                      width: 25,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '${engToKor[myEmotion[post.diaryId][0]]}',
-                                                    style: TextStyle(
-                                                        color: emotionColorList[
-                                                        engToInt[myEmotion[post.diaryId]
-                                                        [
-                                                        0]] -
-                                                            1],
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  Text(
-                                                    '의 감정을 보냈어요!',
-                                                    style: TextStyle(
-                                                        color: emotionColorList[
-                                                        engToInt[myEmotion[post.diaryId]
-                                                        [
-                                                        0]] -
-                                                            1],
-                                                        fontSize: 10),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            var prevEmotion =
-                                            myEmotion[post.diaryId];
-                                            var res = await Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                builder: (BuildContext context) =>
-                                                new DiaryDetail(
-                                                  post: post,
-                                                  myEmotion:
-                                                  myEmotion[post.diaryId],groupName: widget.group['title'],),
-                                                fullscreenDialog: true,
-                                              ),
-                                            );
-                                            if (res[0] != null) {
-                                              if (prevEmotion == null) {
-                                                setState(() {
-                                                  _data[index].emotionCount += 1;
-                                                  myEmotion[post.diaryId] = [
-                                                    res[0],
-                                                    res[1],
-                                                    res[2],
-                                                  ];
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  myEmotion[post.diaryId] = [
-                                                    res[0],
-                                                    res[1],
-                                                    res[2],
-                                                  ];
-                                                });
-                                              }
-                                            }
-                                            if (prevEmotion != null &&
-                                                res[0] == null) {
-                                              setState(() {
-                                                myEmotion.remove(post.diaryId);
-                                                _data[index].emotionCount -= 1;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            width: 90,
-                                            height: 25,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(30),
-                                                border: Border.all(
-                                                    color: Colors.white,
-                                                    width: 1.5)),
-                                            child: Center(
-                                              child: Text(
-                                                '감정 보내기 >',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          //디바이더
-                          Container(
-                            width: double.infinity,
-                            height: 20,
-                            color: Color(0xff2d2d2d),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }
-              if (index == _data.length) {
-                //최하단
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                          width: double.infinity,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            color: Color(0xff2d2d2d),
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(13),
-                                bottomRight: Radius.circular(13)),
-                          )),
+                                )
+                              ],
+                            ))
+                      ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    )
-                  ],
-                );
-              }
-              //카드
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Column(
-                  children: [
-                    //카드
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xff3d3d3d),
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Color(0xff3d3d3d),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xd000000),
-                                spreadRadius: 0,
-                                blurRadius: 10,
-                                offset: Offset(0, 0),
+                    decoration: BoxDecoration(
+                      color: Color(0xff2D2D2D),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(13),
+                          topRight: Radius.circular(13)),
+                    ),
+                  ),
+                  Container(
+                    height: 1,
+                    color: Color(0xff4D4D4D),
+                  ),
+                  //그룹 다이어리 작성버튼
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return WriteDiary(
+                          groupName: group.title,groupId:group.groupId,
+                        );
+                      }));
+                    },
+                    child: Container(
+                      height: 170,
+                      width: double.infinity,
+                      color: Color(0xff2D2D2D),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(13),
+                            color: Color(0xff3D3D3D),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_box_outlined,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '그룹 다이어리 작성하기',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               )
-                            ]),
-                        // 카드 제작
-                        child: Column(
-                          children: [
-                            RecCardHeader(
-                              data: post,
-                            ),
-                            GestureDetector(
-                              // 리액션 상태 변경
-                              onTap: () async {
-                                var prevEmotion = myEmotion[post.diaryId];
-                                var res = await Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (BuildContext context) =>
-                                    new DiaryDetail(
-                                      post: post,
-                                      myEmotion:
-                                      myEmotion[post.diaryId],groupName: group.title,),
-                                    fullscreenDialog: true,
-                                  ),
-                                );
-                                if (res[0] != null) {
-                                  if (prevEmotion == null) {
-                                    setState(() {
-                                      _data[index].emotionCount += 1;
-                                      myEmotion[post.diaryId] = [
-                                        res[0],
-                                        res[1],
-                                        res[2],
-                                      ];
-                                      prevEmotion = myEmotion[post.diaryId];
-                                    });
-                                  } else {
-                                    setState(() {
-                                      myEmotion[post.diaryId] = [
-                                        res[0],
-                                        res[1],
-                                        res[2],
-                                      ];
-                                      prevEmotion = myEmotion[post.diaryId];
-                                    });
-                                  }
-                                }
-                                if (prevEmotion==null && res[0]==null){
-                                  //아무것도 안하고 나온경우
-                                }
-                                if (prevEmotion != null && res[0] == null) {
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  //카드 테스트후 수정
+                ],
+              ),
+            ),
+            for(var post in _data) Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Column(
+                children: [
+                  //카드
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xff3d3d3d),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Color(0xff3d3d3d),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xd000000),
+                              spreadRadius: 0,
+                              blurRadius: 10,
+                              offset: Offset(0, 0),
+                            )
+                          ]),
+                      // 카드 제작
+                      child: Column(
+                        children: [
+                          RecCardHeader(
+                            data: post,
+                          ),
+                          GestureDetector(
+                            // 리액션 상태 변경
+                            onTap: () async {
+                              var prevEmotion = myEmotion[post.diaryId];
+                              var res = await Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (BuildContext context) =>
+                                  new DiaryDetail(
+                                    post: post,
+                                    myEmotion:
+                                    myEmotion[post.diaryId],groupName: group.title,),
+                                  fullscreenDialog: true,
+                                ),
+                              );
+                              if (res[0] != null) {
+                                if (prevEmotion == null) {
                                   setState(() {
-                                    myEmotion.remove(post.diaryId);
-                                    _data[index].emotionCount -= 1;
-                                    prevEmotion = null;
+                                    post.emotionCount += 1;
+                                    myEmotion[post.diaryId] = [
+                                      res[0],
+                                      res[1],
+                                      res[2],
+                                    ];
+                                    prevEmotion = myEmotion[post.diaryId];
+                                  });
+                                } else {
+                                  setState(() {
+                                    myEmotion[post.diaryId] = [
+                                      res[0],
+                                      res[1],
+                                      res[2],
+                                    ];
+                                    prevEmotion = myEmotion[post.diaryId];
                                   });
                                 }
-                              },
-                              child: Container(
-                                width: 331,
-                                padding:
-                                EdgeInsets.fromLTRB(20, 10, 20, 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    //이미지가 있는경우
-                                    post.category == 'diary' ||
-                                        post.category == 'trip'
-                                        ? post.Images.isNotEmpty
-                                        ? Container(
-                                      padding: EdgeInsets.only(
-                                          top: 5, bottom: 10),
-                                      child: FadeInImage.assetNetwork(
-                                        placeholder:
-                                        'assets/loading300.gif',
-                                        image: post.Images[0],
-                                        width: 300,
-                                        height: 300,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                        : Container()
-                                    //영화, 책 이미지 부분
-                                        : Container(
-                                      padding: EdgeInsets.only(
-                                          top: 5, bottom: 10),
-                                      child:
-                                      //       Image.network(
-                                      //   post.linkImg,
-                                      //   width: 300,
-                                      //   height: 300,
-                                      //   fit: BoxFit.cover,
-                                      // ),
-                                      FadeInImage.assetNetwork(
-                                        placeholder:
-                                        'assets/loading.gif',
-                                        image: post.linkImg,
-                                        width: 300,
-                                        height: 300,
-                                        fit: BoxFit.cover,
-                                      ),
-
-                                    ),
-                                    Text(
-                                      post.content,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 5,
-                                      softWrap: false,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          height: 2,
-                                          fontSize: 13),
-                                    ),
-                                  ],
-                                ),
+                              }
+                              if (prevEmotion==null && res[0]==null){
+                                //아무것도 안하고 나온경우
+                              }
+                              if (prevEmotion != null && res[0] == null) {
+                                setState(() {
+                                  myEmotion.remove(post.diaryId);
+                                  post.emotionCount -= 1;
+                                  prevEmotion = null;
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: 331,
+                              padding:
+                              EdgeInsets.fromLTRB(20, 10, 20, 15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
-                                  //내 리액션리스트에 있는지 확인후 출력
-                                  Container(
-                                    // 내가 표현한 감정 표시
-                                    child: Row(
-                                      children: [
-                                        post.emotionCount == 0
-                                            ? Text(
-                                          '가장 먼저 감정을 보내보세요!',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10),
-                                        )
-                                            : myEmotion[post.diaryId] ==
-                                            null
-                                            ? Row(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  right:
-                                                  10.0),
-                                              child: Image.asset(
-                                                'assets/emotions/${post.maxEmotion}.png',
-                                                width: 25,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${post.emotionCount}명',
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .white,
-                                                  fontSize: 10,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .bold),
-                                            ),
-                                            Text(
-                                              '의 커넥티가 감정을 표현했어요!',
-                                              style: TextStyle(
-                                                  color: Colors
-                                                      .white,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        )
-                                            : Row(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  right:
-                                                  10.0),
-                                              child: Image.asset(
-                                                'assets/emotions/${myEmotion[post.diaryId][0]}.png',
-                                                width: 25,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${engToKor[myEmotion[post.diaryId][0]]}',
-                                              style: TextStyle(
-                                                  color: emotionColorList[
-                                                  engToInt[myEmotion[post.diaryId]
-                                                  [
-                                                  0]] -
-                                                      1],
-                                                  fontSize: 10,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .bold),
-                                            ),
-                                            Text(
-                                              '의 감정을 보냈어요!',
-                                              style: TextStyle(
-                                                  color: emotionColorList[
-                                                  engToInt[myEmotion[post.diaryId]
-                                                  [
-                                                  0]] -
-                                                      1],
-                                                  fontSize: 10),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      var prevEmotion =
-                                      myEmotion[post.diaryId];
-                                      var res = await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (BuildContext context) =>
-                                          new DiaryDetail(
-                                            post: post,
-                                            myEmotion:
-                                            myEmotion[post.diaryId],groupName: widget.group['title'],),
-                                          fullscreenDialog: true,
-                                        ),
-                                      );
-                                      if (res[0] != null) {
-                                        if (prevEmotion == null) {
-                                          setState(() {
-                                            _data[index].emotionCount += 1;
-                                            myEmotion[post.diaryId] = [
-                                              res[0],
-                                              res[1],
-                                              res[2],
-                                            ];
-                                          });
-                                        } else {
-                                          setState(() {
-                                            myEmotion[post.diaryId] = [
-                                              res[0],
-                                              res[1],
-                                              res[2],
-                                            ];
-                                          });
-                                        }
-                                      }
-                                      if (prevEmotion != null &&
-                                          res[0] == null) {
-                                        setState(() {
-                                          myEmotion.remove(post.diaryId);
-                                          _data[index].emotionCount -= 1;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      width: 90,
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(30),
-                                          border: Border.all(
-                                              color: Colors.white,
-                                              width: 1.5)),
-                                      child: Center(
-                                        child: Text(
-                                          '감정 보내기 >',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                      ),
+                                  //이미지가 있는경우
+                                  post.category == 'diary' ||
+                                      post.category == 'trip'
+                                      ? post.Images.isNotEmpty
+                                      ? Container(
+                                    padding: EdgeInsets.only(
+                                        top: 5, bottom: 10),
+                                    child: FadeInImage.assetNetwork(
+                                      placeholder:
+                                      'assets/loading300.gif',
+                                      image: post.Images[0],
+                                      width: 300,
+                                      height: 300,
+                                      fit: BoxFit.cover,
                                     ),
                                   )
+                                      : Container()
+                                  //영화, 책 이미지 부분
+                                      : Container(
+                                    padding: EdgeInsets.only(
+                                        top: 5, bottom: 10),
+                                    child:
+                                    //       Image.network(
+                                    //   post.linkImg,
+                                    //   width: 300,
+                                    //   height: 300,
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                    FadeInImage.assetNetwork(
+                                      placeholder:
+                                      'assets/loading.gif',
+                                      image: post.linkImg,
+                                      width: 300,
+                                      height: 300,
+                                      fit: BoxFit.cover,
+                                    ),
+
+                                  ),
+                                  Text(
+                                    post.content,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 5,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        height: 2,
+                                        fontSize: 13),
+                                  ),
                                 ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                //내 리액션리스트에 있는지 확인후 출력
+                                Container(
+                                  // 내가 표현한 감정 표시
+                                  child: Row(
+                                    children: [
+                                      post.emotionCount == 0
+                                          ? Text(
+                                        '가장 먼저 감정을 보내보세요!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10),
+                                      )
+                                          : myEmotion[post.diaryId] ==
+                                          null
+                                          ? Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets
+                                                .only(
+                                                right:
+                                                10.0),
+                                            child: Image.asset(
+                                              'assets/emotions/${post.maxEmotion}.png',
+                                              width: 25,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${post.emotionCount}명',
+                                            style: TextStyle(
+                                                color: Colors
+                                                    .white,
+                                                fontSize: 10,
+                                                fontWeight:
+                                                FontWeight
+                                                    .bold),
+                                          ),
+                                          Text(
+                                            '의 커넥티가 감정을 표현했어요!',
+                                            style: TextStyle(
+                                                color: Colors
+                                                    .white,
+                                                fontSize: 10),
+                                          ),
+                                        ],
+                                      )
+                                          : Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets
+                                                .only(
+                                                right:
+                                                10.0),
+                                            child: Image.asset(
+                                              'assets/emotions/${myEmotion[post.diaryId][0]}.png',
+                                              width: 25,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${engToKor[myEmotion[post.diaryId][0]]}',
+                                            style: TextStyle(
+                                                color: emotionColorList[
+                                                engToInt[myEmotion[post.diaryId]
+                                                [
+                                                0]] -
+                                                    1],
+                                                fontSize: 10,
+                                                fontWeight:
+                                                FontWeight
+                                                    .bold),
+                                          ),
+                                          Text(
+                                            '의 감정을 보냈어요!',
+                                            style: TextStyle(
+                                                color: emotionColorList[
+                                                engToInt[myEmotion[post.diaryId]
+                                                [
+                                                0]] -
+                                                    1],
+                                                fontSize: 10),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    var prevEmotion =
+                                    myEmotion[post.diaryId];
+                                    var res = await Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (BuildContext context) =>
+                                        new DiaryDetail(
+                                          post: post,
+                                          myEmotion:
+                                          myEmotion[post.diaryId],groupName: widget.group['title'],),
+                                        fullscreenDialog: true,
+                                      ),
+                                    );
+                                    if (res[0] != null) {
+                                      if (prevEmotion == null) {
+                                        setState(() {
+                                          post.emotionCount += 1;
+                                          myEmotion[post.diaryId] = [
+                                            res[0],
+                                            res[1],
+                                            res[2],
+                                          ];
+                                        });
+                                      } else {
+                                        setState(() {
+                                          myEmotion[post.diaryId] = [
+                                            res[0],
+                                            res[1],
+                                            res[2],
+                                          ];
+                                        });
+                                      }
+                                    }
+                                    if (prevEmotion != null &&
+                                        res[0] == null) {
+                                      setState(() {
+                                        myEmotion.remove(post.diaryId);
+                                        post.emotionCount -= 1;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 90,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(30),
+                                        border: Border.all(
+                                            color: Colors.white,
+                                            width: 1.5)),
+                                    child: Center(
+                                      child: Text(
+                                        '감정 보내기 >',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    //디바이더
-                    Container(
+                  ),
+                  //디바이더
+                  Container(
+                    width: double.infinity,
+                    height: 20,
+                    color: Color(0xff2d2d2d),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Container(
                       width: double.infinity,
-                      height: 20,
-                      color: Color(0xff2d2d2d),
-                    ),
-                  ],
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Color(0xff2d2d2d),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(13),
+                            bottomRight: Radius.circular(13)),
+                      )),
                 ),
-              );
-            },
-          ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
+          ],),
         ),
       ),
     );

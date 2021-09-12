@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/screen/myPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -248,6 +249,7 @@ class _MyAppState extends State<MyApp> {
             "http://52.79.146.213:5000/auth/login"),
         body: data);
     var result = json.decode(res.body);
+    print(data);
     print(result);
     if (result["success"] == true) {
       var token=JwtDecoder.decode(result['access_token']);
@@ -291,7 +293,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context, rootNavigator: true).push(
               new CupertinoPageRoute(
                 builder: (BuildContext context) =>
-                    new WriteDiary(groupName: null),
+                    new WriteDiary(),
                 fullscreenDialog: true,
               ),
             );
@@ -402,7 +404,7 @@ class _HomePageState extends State<HomePage> {
           case 3:
             return CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: Container(),
+                child: MyDiary(),
               );
             });
           case 4:

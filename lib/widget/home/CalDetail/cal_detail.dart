@@ -331,7 +331,6 @@ class _CalDetailState extends State<CalDetail> {
         .get(Uri.parse(
             'http://52.79.146.213:5000/diaries/$userId/fetch/daily?date=$date'))
         .then((res) {
-          print(res.body);
       if (res.statusCode == 200) {
         String jsonString = res.body;
         List data = jsonDecode(jsonString);

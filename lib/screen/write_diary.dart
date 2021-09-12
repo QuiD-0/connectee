@@ -1105,16 +1105,15 @@ class _WriteDiaryState extends State<WriteDiary> {
     var resJson = json.decode(respStr.body);
     if (resJson["result"] == true) {
       _toast('오늘의 일기가 기록되었습니다.');
-      _postMainEmotion().then((res){
+      _postMainEmotion().then((res) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        if (group==null){
-          Navigator.pushAndRemoveUntil(
+        if (group == null) {
+          Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      WillPopScope(onWillPop: () {}, child: HomePage())),
-                  (route) => false);
+              MaterialPageRoute(builder: (BuildContext context) => WillPopScope(
+                  onWillPop: (){},
+                  child: HomePage())));
         }
       });
     } else {
@@ -1147,7 +1146,8 @@ class _WriteDiaryState extends State<WriteDiary> {
     await http.post(Uri.parse('http://52.79.146.213:5000/daily-infos/create'),
         body: body);
     var prefs = await SharedPreferences.getInstance();
-    prefs.setString(day, '${engEmotionList[finalEmotion - 1]},${emotionValue.toString()}');
+    prefs.setString(
+        day, '${engEmotionList[finalEmotion - 1]},${emotionValue.toString()}');
   }
 
   Widget emotionSelector() {

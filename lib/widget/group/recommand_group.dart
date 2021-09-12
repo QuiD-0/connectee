@@ -109,7 +109,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         //그룹 이미지
-                        Container(
+                        group['imageUrl']!=null?Container(
                           width: 120,
                           child: Center(
                             child: ClipRRect(
@@ -119,6 +119,20 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                 height: 80,
                                 width: 80,
                                 fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ):Container(
+                          width: 120,
+                          child: Center(
+                            child: ClipRRect(
+                              borderRadius:
+                              BorderRadius.circular(
+                                  50),
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                color: Color(0xffFF9082),
                               ),
                             ),
                           ),
@@ -276,7 +290,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
               SizedBox(
                 height: 15,
               ),
-              Container(
+              group['imageUrl']!=null?Container(
                 width: 120,
                 child: Center(
                   child: ClipRRect(
@@ -286,6 +300,20 @@ class _RecommandGroupState extends State<RecommandGroup> {
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ):Container(
+                width: 120,
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius:
+                    BorderRadius.circular(
+                        50),
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      color: Color(0xffFF9082),
                     ),
                   ),
                 ),
@@ -337,7 +365,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '100+ ',
+                    '${group['groupDiaryCount']}+ ',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
