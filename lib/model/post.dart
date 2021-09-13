@@ -14,6 +14,9 @@ class Diary {
   String linkImg;
   String group;
   int private;
+  Map<String,dynamic> book;
+  Map<String,dynamic> movie;
+  int rating;
 
   Diary.fromMap(Map<String, dynamic> map)
       : diaryId = map['id'],
@@ -34,7 +37,11 @@ class Diary {
           for (var i = 0; i < map["Images"].length; i++)
             map["Images"][i]["location"]
         ],
-        linkImg = getImg(map);
+        linkImg = getImg(map),
+        rating = getRating(map),
+        book = getBook(map),
+        movie = getMovie(map);
+
 
   static getImg(Map<String, dynamic> map) {
     if (map['BookApi'] != null) {
@@ -45,6 +52,35 @@ class Diary {
     }
     else{
       return "none";
+    }
+  }
+
+  static getBook(Map<String, dynamic> map) {
+    if (map['BookApi'] != null) {
+      return map['BookApi'];
+    }
+    else{
+      return null;
+    }
+  }
+
+  static getMovie(Map<String, dynamic> map) {
+    if (map['MovieApi'] != null) {
+      return map['MovieApi'];
+    }else{
+      return null;
+    }
+  }
+
+  static getRating(Map<String, dynamic> map) {
+    if (map['BookApi'] != null) {
+      return map['BookApi']["rating"];
+    }
+    else if (map['MovieApi'] != null) {
+      return map['MovieApi']["rating"];
+    }
+    else{
+      return null;
     }
   }
 }

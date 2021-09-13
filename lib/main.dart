@@ -235,12 +235,12 @@ class _MyAppState extends State<MyApp> {
     var data;
     if (kakaoId!=null){
       data = {
-        "password": kakaoId,
+        "password": kakaoId.toString(),
         "username": "kakao",
       };
     }else{
       data = {
-        "password": appleId,
+        "password": appleId.toString(),
         "username": "apple",
       };
     }

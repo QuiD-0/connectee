@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:connectee/main.dart';
+import 'package:intl/intl.dart';
 import 'package:connectee/vars.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -26,7 +26,7 @@ class _EditDiaryState extends State<EditDiary> {
   GlobalKey<FormBuilderState> fbkey = GlobalKey<FormBuilderState>();
 
   String userId;
-  String type = ''; //default
+  String type = "diary"; //default
   Map<String, String> types = {
     "diary": "일기",
     "trip": "여행",
@@ -37,7 +37,8 @@ class _EditDiaryState extends State<EditDiary> {
   int emotionValue;
   int selectEmotion;
   String isPublic = "open";
-  List<XFile> _image;
+  List<XFile> _image=[];
+  List initImage;
 
   //영화
   String movieName = '';
@@ -59,9 +60,7 @@ class _EditDiaryState extends State<EditDiary> {
   void initState() {
     // TODO: implement initState
     _getId();
-    type = widget.post.category;
-    finalEmotion = engToInt[widget.post.emotionType];
-    emotionValue =widget.post.emotionLevel;
+    initValues();
     super.initState();
   }
 
@@ -103,7 +102,7 @@ class _EditDiaryState extends State<EditDiary> {
                     } else if (type == "book" && bookName == '') {
                       _toast('책을 선택해 주세요');
                     } else {
-                      post(group);
+                      editDiary(group);
                     }
                   } else {
                     _toast('감정을 선택해 주세요');
@@ -460,25 +459,27 @@ class _EditDiaryState extends State<EditDiary> {
                                       ? await Permission.photos.request()
                                       : await Permission.storage
                                       .request();
-                                  print(status);
                                   if (status.isGranted) {
                                     final ImagePicker _picker =
                                     ImagePicker();
                                     List<XFile> images =
                                     await _picker.pickMultiImage();
-                                    if (images == null) {
+                                    if (images==null) {
                                       setState(() {
-                                        _image = null;
+                                        _image = [];
+                                        initImage = [];
                                       });
                                     } else {
                                       if (images.length > 5) {
                                         _toast("사진은 최대 5장까지 선택가능합니다.");
                                         setState(() {
-                                          _image = null;
+                                          _image = [];
+                                          initImage = [];
                                         });
                                       } else {
                                         setState(() {
                                           _image = images;
+                                          initImage = [];
                                         });
                                       }
                                     }
@@ -501,7 +502,7 @@ class _EditDiaryState extends State<EditDiary> {
                                           spreadRadius: 0)
                                     ],
                                   ),
-                                  child: _image == null
+                                  child: initImage.isEmpty && _image.isEmpty
                                       ? Column(
                                     mainAxisAlignment:
                                     MainAxisAlignment.center,
@@ -528,12 +529,15 @@ class _EditDiaryState extends State<EditDiary> {
                                     child: Stack(
                                       alignment: Alignment.topRight,
                                       children: [
-                                        Image.file(
+                                        initImage.isEmpty?Image.file(
                                           File(_image[0].path),
                                           width: 340,
                                           height: 340,
                                           fit: BoxFit.cover,
-                                        ),
+                                        ):Image.network(initImage[0],
+                                          width: 340,
+                                          height: 340,
+                                          fit: BoxFit.cover,),
                                         Padding(
                                           padding:
                                           const EdgeInsets.all(
@@ -1062,13 +1066,13 @@ class _EditDiaryState extends State<EditDiary> {
     });
   }
 
-  post(group) async {
+  editDiary(group) async {
     final inputValues = fbkey.currentState.value;
     showLoaderDialog(context);
     //실제 url
     var request = new http.MultipartRequest(
       "PATCH",
-      Uri.parse('http://52.79.146.213:5000/diaries/$userId'),
+      Uri.parse('http://52.79.146.213:5000/diaries/${widget.post.diaryId}'),
     );
 
     //기본 필드값
@@ -1106,6 +1110,7 @@ class _EditDiaryState extends State<EditDiary> {
     var res = await request.send();
     var respStr = await http.Response.fromStream(res);
     var resJson = json.decode(respStr.body);
+    print(resJson);
     if (resJson["result"] == true) {
       _toast('수정완료');
       Navigator.of(context).pop();
@@ -1114,6 +1119,7 @@ class _EditDiaryState extends State<EditDiary> {
       _toast('다시 시도해 주세요');
       Navigator.of(context).pop();
     }
+    Navigator.of(context).pop();
   }
 
   _toast(msg) {
@@ -1271,7 +1277,6 @@ class _EditDiaryState extends State<EditDiary> {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       content: Builder(
         builder: (context) {
-          // Get available height and width of the build area of this widget. Make a choice depending on the size.
           return Container(
             height: 50,
             child: Center(
@@ -1282,6 +1287,7 @@ class _EditDiaryState extends State<EditDiary> {
       ),
     );
     showDialog(
+      useRootNavigator: false,
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -1341,6 +1347,35 @@ class _EditDiaryState extends State<EditDiary> {
         ],
       ),
     );
+  }
+
+  void initValues() {
+    type = widget.post.category;
+    finalEmotion = engToInt[widget.post.emotionType];
+    emotionValue = widget.post.emotionLevel;
+    selectEmotion = widget.post.emotionLevel;
+    isPublic = widget.post.private==0?'open':'close';
+    initImage =widget.post.Images;
+    //영화
+    if(widget.post.movie!=null){
+      movieName = widget.post.movie['movie'];
+      director =widget.post.movie['director'];
+      actors = widget.post.movie['actors'];
+      playDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(widget.post.movie['playDate'])).toString();
+      imgLink = widget.post.linkImg;
+      rating = double.parse(widget.post.rating.toString());
+    }
+
+    //책
+    if(widget.post.book!=null){
+      bookName = widget.post.book['book'];
+      author = widget.post.book['author'];
+      publisher = widget.post.book['publisher'];
+      publishDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(widget.post.book['publishDate'])).toString();
+      imgLink = widget.post.linkImg;
+      rating = double.parse(widget.post.rating.toString());
+    }
+
   }
 }
 

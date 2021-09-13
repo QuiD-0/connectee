@@ -21,29 +21,137 @@ class _MyDiaryState extends State<MyDiary> {
       RefreshController(initialRefresh: false);
   List _data = [
     Diary.fromMap({
-      "id": 19,
-      "title": "2nd test",
-      "content": "plz plz",
-      "emotionType": "happy",
-      "emotionLevel": 4,
+      "id": 22,
+      "title": "이쁜 하늘",
+      "content": "매일 이런 날씨면 좋겟다",
+      "emotionType": "surprised",
+      "emotionLevel": 5,
       "private": 0,
       "weather": null,
       "category": "diary",
       "categoryScore": null,
-      "createdAt": "2021-09-12T02:06:42.744Z",
-      "updatedAt": "2021-09-12T02:09:22.934Z",
+      "createdAt": "2021-09-12T22:04:09.452Z",
+      "updatedAt": "2021-09-12T22:04:09.572Z",
       "deletedAt": null,
       "userId": 1,
       "movieId": null,
       "bookId": null,
-      "train": true,
-      "FTVector": "[]",
+      "train": false,
+      "FTVector": "[ 0.07930864 -0.13277662  0.18714295  0.0611374  -0.10511176 -0.2563751\n  0.1362925   0.05879297  0.14633304  0.1039238  -0.21439154 -0.03212082\n  0.21975231  0.09757462 -0.18519069  0.22017968 -0.2159352   0.23821585\n -0.31008035 -0.11176975 -0.22413716 -0.34892857 -0.18236616  0.04763281\n  0.21652508 -0.09015366  0.07634337  0.30142602  0.21586272  0.02983756]",
+      "interest": "날씨,하늘",
+      "LDAVector": "[(0, 0.05178676), (1, 0.051796485), (2, 0.05178706), (3, 0.051787145), (4, 0.051787052), (5, 0.05178707), (6, 0.051787864), (7, 0.05178711), (8, 0.5339065), (9, 0.05178697)]",
+      "isMyDiary": true,
+      "Images": [
+        {
+          "id": 2,
+          "originalName": "image_picker4166048543844957850.jpg",
+          "location": "https://sw-connectee-s3.s3.ap-northeast-2.amazonaws.com/original/image_picker4166048543844957850.jpg",
+          "size": 3663721,
+          "createdAt": "2021-09-12T22:04:09.593Z",
+          "updatedAt": "2021-09-12T22:04:09.593Z",
+          "deletedAt": null,
+          "diaryId": 22
+        }
+      ],
+      "BookApi": null,
+      "MovieApi": null,
+      "Comments": [],
+      "User": {
+        "id": 1,
+        "snsId": "1822802345",
+        "provider": "kakao",
+        "email": "wodnd101@naver.com",
+        "nickname": "이재웅",
+        "interest": "날씨,하루,오늘,설정,서버",
+        "createdAt": "2021-09-07T01:37:53.707Z",
+        "updatedAt": "2021-09-12T22:03:42.000Z",
+        "deletedAt": null
+      },
+      "maxEmotion": null
+    }),
+    Diary.fromMap({
+      "id": 21,
+      "title": "영화 영화",
+      "content": "보고싶다",
+      "emotionType": "happy",
+      "emotionLevel": 4,
+      "private": 0,
+      "weather": null,
+      "category": "movie",
+      "categoryScore": null,
+      "createdAt": "2021-09-12T21:42:40.567Z",
+      "updatedAt": "2021-09-12T21:42:40.661Z",
+      "deletedAt": null,
+      "userId": 1,
+      "movieId": 1,
+      "bookId": null,
+      "train": false,
+      "FTVector": "[-8.93709287e-02  4.55319807e-02  4.07666862e-02 -2.46889535e-02\n  1.90205183e-02  1.36115536e-01  6.32665679e-02  4.42459643e-01\n  1.95865214e-01 -9.08108503e-02  1.77156436e-03 -1.77739441e-01\n -3.65066640e-02 -2.00524062e-01  1.56549644e-02  6.44933358e-02\n  2.15869591e-01  6.25528246e-02  4.13581878e-01 -1.22825496e-01\n  2.35106289e-01  2.54637022e-02  5.71883954e-02  3.53091151e-01\n  2.84556125e-04  6.07549213e-02 -7.67135918e-02 -2.76137330e-02\n  4.48129714e-01 -1.14802592e-01]",
       "interest": null,
-      "LDAVector":
-          "[(0, 0.1), (1, 0.1), (2, 0.1), (3, 0.1), (4, 0.1), (5, 0.1), (6, 0.1), (7, 0.1), (8, 0.1), (9, 0.1)]",
+      "LDAVector": "[(0, 0.035811923), (1, 0.035811927), (2, 0.035812188), (3, 0.035811946), (4, 0.035811946), (5, 0.03581195), (6, 0.035811946), (7, 0.035811946), (8, 0.6776921), (9, 0.0358121)]",
       "isMyDiary": true,
       "Images": [],
       "BookApi": null,
+      "MovieApi": {
+        "id": 1,
+        "movie": "스파이더맨: 노 웨이 홈",
+        "director": "존 왓츠",
+        "actors": "톰 홀랜드, 젠데이아 콜먼, 제이콥 배덜런, 베네딕트 컴버배치, 알프리드 몰리나, 존 파브로, 마리사 토메이",
+        "playDate": "2021-01-01T00:00:00.000Z",
+        "imgLink": "https://ssl.pstatic.net/imgmovie/mdi/mit110/2080/208077_P01_105043.jpg",
+        "rating": 5,
+        "createdAt": "2021-09-12T21:42:40.551Z",
+        "updatedAt": "2021-09-12T21:42:40.551Z",
+        "deletedAt": null
+      },
+      "Comments": [],
+      "User": {
+        "id": 1,
+        "snsId": "1822802345",
+        "provider": "kakao",
+        "email": "wodnd101@naver.com",
+        "nickname": "이재웅",
+        "interest": "마음,나가,하루,오늘",
+        "createdAt": "2021-09-07T01:37:53.707Z",
+        "updatedAt": "2021-09-12T21:41:41.000Z",
+        "deletedAt": null
+      },
+      "maxEmotion": null
+    }),
+    Diary.fromMap({
+      "id": 20,
+      "title": "책책",
+      "content": "굿굿",
+      "emotionType": "sad",
+      "emotionLevel": 4,
+      "private": 0,
+      "weather": null,
+      "category": "book",
+      "categoryScore": null,
+      "createdAt": "2021-09-12T21:22:44.598Z",
+      "updatedAt": "2021-09-12T21:22:44.661Z",
+      "deletedAt": null,
+      "userId": 1,
+      "movieId": null,
+      "bookId": 1,
+      "train": false,
+      "FTVector": "[]",
+      "interest": null,
+      "LDAVector": "[(0, 0.1), (1, 0.1), (2, 0.1), (3, 0.1), (4, 0.1), (5, 0.1), (6, 0.1), (7, 0.1), (8, 0.1), (9, 0.1)]",
+      "isMyDiary": true,
+      "Images": [],
+      "BookApi": {
+        "id": 1,
+        "book": "오늘 밤, 세계에서 이 사랑이 사라진다 해도 (매일 기억을 잃는 너와 두 번 다시 돌아갈 수 없는 사랑을 했다)",
+        "author": "이치조 미사키",
+        "publisher": "모모",
+        "publishDate": "2021-06-21T00:00:00.000Z",
+        "imgLink": "https://bookthumb-phinf.pstatic.net/cover/206/578/20657805.jpg?type=m1&udate=20210724",
+        "rating": 4,
+        "createdAt": "2021-09-12T21:22:44.581Z",
+        "updatedAt": "2021-09-12T21:22:44.581Z",
+        "deletedAt": null
+      },
       "MovieApi": null,
       "Comments": [],
       "User": {
@@ -54,9 +162,10 @@ class _MyDiaryState extends State<MyDiary> {
         "nickname": "이재웅",
         "interest": "마음,나가,하루,오늘",
         "createdAt": "2021-09-07T01:37:53.707Z",
-        "updatedAt": "2021-09-12T03:27:38.000Z",
+        "updatedAt": "2021-09-12T21:21:35.000Z",
         "deletedAt": null
-      }
+      },
+      "maxEmotion": null
     }),
     Diary.fromMap({
       "id": 18,
@@ -96,8 +205,7 @@ class _MyDiaryState extends State<MyDiary> {
         "deletedAt": null
       }
     }),
-    Diary.fromMap(
-      {
+    Diary.fromMap({
         "id": 17,
         "title": "코로나 언제끝날까",
         "content": "빨리 끝나면 좋겟다 ㅠㅠ",
@@ -135,8 +243,7 @@ class _MyDiaryState extends State<MyDiary> {
           "updatedAt": "2021-09-12T03:27:38.000Z",
           "deletedAt": null
         }
-      },
-    ),
+      }),
     Diary.fromMap({
       "id": 16,
       "title": "안녕",
@@ -228,7 +335,7 @@ class _MyDiaryState extends State<MyDiary> {
         "updatedAt": "2021-09-12T03:27:38.000Z",
         "deletedAt": null
       }
-    })
+    }),
   ];
   var userInfo = {
     "id": 1,
@@ -449,7 +556,7 @@ class _MyDiaryState extends State<MyDiary> {
                               ),
                               userInfo['desc'] != ''
                                   ? Text(
-                                      '${userInfo['desc']}dlqslek 입니다ㅁㅁㅇㅁㄴㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅁㄴㅇㅁㄴㅇㅇ',
+                                      '${userInfo['desc']}',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -502,12 +609,12 @@ class _MyDiaryState extends State<MyDiary> {
                 for (var diary in _data)
                   Column(
                     children: [
-                      _monthCheck(diary)
-                          ? Padding(
+                      Padding(
                             padding: const EdgeInsets.fromLTRB(10,0,10,0),
                             child: Column(
                                 children: [
-                                  Container(
+                                  _monthCheck(diary)
+                                      ? Container(
                                     height: 30,
                                     width: double.infinity,
                                     color: Color(0xff2d2d2d),
@@ -528,7 +635,7 @@ class _MyDiaryState extends State<MyDiary> {
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ):Container(),
                                   Container(
                                     color: Color(0xff3D3D3D),
                                     child: Column(
@@ -692,172 +799,172 @@ class _MyDiaryState extends State<MyDiary> {
                                 ],
                               ),
                           )
-                          : Padding(
-                            padding: const EdgeInsets.fromLTRB(10,0,10,0),
-                            child: Column(
-                              children: [
-                                Container(
-                        color: Color(0xff3D3D3D),
-                        child: Column(
-                                children: [
-                                  MyDiaryHeader(
-                                    post: diary,
-                                  ),
-                                  GestureDetector(
-                                    // 리액션 상태 변경
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (BuildContext context) =>
-                                          new MyDiaryDetail(
-                                            post: diary,edit: true,),
-                                          fullscreenDialog: true,
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 331,
-                                      padding: EdgeInsets.fromLTRB(
-                                          20, 10, 20, 15),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                        BorderRadius.circular(10),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          //이미지가 있는경우
-                                          diary.category == 'diary' ||
-                                              diary.category == 'trip'
-                                              ? diary.Images.isNotEmpty
-                                              ? Container(
-                                            padding:
-                                            EdgeInsets.only(
-                                                top: 5,
-                                                bottom: 10),
-                                            child: FadeInImage
-                                                .assetNetwork(
-                                              placeholder:
-                                              'assets/loading300.gif',
-                                              image:
-                                              diary.Images[0],
-                                              width: 300,
-                                              height: 300,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                              : Container()
-                                          //영화, 책 이미지 부분
-                                              : Container(
-                                            padding: EdgeInsets.only(
-                                                top: 5, bottom: 10),
-                                            child: FadeInImage
-                                                .assetNetwork(
-                                              placeholder:
-                                              'assets/loading300.gif',
-                                              image: diary.linkImg,
-                                              width: 300,
-                                              height: 300,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Text(
-                                            diary.content,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 5,
-                                            softWrap: false,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                height: 2,
-                                                fontSize: 13),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin:
-                                    EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsets.only(
-                                                      right: 10.0),
-                                                  child:
-                                                  diary.maxEmotion != null
-                                                      ? Image.asset(
-                                                    'assets/emotions/${diary.maxEmotion}.png',
-                                                    width: 25,
-                                                  )
-                                                      : Container(),
-                                                ),
-                                                Text(
-                                                  '${diary.emotionCount}명',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                      FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  '의 커넥티가 감정을 표현했어요!',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            )),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                builder: (BuildContext
-                                                context) =>
-                                                new MyDiaryDetail(
-                                                  post: diary,edit: true,),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            width: 90,
-                                            height: 25,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    30),
-                                                border: Border.all(
-                                                    color: Colors.white,
-                                                    width: 1.5)),
-                                            child: Center(
-                                              child: Text(
-                                                '자세히 보기 >',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                        ),
-                      ),
-                                Container(width: double.infinity,color: Color(0xff2D2D2D),height: 15,),
-                              ],
-                            ),
-                          ),
+                      //     : Padding(
+                      //       padding: const EdgeInsets.fromLTRB(10,0,10,0),
+                      //       child: Column(
+                      //         children: [
+                      //           Container(
+                      //   color: Color(0xff3D3D3D),
+                      //   child: Column(
+                      //           children: [
+                      //             MyDiaryHeader(
+                      //               post: diary,
+                      //             ),
+                      //             GestureDetector(
+                      //               // 리액션 상태 변경
+                      //               onTap: () {
+                      //                 Navigator.push(
+                      //                   context,
+                      //                   CupertinoPageRoute(
+                      //                     builder: (BuildContext context) =>
+                      //                     new MyDiaryDetail(
+                      //                       post: diary,edit: true,),
+                      //                     fullscreenDialog: true,
+                      //                   ),
+                      //                 );
+                      //               },
+                      //               child: Container(
+                      //                 width: 331,
+                      //                 padding: EdgeInsets.fromLTRB(
+                      //                     20, 10, 20, 15),
+                      //                 decoration: BoxDecoration(
+                      //                   color: Colors.white,
+                      //                   borderRadius:
+                      //                   BorderRadius.circular(10),
+                      //                 ),
+                      //                 child: Column(
+                      //                   crossAxisAlignment:
+                      //                   CrossAxisAlignment.start,
+                      //                   children: [
+                      //                     //이미지가 있는경우
+                      //                     diary.category == 'diary' ||
+                      //                         diary.category == 'trip'
+                      //                         ? diary.Images.isNotEmpty
+                      //                         ? Container(
+                      //                       padding:
+                      //                       EdgeInsets.only(
+                      //                           top: 5,
+                      //                           bottom: 10),
+                      //                       child: FadeInImage
+                      //                           .assetNetwork(
+                      //                         placeholder:
+                      //                         'assets/loading300.gif',
+                      //                         image:
+                      //                         diary.Images[0],
+                      //                         width: 300,
+                      //                         height: 300,
+                      //                         fit: BoxFit.cover,
+                      //                       ),
+                      //                     )
+                      //                         : Container()
+                      //                     //영화, 책 이미지 부분
+                      //                         : Container(
+                      //                       padding: EdgeInsets.only(
+                      //                           top: 5, bottom: 10),
+                      //                       child: FadeInImage
+                      //                           .assetNetwork(
+                      //                         placeholder:
+                      //                         'assets/loading300.gif',
+                      //                         image: diary.linkImg,
+                      //                         width: 300,
+                      //                         height: 300,
+                      //                         fit: BoxFit.cover,
+                      //                       ),
+                      //                     ),
+                      //                     Text(
+                      //                       diary.content,
+                      //                       overflow: TextOverflow.ellipsis,
+                      //                       maxLines: 5,
+                      //                       softWrap: false,
+                      //                       style: TextStyle(
+                      //                           color: Colors.black,
+                      //                           height: 2,
+                      //                           fontSize: 13),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //             Container(
+                      //               margin:
+                      //               EdgeInsets.fromLTRB(20, 15, 20, 15),
+                      //               child: Row(
+                      //                 mainAxisAlignment:
+                      //                 MainAxisAlignment.spaceBetween,
+                      //                 children: [
+                      //                   Container(
+                      //                       child: Row(
+                      //                         children: [
+                      //                           Padding(
+                      //                             padding:
+                      //                             const EdgeInsets.only(
+                      //                                 right: 10.0),
+                      //                             child:
+                      //                             diary.maxEmotion != null
+                      //                                 ? Image.asset(
+                      //                               'assets/emotions/${diary.maxEmotion}.png',
+                      //                               width: 25,
+                      //                             )
+                      //                                 : Container(),
+                      //                           ),
+                      //                           Text(
+                      //                             '${diary.emotionCount}명',
+                      //                             style: TextStyle(
+                      //                                 color: Colors.white,
+                      //                                 fontSize: 10,
+                      //                                 fontWeight:
+                      //                                 FontWeight.bold),
+                      //                           ),
+                      //                           Text(
+                      //                             '의 커넥티가 감정을 표현했어요!',
+                      //                             style: TextStyle(
+                      //                                 color: Colors.white,
+                      //                                 fontSize: 10),
+                      //                           ),
+                      //                         ],
+                      //                       )),
+                      //                   GestureDetector(
+                      //                     onTap: () {
+                      //                       Navigator.push(
+                      //                         context,
+                      //                         CupertinoPageRoute(
+                      //                           builder: (BuildContext
+                      //                           context) =>
+                      //                           new MyDiaryDetail(
+                      //                             post: diary,edit: true,),
+                      //                         ),
+                      //                       );
+                      //                     },
+                      //                     child: Container(
+                      //                       width: 90,
+                      //                       height: 25,
+                      //                       decoration: BoxDecoration(
+                      //                           borderRadius:
+                      //                           BorderRadius.circular(
+                      //                               30),
+                      //                           border: Border.all(
+                      //                               color: Colors.white,
+                      //                               width: 1.5)),
+                      //                       child: Center(
+                      //                         child: Text(
+                      //                           '자세히 보기 >',
+                      //                           style: TextStyle(
+                      //                               color: Colors.white,
+                      //                               fontSize: 12),
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                   )
+                      //                 ],
+                      //               ),
+                      //             )
+                      //           ],
+                      //   ),
+                      // ),
+                      //           Container(width: double.infinity,color: Color(0xff2D2D2D),height: 15,),
+                      //         ],
+                      //       ),
+                      //     ),
                     ],
                   ),
               ],
