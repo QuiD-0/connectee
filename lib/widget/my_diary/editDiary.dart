@@ -1052,7 +1052,20 @@ class _EditDiaryState extends State<EditDiary> {
                           ),
                         ],
                       )),
-                )
+                ),
+                GestureDetector(
+                  onTap: (){
+                    //다이어리 삭제
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 311,
+                    height: 48,
+                    decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(30)),
+                    child: Text('다이어리 삭제',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),),
+                  ),
+                ),
+                SizedBox(height: 50,),
               ],
             ),
           )),

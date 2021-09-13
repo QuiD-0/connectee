@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/widget/my_diary/othersDiary.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -73,6 +74,22 @@ class _MyPageState extends State<MyPage> {
               width: 100,
               height: 40,
               child: Center(child: Text('테스트 버튼')),
+              color: Colors.redAccent,
+            ),
+          ),
+        ),
+        SizedBox(height: 20,),
+        GestureDetector(
+          onTap: ()  {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context){
+              return OtherDiary(userId: 2,);
+            }));
+          },
+          child: Center(
+            child: Container(
+              width: 100,
+              height: 40,
+              child: Center(child: Text('다른사람 다이어리 보기')),
               color: Colors.redAccent,
             ),
           ),

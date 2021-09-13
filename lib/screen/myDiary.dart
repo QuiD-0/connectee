@@ -356,6 +356,12 @@ class _MyDiaryState extends State<MyDiary> {
   int year=0;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

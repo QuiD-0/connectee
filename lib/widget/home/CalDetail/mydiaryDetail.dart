@@ -42,7 +42,7 @@ class _MyDiaryDetailState extends State<MyDiaryDetail> {
             widget.edit != null
                 ? GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
+                      Navigator.of(context,rootNavigator: true)
                           .push(MaterialPageRoute(builder: (context) {
                         return EditDiary(post:post);
                       }));
