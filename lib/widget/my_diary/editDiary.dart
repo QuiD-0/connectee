@@ -158,7 +158,8 @@ class _EditDiaryState extends State<EditDiary> {
                     publisher = '';
                     publishDate = '';
                     imgLink = '';
-                    _image = null;
+                    _image = [];
+                    rating = 0.0;
                   });
                 },
                 color: Color(0xff2d2d2d),
@@ -1055,7 +1056,7 @@ class _EditDiaryState extends State<EditDiary> {
                 ),
                 GestureDetector(
                   onTap: (){
-                    //다이어리 삭제
+                    //다이어리 삭제 팝업
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -1104,21 +1105,21 @@ class _EditDiaryState extends State<EditDiary> {
             .add(await http.MultipartFile.fromPath('image$i', _image[i].path));
       }
     }
-    //영화 필드
-    request.fields['movie'] = movieName;
-    request.fields['director'] = director;
-    request.fields['actors'] = actors;
-    request.fields['playDate'] = playDate;
-
-    //도서 필드
-    request.fields['book'] = bookName;
-    request.fields['author'] = author;
-    request.fields['publisher'] = publisher;
-    request.fields['publishDate'] = publishDate;
+    // //영화 필드
+    // request.fields['movie'] = movieName;
+    // request.fields['director'] = director;
+    // request.fields['actors'] = actors;
+    // request.fields['playDate'] = playDate;
+    //
+    // //도서 필드
+    // request.fields['book'] = bookName;
+    // request.fields['author'] = author;
+    // request.fields['publisher'] = publisher;
+    // request.fields['publishDate'] = publishDate;
 
     //영화, 책 공통
-    request.fields['imgLink'] = imgLink;
-    request.fields['rating'] = rating.toString();
+    //request.fields['imgLink'] = imgLink;
+    request.fields['categoryScore'] = rating.toString();
 
     var res = await request.send();
     var respStr = await http.Response.fromStream(res);
@@ -1132,7 +1133,6 @@ class _EditDiaryState extends State<EditDiary> {
       _toast('다시 시도해 주세요');
       Navigator.of(context).pop();
     }
-    Navigator.of(context).pop();
   }
 
   _toast(msg) {
@@ -1366,9 +1366,9 @@ class _EditDiaryState extends State<EditDiary> {
     type = widget.post.category;
     finalEmotion = engToInt[widget.post.emotionType];
     emotionValue = widget.post.emotionLevel;
-    selectEmotion = widget.post.emotionLevel;
+    selectEmotion = engToInt[widget.post.emotionType];
     isPublic = widget.post.private==0?'open':'close';
-    initImage =widget.post.Images;
+    initImage = getImage(widget.post);
     //영화
     if(widget.post.movie!=null){
       movieName = widget.post.movie['movie'];
@@ -1389,6 +1389,14 @@ class _EditDiaryState extends State<EditDiary> {
       rating = double.parse(widget.post.rating.toString());
     }
 
+  }
+
+  List getImage(post) {
+    if(post.category =='diary' || post.category=='trip'){
+      return widget.post.Images;
+    }else{
+      return [];
+    }
   }
 }
 

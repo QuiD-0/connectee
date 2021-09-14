@@ -16,7 +16,7 @@ class Diary {
   int private;
   Map<String,dynamic> book;
   Map<String,dynamic> movie;
-  int rating;
+  double rating;
 
   Diary.fromMap(Map<String, dynamic> map)
       : diaryId = map['id'],
@@ -38,7 +38,7 @@ class Diary {
             map["Images"][i]["location"]
         ],
         linkImg = getImg(map),
-        rating = getRating(map),
+        rating = map['categoryScore']??0,
         book = getBook(map),
         movie = getMovie(map);
 
@@ -72,15 +72,4 @@ class Diary {
     }
   }
 
-  static getRating(Map<String, dynamic> map) {
-    if (map['BookApi'] != null) {
-      return map['BookApi']["rating"];
-    }
-    else if (map['MovieApi'] != null) {
-      return map['MovieApi']["rating"];
-    }
-    else{
-      return null;
-    }
-  }
 }

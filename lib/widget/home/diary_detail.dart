@@ -272,7 +272,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   }
 
   _getMainEmotion() {
-    if (data[0]==null){
+    if (data==null){
       return [null,null];
     }else{
       String emotion= data.split(',')[0];
@@ -324,7 +324,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
     var data = _getMainEmotion();
     var body = {
       "userEmotionType": data[0],
-      "userEmotionLevel": int.parse(data[1]),
+      "userEmotionLevel": data[1],
       "accessType": 1,
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,
@@ -343,7 +343,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
     var data=_getMainEmotion();
     var body = {
       "userEmotionType": data[0],
-      "userEmotionLevel": int.parse(data[1]),
+      "userEmotionLevel": data[1],
       "accessType": 1,
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,

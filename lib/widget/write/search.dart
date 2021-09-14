@@ -442,6 +442,8 @@ class _SearchState extends State<Search> {
                                                           ['actor'],
                                                       searchData[index - 1]
                                                           ['playDate'],
+                                                      searchData[index - 1]
+                                                      ['userRating'],
                                                     ]);
                                                   },
                                                   child: Container(
@@ -709,6 +711,7 @@ class _SearchState extends State<Search> {
             "director": _replaceBar(result['items'][i]["director"]),
             "actor": _replaceBar(result['items'][i]["actor"]),
             'playDate': result['items'][i]['pubDate'],
+            'userRating': result['items'][i]['userRating'],
           });
         }
       } else {
@@ -730,6 +733,7 @@ class _SearchState extends State<Search> {
         .then((res) {
       if (res.statusCode == 200) {
         var result = json.decode(res.body);
+        print(result['items'][1]);
         total = result['total'] <= 50 ? result['total'] : 50;
         setState(() {
           searchData.clear();

@@ -17,11 +17,12 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   String userId;
   String token;
-
   @override
   void initState() {
     // TODO: implement initState
-    _getId();
+    _getId().then((res){
+
+    });
     super.initState();
   }
 
@@ -59,9 +60,8 @@ class _MyPageState extends State<MyPage> {
         SizedBox(height:20),
         GestureDetector(
           onTap: () async {
-            await http.get(Uri.parse('http://52.79.146.213:5000/users/getOne/1'),
+            await http.get(Uri.parse('http://52.79.146.213:5000/diaries/fetch/myDiary?page=2&limit=5'),
                 headers: {"Authorization": "Bearer $token"}).then((value) {
-                  print(value.body);
               if (value.statusCode == 200) {
                 String jsonString = value.body;
                 var result = json.decode(jsonString);
@@ -97,4 +97,6 @@ class _MyPageState extends State<MyPage> {
       ],
     ));
   }
+
+
 }

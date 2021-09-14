@@ -24,6 +24,7 @@ class _MakeGroupState extends State<MakeGroup> {
   List finalSelectTopics = [];
   String private; // open, close
   String userId;
+  String token;
   TextEditingController name = TextEditingController();
   TextEditingController desc = TextEditingController();
   TextEditingController NOP = TextEditingController();
@@ -917,6 +918,7 @@ class _MakeGroupState extends State<MakeGroup> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getString('userId');
+      token= prefs.getString('access_token');
     });
   }
 
@@ -966,6 +968,7 @@ class _MakeGroupState extends State<MakeGroup> {
         "POST",
         Uri.parse('http://52.79.146.213:5000/groups/create'),
       );
+      request.headers["Authorization"]="Bearer $token";
       request.fields['title'] = name.text;
       request.fields['OwnerId'] = userId;
       request.fields['description'] = desc.text;

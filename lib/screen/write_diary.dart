@@ -54,6 +54,7 @@ class _WriteDiaryState extends State<WriteDiary> {
   String publishDate = '';
 
   //영화,책 공통
+  double categoryScore=0;
   String imgLink = '';
   double rating = 0;
 
@@ -600,6 +601,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                           actors = result[3];
                                                           playDate = result[4];
                                                           imgLink = result[1];
+                                                          rating = double.parse(result[5]);
                                                         });
                                                       }
                                                     },
@@ -806,6 +808,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                                                               result[4];
                                                           publisher = result[3];
                                                           imgLink = result[1];
+                                                          rating = 0.0;
                                                         });
                                                       }
                                                     },
@@ -999,11 +1002,11 @@ class _WriteDiaryState extends State<WriteDiary> {
                                               allowHalfRating: false,
                                               onRated: (v) {
                                                 setState(() {
-                                                  rating = v;
+                                                  categoryScore = v;
                                                 });
                                               },
                                               starCount: 5,
-                                              rating: rating,
+                                              rating: categoryScore,
                                               size: 40.0,
                                               isReadOnly: false,
                                               color: Colors.white,
@@ -1097,6 +1100,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     request.fields['publishDate'] = publishDate;
 
     //영화, 책 공통
+    request.fields['categoryScore'] = categoryScore.toString();
     request.fields['imgLink'] = imgLink;
     request.fields['rating'] = rating.toString();
 
