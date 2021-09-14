@@ -307,7 +307,7 @@ class _MyDiaryState extends State<MyDiary> {
                     ],
                   ),
                 ),
-                // 다이어리 내용
+                // 다이어리 내용없을때
                 _data.length == 0
                     ? Container()
                     : Container(),

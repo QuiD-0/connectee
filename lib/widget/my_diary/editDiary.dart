@@ -1055,8 +1055,9 @@ class _EditDiaryState extends State<EditDiary> {
                       )),
                 ),
                 GestureDetector(
-                  onTap: (){
-                    //다이어리 삭제 팝업
+                  onTap: () async{
+                    var res = await _checkDelete();
+                    res == true ? _deleteDiary() : null;
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -1397,6 +1398,67 @@ class _EditDiaryState extends State<EditDiary> {
     }else{
       return [];
     }
+  }
+
+  _checkDelete() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Color(0x99000000),
+      builder: (context) => AlertDialog(
+        titlePadding: EdgeInsets.fromLTRB(20, 40, 20, 10),
+        elevation: 0,
+        backgroundColor: Color(0xff3D3D3D),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        title: Text(
+          '정말 삭제하시겟습니까?',
+          textAlign: TextAlign.center,
+        ),
+        titleTextStyle: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+            fontFamily: 'GmarketSans',
+            fontWeight: FontWeight.bold),
+        // content: Text(
+        //   '수정중인 일기는\n저장되지 않습니다',
+        //   textAlign: TextAlign.center,
+        // ),
+        contentTextStyle: TextStyle(
+            fontSize: 16, color: Colors.white, fontFamily: 'GmarketSans'),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              FlatButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('취소',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontFamily: 'GmarketSans')),
+              ),
+              FlatButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text('확인',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontFamily: 'GmarketSans')),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  _deleteDiary() async{
+    await http.delete(Uri.parse('http://52.79.146.213:5000/diaries/${widget.post.diaryId}')).then((value){
+      Navigator.of(context).pop();
+      _toast('삭제완료');
+    });
+
   }
 }
 
