@@ -60,7 +60,7 @@ class _MyPageState extends State<MyPage> {
         SizedBox(height:20),
         GestureDetector(
           onTap: () async {
-            await http.get(Uri.parse('http://52.79.146.213:5000/diaries/fetch/myDiary?page=2&limit=5'),
+            await http.get(Uri.parse('http://52.79.146.213:5000/groups/getMyPreferringGroups'),
                 headers: {"Authorization": "Bearer $token"}).then((value) {
               if (value.statusCode == 200) {
                 String jsonString = value.body;

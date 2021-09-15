@@ -244,6 +244,8 @@ class _MyAppState extends State<MyApp> {
         "username": "apple",
       };
     }
+    print(kakaoId);
+    print(appleId);
     var res = await http.post(
         Uri.parse(
             "http://52.79.146.213:5000/auth/login"),

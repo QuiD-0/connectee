@@ -13,7 +13,6 @@ import '../../vars.dart';
 
 class OtherDiary extends StatefulWidget {
   final userId;
-
   const OtherDiary({Key key, this.userId}) : super(key: key);
 
   @override
@@ -392,8 +391,11 @@ class _OtherDiaryState extends State<OtherDiary> {
     // TODO: implement initState
     //사용자 받아오기
     _getId().then((res) {
-      _fetchMyEmotion();
       //내가 쓴 댓글 받아오기
+      _fetchMyEmotion();
+      //사용자 정보
+
+      //사용자 다이어리
     });
     super.initState();
   }

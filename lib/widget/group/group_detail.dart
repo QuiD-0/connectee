@@ -76,32 +76,15 @@ class _GroupDetailState extends State<GroupDetail> {
           controller: _refreshController,
           enablePullDown: true,
           onRefresh: () {
+            setState(() {
+              page=1;
+            });
             _fetchGroupDiarys();
             _refreshController.refreshCompleted();
           },
           enablePullUp: true,
           onLoading: () async{
-            //테스트용 링크 바꾸기
-            // http://52.79.146.213:5000/diaries/${group.groupId}/group/getAll?page=$page&limit=5
-            await http
-                .get(Uri.parse(
-                'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
-                .then((res) {
-              if (res.statusCode == 200) {
-                String jsonString = res.body;
-                List posts = jsonDecode(jsonString);
-                for (int i = 0; i < posts.length; i++) {
-                  var post = posts[i];
-                  Diary diaryToAdd = Diary.fromMap(post);
-                  setState(() {
-                    _data.add(diaryToAdd);
-                  });
-                }
-                setState(() {
-                  page++;
-                });
-              }
-            });
+            _fetchGroupDiarys();
             _refreshController.loadComplete();
           },
           child: ListView(children: [
@@ -640,13 +623,9 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   void _fetchGroupDiarys() async{
-    setState(() {
-      //그룹 연결후 2로 바꾸기
-      page=1;
-    });
     await http
         .get(Uri.parse(
-        'http://52.79.146.213:5000/diaries/${widget.group.groupId}/group/getAll?page=1&limit=5'))
+        'http://52.79.146.213:5000/diaries/${widget.group.groupId}/group/getAll?page=$page&limit=5'))
         .then((res) {
       if (res.statusCode == 200) {
         setState(() {

@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:connectee/model/groupModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
+import 'group_detail.dart';
 
 class RecommandGroup extends StatefulWidget {
   const RecommandGroup({Key key}) : super(key: key);
@@ -15,7 +19,7 @@ class RecommandGroup extends StatefulWidget {
 
 class _RecommandGroupState extends State<RecommandGroup> {
   RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController(initialRefresh: false);
   List recGroup = [];
   String userId;
   String token;
@@ -90,12 +94,15 @@ class _RecommandGroupState extends State<RecommandGroup> {
                             borderRadius: BorderRadius.circular(13.0)),
                         backgroundColor: Color(0xff2d2d2d),
                         context: context,
-                        builder: (context) => Container(
+                        builder: (context) =>
+                            Container(
                               child: ConnectSheet(group),
                             ));
                     bottomSheet.then((value) {
-                      if (value==true){
-                        //그룹 체크인 완료후 디테일 페이지로 가기
+                      if (value == true) {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return GroupDetail(group: Group.fromMap(group));
+                        }));
                         _toast('참여완료!');
                       }
                     });
@@ -109,7 +116,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         //그룹 이미지
-                        group['imageUrl']!=null?Container(
+                        group['imageUrl'] != null ? Container(
                           width: 120,
                           child: Center(
                             child: ClipRRect(
@@ -122,7 +129,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                               ),
                             ),
                           ),
-                        ):Container(
+                        ) : Container(
                           width: 120,
                           child: Center(
                             child: ClipRRect(
@@ -187,7 +194,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                               //그룹 토픽
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     width: 200,
@@ -203,14 +210,14 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          30)),
+                                                  BorderRadius.circular(
+                                                      30)),
                                               child: Text(
                                                 "#${i['name']}",
                                                 style: TextStyle(
                                                     fontSize: 13,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                    FontWeight.bold),
                                               ),
                                             ),
                                           )
@@ -256,7 +263,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getString('userId');
-      token= prefs.getString('access_token');
+      token = prefs.getString('access_token');
     });
   }
 
@@ -271,182 +278,308 @@ class _RecommandGroupState extends State<RecommandGroup> {
   }
 
   Widget ConnectSheet(group) {
+    TextEditingController pw = TextEditingController();
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-      return Container(
-          height: 450,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Container(
-                  height: 5,
-                  width: 65,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30)),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              group['imageUrl']!=null?Container(
-                width: 120,
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.network(
-                      group['imageUrl'],
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ):Container(
-                width: 120,
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius:
-                    BorderRadius.circular(
-                        50),
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      color: Color(0xffFF9082),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Container(
-                  width: 250,
-                  alignment: Alignment.center,
-                  child: Text(
-                    group['title'],
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          return Container(
+              height: 450,
+              child: Column(
                 children: [
-                  for (var i in group['themes'])
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(11, 3, 11, 3),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Text(
-                          "#${i['name']}",
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      height: 5,
+                      width: 65,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  group['imageUrl'] != null ? Container(
+                    width: 120,
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          group['imageUrl'],
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    )
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${group['groupDiaryCount']}+ ',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'diary',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                  Text(
-                    '   |   ',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                  Image.asset(
-                    'assets/icons/user.png',
-                    height: 14,
-                    width: 12,
-                    fit: BoxFit.contain,
-                  ),
-                  Text(
-                    '  (${group['groupUserCount'].toString()}/${group['limitMembers'].toString()})',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ],
-              ),
-              Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: Container(
-                    height: 50,
-                    child: Text(
-                      group['description'],
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 12, height: 1.7),
                     ),
-                  )),
-              GestureDetector(
-                onTap: (){
-                  //그룹 참가
-                  Navigator.pop(context,true);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 311,
-                  height: 48,
-                  decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(30)),
-                  child: Text('CONNECT!',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                ),
-              )
-            ],
-          ));
-    });
+                  ) : Container(
+                    width: 120,
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius:
+                        BorderRadius.circular(
+                            50),
+                        child: Container(
+                          height: 80,
+                          width: 80,
+                          color: Color(0xffFF9082),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      width: 250,
+                      alignment: Alignment.center,
+                      child: Text(
+                        group['title'],
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (var i in group['themes'])
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(11, 3, 11, 3),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: Text(
+                              "#${i['name']}",
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${group['groupDiaryCount']}+ ',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'diary',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                      Text(
+                        '   |   ',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                      Image.asset(
+                        'assets/icons/user.png',
+                        height: 14,
+                        width: 12,
+                        fit: BoxFit.contain,
+                      ),
+                      Text(
+                        '  (${group['groupUserCount']
+                            .toString()}/${group['limitMembers'].toString()})',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Container(
+                        height: 50,
+                        child: Text(
+                          group['description'],
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 12, height: 1.7),
+                        ),
+                      )),
+                  GestureDetector(
+                    onTap: () async {
+                      //그룹 참가
+                      if (group['password'] == '') {
+                        _joinGroup(group['id'],pw.text);
+                        Navigator.pop(context, true);
+                      } else {
+                        //비밀번호 확인창
+                        var res = await showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          barrierColor: Color(0x99000000),
+                          builder: (context) =>
+                              AlertDialog(
+                                titlePadding: EdgeInsets.fromLTRB(
+                                    20, 40, 20, 10),
+                                elevation: 0,
+                                backgroundColor: Color(0xff3D3D3D),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                title: Text(
+                                  '비밀번호를 입력해주세요!',
+                                  textAlign: TextAlign.center,
+                                ),
+                                titleTextStyle: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontFamily: 'GmarketSans',
+                                    fontWeight: FontWeight.bold),
+                                content: TextField(
+                                  obscureText: true,
+                                  obscuringCharacter: '●',
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    WhitelistingTextInputFormatter
+                                        .digitsOnly
+                                  ],
+                                  controller: pw,
+                                  maxLength: 6,
+                                  maxLines: 1,
+                                  showCursor: false,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xff3D3D3D),
+                                      height: 1.8),
+                                  decoration: InputDecoration(
+                                    hintText: '비밀번호를 입력해주세요',
+                                    counterText: '',
+                                    filled: true,
+                                    fillColor: Color(0xff9d9d9d),
+                                    contentPadding:
+                                    const EdgeInsets.only(
+                                        left: 20, bottom: 7),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(width: 0),
+                                      borderRadius:
+                                      BorderRadius.circular(5),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(width: 0),
+                                      borderRadius:
+                                      BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                                contentTextStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontFamily: 'GmarketSans'),
+                                actions: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceAround,
+                                    children: [
+                                      FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, ''),
+                                        child: Text('취소',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontFamily: 'GmarketSans')),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, pw.text),
+                                        child: Text('확인',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontFamily: 'GmarketSans')),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                        );
+                        if (group['password'] == res) {
+                          _joinGroup(group['id'],pw.text);
+                          Navigator.pop(context, true);
+                        } else {
+                          _toast('비밀번호가 다릅니다');
+                        }
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 311,
+                      height: 48,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: Text(
+                        'CONNECT!',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  )
+                ],
+              ));
+        });
   }
 
-  void _getUserNickname() async{
-    await http.get(Uri.parse('http://52.79.146.213:5000/users/myInfo'),headers: {
+  void _getUserNickname() async {
+    await http.get(
+        Uri.parse('http://52.79.146.213:5000/users/myInfo'), headers: {
       "Authorization": "Bearer $token"
-    } ).then((value){
+    }).then((value) {
       if (value.statusCode == 200) {
         String jsonString = value.body;
         var result = json.decode(jsonString);
         setState(() {
-          nickname=result['nickname'];
+          nickname = result['nickname'];
         });
       }
     });
   }
 
-  void _getRecGroup() async{
-    await http.get(Uri.parse('http://52.79.146.213:5000/groups/recommand?accessType=timeline'),
+  void _getRecGroup() async {
+    await http.get(Uri.parse(
+        'http://52.79.146.213:5000/groups/recommand?accessType=timeline'),
         headers: {"Authorization": "Bearer $token"}).then((value) {
       if (value.statusCode == 200) {
         String jsonString = value.body;
         var result = json.decode(jsonString);
-        for( var i in result){
+        for (var i in result) {
           setState(() {
             recGroup.add(i);
           });
         }
       }
+    });
+  }
+
+  _joinGroup(id, pw) async {
+    var data = {
+      "groupId": id,
+      "userId": userId,
+      "password": pw
+    };
+    await http.post(Uri.parse('http://52.79.146.213:5000/groups/addMember'),
+        headers: {"Content-Type": "application/json"}, body: json.encode(data)).then((res){
+          print(res.body);
+          var result = json.decode(res.body);
+          if(result['success']==true){
+           print("성공");
+          }
     });
   }
 

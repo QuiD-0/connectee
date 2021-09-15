@@ -18,10 +18,12 @@ class _GroupSearchState extends State<GroupSearch> {
   bool visibleRecent;
   List searchData = [];
   List<String> recent = [];
+  String userId;
 
   @override
   void initState() {
     // TODO: implement initState
+    _getId();
     visibleRecent = true;
     _getList();
     super.initState();
@@ -616,6 +618,7 @@ class _GroupSearchState extends State<GroupSearch> {
                     onTap: () async {
                       //그룹 참가
                       if (group['password'] == '') {
+                        _joinGroup(group['id'],pw.text);
                         Navigator.pop(context, true);
                       } else {
                         //비밀번호 확인창
@@ -709,10 +712,10 @@ class _GroupSearchState extends State<GroupSearch> {
                               ),
                         );
                         if (group['password'] == res) {
-                          print('성공');
+                          _joinGroup(group['id'],pw.text);
                           Navigator.pop(context, true);
                         } else {
-                          print('실패');
+
                         }
                       }
                     },
@@ -735,5 +738,25 @@ class _GroupSearchState extends State<GroupSearch> {
         });
   }
 
-
+  _joinGroup(id, pw) async {
+    var data = {
+      "groupId": id,
+      "userId": userId,
+      "password": pw
+    };
+    await http.post(Uri.parse('http://52.79.146.213:5000/groups/addMember'),
+        headers: {"Content-Type": "application/json"}, body: json.encode(data)).then((res){
+      print(res.body);
+      var result = json.decode(res.body);
+      if(result['success']==true){
+        print("성공");
+      }
+    });
+  }
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
 }

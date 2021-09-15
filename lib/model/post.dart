@@ -12,7 +12,7 @@ class Diary {
   String maxEmotion;
   int emotionCount;
   String linkImg;
-  String group;
+  List<dynamic> group;
   int private;
   Map<String,dynamic> book;
   Map<String,dynamic> movie;
@@ -30,7 +30,7 @@ class Diary {
         maxEmotion = map['maxEmotion'],
         emotionLevel = map['emotionLevel'],
         emotionCount = map['Comments'].length,
-        group = map['group'],
+        group = map['groups'],
         private = map['private'],
         // Images=[],
         Images = [

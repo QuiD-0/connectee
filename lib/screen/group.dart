@@ -21,7 +21,7 @@ class _GroupScreenState extends State<GroupScreen> {
       RefreshController(initialRefresh: false);
   String userId;
   String token;
-  List likedGroup = [1, 3];
+  List likedGroup = [];
   List myGroup = [];
 
   @override
@@ -29,7 +29,9 @@ class _GroupScreenState extends State<GroupScreen> {
     // TODO: implement initState
     _getId().then((res) {
       //내그룹, 좋아요한 그룹 받아오기
-      _fetchMyGroup();
+      _getLikeGroup().then((res){
+        _fetchMyGroup();
+      });
     });
     super.initState();
   }
@@ -465,11 +467,13 @@ class _GroupScreenState extends State<GroupScreen> {
       //좋아요 취소
       setState(() {
         likedGroup.remove(group);
+        _likeUpdate(false,group);
       });
     } else {
       //좋아요 추가
       setState(() {
         likedGroup.add(group);
+        _likeUpdate(true,group);
       });
     }
   }
@@ -482,16 +486,68 @@ class _GroupScreenState extends State<GroupScreen> {
         .then((res) {
       if (res.statusCode == 200) {
         myGroup = [];
+        List notSortedGroups=[];
         String jsonString = res.body;
         var result = json.decode(jsonString);
         for (var i = 0; i < result.length; i++) {
           var group = Group.fromMap(result[i]);
+          notSortedGroups.add(group);
+        }
+        groupSort(notSortedGroups);
+      }
+    });
+  }
+
+  _getLikeGroup() async{
+    await http
+        .get(Uri.parse('http://52.79.146.213:5000/groups/getMyPreferringGroups'),headers: {
+      "Authorization": "Bearer $token"
+    })
+        .then((res) {
+      if (res.statusCode == 200) {
+        likedGroup = [];
+        String jsonString = res.body;
+        var result = json.decode(jsonString);
+        for (var i = 0; i < result.length; i++) {
+          var groupId = result[i]['id'];
           setState(() {
-            myGroup.add(group);
+            likedGroup.add(groupId);
           });
         }
       }
     });
+    return true;
+  }
+
+  _likeUpdate(bool bool,int group) async{
+    var url;
+    if (bool){
+      url = "http://52.79.146.213:5000/groups/addMyPreferringGroup/$group";
+    }else{
+      url = "http://52.79.146.213:5000/groups/cancelMyPreferringGroups/$group";
+    }
+    await http
+        .patch(Uri.parse(url),headers: {
+      "Authorization": "Bearer $token"
+    }).then((res){
+    });
+  }
+
+  void groupSort(notSortedGroups) {
+      for(var i in notSortedGroups){
+        if (likedGroup.contains(i.groupId)){
+          setState(() {
+            myGroup.add(i);
+          });
+        }
+      }
+      for(var i in notSortedGroups){
+        if (!likedGroup.contains(i.groupId)){
+          setState(() {
+            myGroup.add(i);
+          });
+        }
+      }
   }
 }
 
