@@ -17,6 +17,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:sk_onboarding_screen/sk_onboarding_screen.dart';
 
+bool firstLogin;
+
 void main() {
   runApp(Phoenix(child: MyApp()));
 }
@@ -91,6 +93,8 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         userId = token['sub'].toString();
       });
+    }else{
+      userId=null;
     }
   }
 
@@ -156,8 +160,7 @@ class _CheckLoginState extends State<CheckLogin> {
                           final prefs = await SharedPreferences
                               .getInstance();
                           var data = {
-                            "password":
-                            token.accessToken.toString(),
+                            "password":token.accessToken.toString(),
                             "username":"kakao",
                           };
                           prefs.setString('kakao',
@@ -252,7 +255,7 @@ class _CheckLoginState extends State<CheckLogin> {
           ),
         ),
       ),
-      onWillPop: () {},
+      onWillPop: () async{return false;},
     );
   }
 
@@ -310,8 +313,7 @@ class _HomePageState extends State<HomePage> {
       getStartedClicked: (value) {
         _changeFirst();
       },
-    )
-        : CupertinoTabScaffold(
+    ):CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         onTap: (index) {
           if (index == 2) {

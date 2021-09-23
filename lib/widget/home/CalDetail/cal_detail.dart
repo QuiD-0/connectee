@@ -211,18 +211,19 @@ class _CalDetailState extends State<CalDetail> {
                                             )
                                           : Container()
                                       //영화, 책 이미지 부분
-                                      : Container(
-                                          padding: EdgeInsets.only(
-                                              top: 5, bottom: 10),
-                                          child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/loading300.gif',
-                                            image: diary.linkImg,
-                                            width: 300,
-                                            height: 300,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                                      : Center(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          top: 5, bottom: 10),
+                                      child:
+                                      FadeInImage.assetNetwork(
+                                        placeholder:
+                                        'assets/loading300.gif',
+                                        image: diary.linkImg,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
                                   Text(
                                     diary.content,
                                     overflow: TextOverflow.ellipsis,
