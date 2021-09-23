@@ -363,25 +363,18 @@ class _GroupDetailState extends State<GroupDetail> {
                                   )
                                       : Container()
                                   //영화, 책 이미지 부분
-                                      : Container(
-                                    padding: EdgeInsets.only(
-                                        top: 5, bottom: 10),
-                                    child:
-                                    //       Image.network(
-                                    //   post.linkImg,
-                                    //   width: 300,
-                                    //   height: 300,
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                    FadeInImage.assetNetwork(
-                                      placeholder:
-                                      'assets/loading.gif',
-                                      image: post.linkImg,
-                                      width: 300,
-                                      height: 300,
-                                      fit: BoxFit.cover,
+                                      : Center(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          top: 5, bottom: 10),
+                                      child:
+                                      FadeInImage.assetNetwork(
+                                        placeholder:
+                                        'assets/loading300.gif',
+                                        image: post.linkImg,
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
-
                                   ),
                                   Text(
                                     post.content,

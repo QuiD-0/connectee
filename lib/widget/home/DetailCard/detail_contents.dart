@@ -12,7 +12,7 @@ class DetailContents extends StatefulWidget {
 
 class _DetailContentsState extends State<DetailContents> {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Container(
         width: 330,
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -26,11 +26,17 @@ class _DetailContentsState extends State<DetailContents> {
                     data: widget.data,
                     images: widget.data.Images,
                   )
+                // 영호, 책 이미지 부분
                 : widget.data.linkImg != 'none'
-            // 영호, 책 이미지 부분
-                    ? ImageSlider(
-                        data: widget.data,
-                        images: [widget.data.linkImg],
+                    ? Center(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 5, bottom: 10),
+                          child: FadeInImage.assetNetwork(
+                            placeholder: 'assets/loading300.gif',
+                            image: widget.data.linkImg,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       )
                     : Container(),
             Container(

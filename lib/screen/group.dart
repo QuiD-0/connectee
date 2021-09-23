@@ -323,7 +323,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                                     fit: BoxFit.contain,
                                                   ),
                                                   Text(
-                                                    '   (${group.groupUserCount}/${group.limitMembers})  |  ',
+                                                    '  (${group.groupUserCount}/${group.limitMembers})  |  ',
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 14),

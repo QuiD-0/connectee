@@ -140,7 +140,6 @@ class _MyAppState extends State<MyApp> {
                                             "http://52.79.146.213:5000/auth/login"),
                                         body: data);
                                     var result = json.decode(res.body);
-                                    print(result);
                                     if (result["success"] == true) {
                                       var token=JwtDecoder.decode(result['access_token']);
                                       prefs.setString(
@@ -207,6 +206,7 @@ class _MyAppState extends State<MyApp> {
                               var result = json.decode(res.body);
                               print(result);
                               if (result["success"] == true) {
+                                prefs.clear();
                                 var token=JwtDecoder.decode(result['access_token']);
                                 prefs.setString(
                                     'userId',
@@ -249,7 +249,7 @@ class _MyAppState extends State<MyApp> {
     var res = await http.post(
         Uri.parse(
             "http://52.79.146.213:5000/auth/login"),
-        body: data);
+        body: json.encode(data));
     var result = json.decode(res.body);
     print(data);
     print(result);
