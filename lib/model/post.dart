@@ -30,7 +30,7 @@ class Diary {
         maxEmotion = map['maxEmotion'],
         emotionLevel = map['emotionLevel'],
         emotionCount = map['Comments'].length,
-        group = map['groups'],
+        group = map['groups']??[],
         private = map['private'],
         // Images=[],
         Images = [

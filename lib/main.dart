@@ -3,6 +3,8 @@ import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/screen/myPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sk_onboarding_screen/sk_onboarding_model.dart';
 import 'screen/group.dart';
 import 'screen/home_screen.dart';
 import 'screen/write_diary.dart';
@@ -12,6 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:sk_onboarding_screen/sk_onboarding_screen.dart';
 
 void main() {
   runApp(Phoenix(child: MyApp()));
@@ -31,53 +35,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    _getPrefs().then((res){
+    _getPrefs().then((res) {
       _getToken();
     });
     super.initState();
   }
 
-  // _getId() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     userId = prefs.getString('userId');
-  //   });
-  // }
-
-  // _tokenCheck() async {
-  //   //카카오 토큰 리프레시확인하기
-  //   if (userId != null) {
-  //     final prefs = await SharedPreferences.getInstance();
-  //     dynamic token = await AccessTokenStore.instance.fromStore();
-  //     User user = await UserApi.instance.me();
-  //     var data = {
-  //       "password": token.accessToken.toString(),
-  //       "username": user.id.toString(),
-  //     };
-  //     var res = await http
-  //         .post(Uri.parse("http://52.79.146.213:5000/auth/login"), body: data);
-  //     var result = json.decode(res.body);
-  //     if (result["success"] == true) {
-  //       var token=JwtDecoder.decode(result['access_token']);
-  //       prefs.setString(
-  //           'userId',
-  //           token['sub'].toString());
-  //       prefs.setString(
-  //           'access_token',
-  //           result['access_token']);
-  //       setState(() {
-  //         userId = prefs.getString('userId');
-  //       });
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     KakaoContext.clientId = "f90217e80d59b2b247b80059e64a9fa4";
     KakaoContext.javascriptClientId = "39fa8ae2800478812dfc8289b612c7d3";
-
     return MaterialApp(
         scrollBehavior: NoGlowScrollBehavior(),
         debugShowCheckedModeBanner: false,
@@ -91,192 +58,206 @@ class _MyAppState extends State<MyApp> {
           ),
           brightness: Brightness.light,
         ),
-        home: WillPopScope(
-          // 개발완료후 수정
-          child: userId != null
-              ? HomePage()
-              //Oauth page
-              : SafeArea(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 500,
-                        ),
-                        Container(
-                          width: 250,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(9),
-                              color: Colors.yellow),
-                          child: GestureDetector(
-                              onTap: () async {
-                                try {
-                                  final installed =
-                                      await isKakaoTalkInstalled();
-                                  installed
-                                      ? await UserApi.instance
-                                          .loginWithKakaoTalk()
-                                      : await UserApi.instance
-                                          .loginWithKakaoAccount();
-                                  dynamic token = await AccessTokenStore
-                                      .instance
-                                      .fromStore();
-                                  if (token.refreshToken == null) {
-                                    print('token error');
-                                  } else {
-                                    final prefs =
-                                        await SharedPreferences.getInstance();
-                                    var data = {
-                                      "password": token.accessToken.toString(),
-                                      "username": "kakao",
-                                    };
-                                    prefs.setString(
-                                        'kakao',
-                                        token.accessToken.toString());
-                                    var res = await http.post(
-                                        Uri.parse(
-                                            "http://52.79.146.213:5000/auth/login"),
-                                        body: data);
-                                    var result = json.decode(res.body);
-                                    if (result["success"] == true) {
-                                      var token=JwtDecoder.decode(result['access_token']);
-                                      prefs.setString(
-                                          'userId',
-                                          token['sub'].toString());
-                                      prefs.setString(
-                                          'access_token',
-                                          result['access_token']);
-                                      setState(() {
-                                        userId = prefs.getString('userId');
-                                      });
-                                    }
-                                  }
-                                  // perform actions after login
-                                } catch (e) {
-                                  print('error on login: $e');
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  'Sign in with kakao',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      decoration: TextDecoration.none),
-                                ),
-                              )),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Platform.isIOS
-                        //     ?
-                        Container(
-                          width: 250,
-                          child: SignInWithAppleButton(
-                            onPressed: () async {
-                              final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                scopes: [
-                                  AppleIDAuthorizationScopes.email,
-                                  AppleIDAuthorizationScopes.fullName,
-                                ],
-                                webAuthenticationOptions:
-                                    WebAuthenticationOptions(
-                                  clientId: "com.swMaestro.connectee",
-                                  redirectUri: Uri.parse(
-                                      "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
-                                ),
-                              );
-                              var data = {
-                                "password": credential.identityToken.toString(),
-                                "username": "apple",
-                              };
-                              final prefs = await SharedPreferences.getInstance();
-                              prefs.setString(
-                                  'apple',
-                                  credential.identityToken.toString());
-                              var res = await http.post(
-                                  Uri.parse(
-                                      "http://52.79.146.213:5000/auth/login"),
-                                  body: data);
-                              var result = json.decode(res.body);
-                              print(result);
-                              if (result["success"] == true) {
-                                prefs.clear();
-                                var token=JwtDecoder.decode(result['access_token']);
-                                prefs.setString(
-                                    'userId',
-                                    token['sub'].toString());
-                                prefs.setString(
-                                    'access_token',
-                                    result['access_token']);
-                                setState(() {
-                                  userId = prefs.getString('userId');
-                                });
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-          onWillPop: () {},
-        ));
+        home:AnimatedSplashScreen(
+          splash: 'images/splash.png',
+          nextScreen: CheckLogin(id: userId,),
+          splashTransition: SplashTransition.fadeTransition,
+        )
+    );
   }
 
-  void _getToken() async{
-    final prefs =
-    await SharedPreferences.getInstance();
+  _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
     var data;
-    if (kakaoId!=null){
+    if (kakaoId != null) {
       data = {
         "password": kakaoId.toString(),
         "username": "kakao",
       };
-    }else{
+    } else {
       data = {
         "password": appleId.toString(),
         "username": "apple",
       };
     }
-    print(kakaoId);
-    print(appleId);
-    var res = await http.post(
-        Uri.parse(
-            "http://52.79.146.213:5000/auth/login"),
-        body: json.encode(data));
+    var res = await http.post(Uri.parse("http://52.79.146.213:5000/auth/login"),
+        body: data);
     var result = json.decode(res.body);
-    print(data);
     print(result);
     if (result["success"] == true) {
-      var token=JwtDecoder.decode(result['access_token']);
-      prefs.setString(
-          'userId',
-          token['sub'].toString());
-      prefs.setString(
-          'access_token',
-          result['access_token']);
+      var token = JwtDecoder.decode(result['access_token']);
+      prefs.setString('userId', token['sub'].toString());
+      prefs.setString('access_token', result['access_token']);
       setState(() {
-        userId = prefs.getString('userId');
+        userId = token['sub'].toString();
       });
     }
-
   }
 
-  _getPrefs() async{
-    final prefs =
-    await SharedPreferences.getInstance();
+  _getPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
     kakaoId = prefs.getString('kakao');
     appleId = prefs.getString('apple');
   }
 
+}
+
+class CheckLogin extends StatefulWidget {
+  final id;
+  const CheckLogin({Key key,this.id}) : super(key: key);
+
+  @override
+  _CheckLoginState createState() => _CheckLoginState();
+}
+
+class _CheckLoginState extends State<CheckLogin> {
+  String userId;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      child: widget.id != null || userId!=null
+          ? HomePage()
+      //Oauth page
+          : SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 500,
+              ),
+              Container(
+                width: 250,
+                height: 40,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    color: Colors.yellow),
+                child: GestureDetector(
+                    onTap: () async {
+                      try {
+                        final installed =
+                        await isKakaoTalkInstalled();
+                        installed
+                            ? await UserApi.instance
+                            .loginWithKakaoTalk()
+                            : await UserApi.instance
+                            .loginWithKakaoAccount();
+                        dynamic token = await AccessTokenStore
+                            .instance
+                            .fromStore();
+                        if (token.refreshToken == null) {
+                          print('token error');
+                        } else {
+                          final prefs = await SharedPreferences
+                              .getInstance();
+                          var data = {
+                            "password":
+                            token.accessToken.toString(),
+                            "username":"kakao",
+                          };
+                          prefs.setString('kakao',
+                              token.accessToken);
+                          var res = await http.post(
+                              Uri.parse(
+                                  "http://52.79.146.213:5000/auth/login"),
+                              body: data);
+                          var result = json.decode(res.body);
+                          print(result);
+                          if (result["success"] == true) {
+                            var token = JwtDecoder.decode(
+                                result['access_token']);
+                            prefs.setString('userId',
+                                token['sub'].toString());
+                            prefs.setString('access_token',
+                                result['access_token']);
+                            setState(() {
+                              userId = prefs.getString('userId');
+                            });
+                          }
+                        }
+                        // perform actions after login
+                      } catch (e) {
+                        print('error on login: $e');
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        'Sign in with kakao',
+                        style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            decoration: TextDecoration.none),
+                      ),
+                    )),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              // Platform.isIOS
+              //     ?
+              Container(
+                width: 250,
+                child: SignInWithAppleButton(
+                  onPressed: () async {
+                    final credential = await SignInWithApple
+                        .getAppleIDCredential(
+                      scopes: [
+                        AppleIDAuthorizationScopes.email,
+                        AppleIDAuthorizationScopes.fullName,
+                      ],
+                      webAuthenticationOptions:
+                      WebAuthenticationOptions(
+                        clientId: "com.swMaestro.connectee",
+                        redirectUri: Uri.parse(
+                            "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
+                      ),
+                    );
+                    var data = {
+                      "password":
+                      credential.identityToken.toString(),
+                      "username": "apple",
+                    };
+                    final prefs =
+                    await SharedPreferences.getInstance();
+                    prefs.setString('apple',
+                        credential.identityToken.toString());
+                    var res = await http.post(
+                        Uri.parse(
+                            "http://52.79.146.213:5000/auth/login"),
+                        body: data);
+                    var result = json.decode(res.body);
+                    print(result);
+                    if (result["success"] == true) {
+                      prefs.clear();
+                      var token = JwtDecoder.decode(
+                          result['access_token']);
+                      prefs.setString(
+                          'userId', token['sub'].toString());
+                      prefs.setString(
+                          'access_token', result['access_token']);
+                      setState(() {
+                        userId = prefs.getString('userId');
+                      });
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      onWillPop: () {},
+    );
+  }
 
 }
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -286,16 +267,57 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool firstStart=false;
+  final pages = [
+    SkOnboardingModel(
+        title: 'Choose your item',
+        description:
+        'Easily find your grocery items and you will get delivery in wide range',
+        titleColor: Colors.black,
+        descripColor: const Color(0xFF929794),
+        imagePath: 'assets/onboarding1.png'),
+    SkOnboardingModel(
+        title: 'Pick Up or Delivery',
+        description:
+        'We make ordering fast, simple and free-no matter if you order online or cash',
+        titleColor: Colors.black,
+        descripColor: const Color(0xFF929794),
+        imagePath: 'assets/onboarding2.png'),
+    SkOnboardingModel(
+        title: 'Pay quick and easy',
+        description: 'Pay for order using credit or debit card',
+        titleColor: Colors.black,
+        descripColor: const Color(0xFF929794),
+        imagePath: 'assets/onboarding3.png'),
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _checkFirst();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
+    return firstStart
+        ? SKOnboardingScreen(
+      bgColor: Colors.white,
+      themeColor: const Color(0xFFf74269),
+      pages: pages,
+      skipClicked: (value) {
+        _changeFirst();
+      },
+      getStartedClicked: (value) {
+        _changeFirst();
+      },
+    )
+        : CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         onTap: (index) {
           if (index == 2) {
             Navigator.of(context, rootNavigator: true).push(
               new CupertinoPageRoute(
-                builder: (BuildContext context) =>
-                    new WriteDiary(),
+                builder: (BuildContext context) => new WriteDiary(),
                 fullscreenDialog: true,
               ),
             );
@@ -425,6 +447,20 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+  _checkFirst() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      firstStart = prefs.getBool("first") ?? true;
+    });
+  }
+
+  _changeFirst() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      firstStart=false;
+    });
+    prefs.setBool("first", false);
+  }
 }
 
 class NoGlowScrollBehavior extends ScrollBehavior {
@@ -434,3 +470,5 @@ class NoGlowScrollBehavior extends ScrollBehavior {
     return child;
   }
 }
+
+

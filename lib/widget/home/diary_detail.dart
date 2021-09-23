@@ -45,138 +45,137 @@ class _DiaryDetailState extends State<DiaryDetail> {
   Widget build(BuildContext context) {
     var post = widget.post;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.groupName??'추천 다이어리',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          elevation: 0,
-          leading: new IconButton(
-            icon: new Icon(
-              Icons.arrow_back_ios,
-              size: 16,
-            ),
-            // 내 리액션 뒤로 넘기기
-            onPressed: () async {
-              _postEmotion();
-              Navigator.of(context)
-                  .pop([intToEng[selectedEmotion], emotionValue, myCommentId]);
-              // db 데이터 쏘기
-            },
-          ),
+      appBar: AppBar(
+        title: Text(
+          widget.groupName??'추천 다이어리',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                Container(
-                  width: 360,
-                  decoration: BoxDecoration(
-                      color: Color(0xff3d3d3d),
-                      borderRadius: BorderRadius.circular(13)),
-                  child: Column(
-                    children: [
-                      RecCardHeader(
-                        data: post,
-                      ),
-                      DetailContents(
-                        data: post,
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  //내 리액션리스트에 있는지 확인후 출력
-                                  Container(
-                                    height: 30,
-                                    // 내가 표현한 감정 표시
-                                    child: Row(
-                                      children: [
-                                        post.emotionCount == 0 && selectedEmotion==null
-                                            ? Text(
-                                                '가장 먼저 감정을 보내보세요!',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
-                                              )
-                                            : selectedEmotion == null
-                                                ? Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 10.0),
-                                                        child: post.maxEmotion!=null?Image.asset(
-                                                          'assets/emotions/${post.maxEmotion}.png',
-                                                          width: 25,
-                                                        ):Container(),
-                                                      ),
-                                                      Text(
-                                                        '${post.emotionCount.toString()}명',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text(
-                                                        '의 커넥티가 감정을 표현했어요!',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 10.0),
-                                                        child: Image.asset(
-                                                          'assets/emotions/${intToEng[selectedEmotion]}.png',
-                                                          width: 25,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '${emotionList[selectedEmotion - 1]}',
-                                                        style: TextStyle(
-                                                            color: emotionColorList[
-                                                                selectedEmotion -
-                                                                    1],
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text(
-                                                        '의 감정을 보냈어요!',
-                                                        style: TextStyle(
-                                                            color: emotionColorList[
-                                                                selectedEmotion -
-                                                                    1],
-                                                            fontSize: 12),
-                                                      ),
-                                                    ],
-                                                  )
-                                      ],
-                                    ),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: new IconButton(
+          icon: new Icon(
+            Icons.arrow_back_ios,
+            size: 16,
+          ),
+          // 내 리액션 뒤로 넘기기
+          onPressed: () async {
+            _postEmotion();
+            Navigator.of(context)
+                .pop([intToEng[selectedEmotion], emotionValue, myCommentId]);
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                width: 360,
+                decoration: BoxDecoration(
+                    color: Color(0xff3d3d3d),
+                    borderRadius: BorderRadius.circular(13)),
+                child: Column(
+                  children: [
+                    RecCardHeader(
+                      data: post,
+                    ),
+                    DetailContents(
+                      data: post,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                //내 리액션리스트에 있는지 확인후 출력
+                                Container(
+                                  height: 30,
+                                  // 내가 표현한 감정 표시
+                                  child: Row(
+                                    children: [
+                                      post.emotionCount == 0 && selectedEmotion==null
+                                          ? Text(
+                                        '가장 먼저 감정을 보내보세요!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12),
+                                      )
+                                          : selectedEmotion == null
+                                          ? Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets
+                                                .only(
+                                                right: 10.0),
+                                            child: post.maxEmotion!=null?Image.asset(
+                                              'assets/emotions/${post.maxEmotion}.png',
+                                              width: 25,
+                                            ):Container(),
+                                          ),
+                                          Text(
+                                            '${post.emotionCount.toString()}명',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight
+                                                    .bold),
+                                          ),
+                                          Text(
+                                            '의 커넥티가 감정을 표현했어요!',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12),
+                                          ),
+                                        ],
+                                      )
+                                          : Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets
+                                                .only(
+                                                right: 10.0),
+                                            child: Image.asset(
+                                              'assets/emotions/${intToEng[selectedEmotion]}.png',
+                                              width: 25,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${emotionList[selectedEmotion - 1]}',
+                                            style: TextStyle(
+                                                color: emotionColorList[
+                                                selectedEmotion -
+                                                    1],
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight
+                                                    .bold),
+                                          ),
+                                          Text(
+                                            '의 감정을 보냈어요!',
+                                            style: TextStyle(
+                                                color: emotionColorList[
+                                                selectedEmotion -
+                                                    1],
+                                                fontSize: 12),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 15,),
-                            Container(
+                          ),
+                          SizedBox(height: 15,),
+                          Container(
                               height: 170,
                               width: 250,
                               child: Wrap(
@@ -247,28 +246,29 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                       Text(
                                         engToKor[intToEng[i]],
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
+                                          color: Colors.white,
+                                          fontSize: 10,
                                         ),
                                       ),
                                     ],
                                   ),
                                 )],
                               )
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   _getMainEmotion() {

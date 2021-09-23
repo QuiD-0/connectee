@@ -60,14 +60,16 @@ class _MyPageState extends State<MyPage> {
         SizedBox(height:20),
         GestureDetector(
           onTap: () async {
-            await http.get(Uri.parse('http://52.79.146.213:5000/groups/getMyPreferringGroups'),
-                headers: {"Authorization": "Bearer $token"}).then((value) {
-              if (value.statusCode == 200) {
-                String jsonString = value.body;
-                var result = json.decode(jsonString);
-                print(result);
-              }
-            });
+            final prefs = await SharedPreferences.getInstance();
+            prefs.setBool("first", true);
+            // await http.get(Uri.parse('http://52.79.146.213:5000/groups/getMyPreferringGroups'),
+            //     headers: {"Authorization": "Bearer $token"}).then((value) {
+            //   if (value.statusCode == 200) {
+            //     String jsonString = value.body;
+            //     var result = json.decode(jsonString);
+            //     print(result);
+            //   }
+            // });
           },
           child: Center(
             child: Container(
