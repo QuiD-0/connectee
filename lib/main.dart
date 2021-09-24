@@ -118,7 +118,6 @@ class _MyAppState extends State<MyApp> {
 
 class CheckLogin extends StatefulWidget {
   final id;
-
   const CheckLogin({Key key, this.id}) : super(key: key);
 
   @override
@@ -130,13 +129,14 @@ class _CheckLoginState extends State<CheckLogin> {
 
   @override
   void initState() {
+    userId= widget.id;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: widget.id != null || userId != null
+      child: userId != null
           ? HomePage()
           //Oauth page
           : Container(
