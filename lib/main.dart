@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     KakaoContext.clientId = "f90217e80d59b2b247b80059e64a9fa4";
     KakaoContext.javascriptClientId = "39fa8ae2800478812dfc8289b612c7d3";
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
         scrollBehavior: NoGlowScrollBehavior(),
         debugShowCheckedModeBanner: false,
@@ -138,99 +139,52 @@ class _CheckLoginState extends State<CheckLogin> {
       child: widget.id != null || userId != null
           ? HomePage()
           //Oauth page
-          : SafeArea(
-              child: Container(
-                color: Color(0xff2D2D2D),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      top: 270,
-                        child: Image.asset('assets/splash.png',width: 207,)),
-                    //카카오 로그인
-                    Positioned(
-                      top: 500,
-                      child: GestureDetector(
-                          onTap: () async {
-                            try {
-                              final installed = await isKakaoTalkInstalled();
-                              installed
-                                  ? await UserApi.instance.loginWithKakaoTalk()
-                                  : await UserApi.instance
-                                  .loginWithKakaoAccount();
-                              dynamic token =
-                              await AccessTokenStore.instance.fromStore();
-                              if (token.refreshToken == null) {
-                                print('token error');
-                              } else {
-                                final prefs =
-                                await SharedPreferences.getInstance();
-                                var data = {
-                                  "password": token.accessToken.toString(),
-                                  "username": "kakao",
-                                };
-                                prefs.setString('kakao', token.accessToken);
-                                var res = await http.post(
-                                    Uri.parse(
-                                        "http://52.79.146.213:5000/auth/login"),
-                                    body: data);
-                                var result = json.decode(res.body);
-                                print(result);
-                                if (result["success"] == true) {
-                                  var token =
-                                  JwtDecoder.decode(result['access_token']);
-                                  prefs.setString(
-                                      'userId', token['sub'].toString());
-                                  prefs.setString(
-                                      'access_token', result['access_token']);
-                                  setState(() {
-                                    userId = prefs.getString('userId');
-                                    if (result["isNewUser"] == true) {
-                                      firstLogin = true;
-                                    }
-                                  });
-                                }
-                              }
-                              // perform actions after login
-                            } catch (e) {
-                              print('error on login: $e');
-                            }
-                          },
-                          child:Image.asset('assets/kakao_login.png',width: 320,)),
-                    ),
-                    //애플 로그인
-                    Positioned(
-                      top: 560,
-                      child: GestureDetector(
-                        onTap: () async {
-                          final credential =
-                          await SignInWithApple.getAppleIDCredential(
-                            scopes: [
-                              AppleIDAuthorizationScopes.email,
-                              AppleIDAuthorizationScopes.fullName,
-                            ],
-                            webAuthenticationOptions: WebAuthenticationOptions(
-                              clientId: "com.swMaestro.connectee",
-                              redirectUri: Uri.parse(
-                                  "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
-                            ),
-                          );
+          : Container(
+        height: MediaQuery.of(context).size.height,
+        color: Color(0xff2D2D2D),
+        child: Stack(
+            alignment: Alignment.center,
+            children:[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/splash.png',width: 207,),
+                ],
+              ),
+              //카카오 로그인
+              Positioned(
+                top: MediaQuery.of(context).size.height/2+150,
+                child: GestureDetector(
+                    onTap: () async {
+                      try {
+                        final installed = await isKakaoTalkInstalled();
+                        installed
+                            ? await UserApi.instance.loginWithKakaoTalk()
+                            : await UserApi.instance
+                            .loginWithKakaoAccount();
+                        dynamic token =
+                        await AccessTokenStore.instance.fromStore();
+                        if (token.refreshToken == null) {
+                          print('token error');
+                        } else {
+                          final prefs =
+                          await SharedPreferences.getInstance();
                           var data = {
-                            "password": credential.identityToken.toString(),
-                            "username": "apple",
+                            "password": token.accessToken.toString(),
+                            "username": "kakao",
                           };
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setString(
-                              'apple', credential.identityToken.toString());
+                          prefs.setString('kakao', token.accessToken);
                           var res = await http.post(
-                              Uri.parse("http://52.79.146.213:5000/auth/login"),
+                              Uri.parse(
+                                  "http://52.79.146.213:5000/auth/login"),
                               body: data);
                           var result = json.decode(res.body);
                           print(result);
                           if (result["success"] == true) {
                             var token =
                             JwtDecoder.decode(result['access_token']);
-                            prefs.setString('userId', token['sub'].toString());
+                            prefs.setString(
+                                'userId', token['sub'].toString());
                             prefs.setString(
                                 'access_token', result['access_token']);
                             setState(() {
@@ -240,16 +194,66 @@ class _CheckLoginState extends State<CheckLogin> {
                               }
                             });
                           }
-                        },
-                          child: Image.asset('assets/apple_login.png',width: 320),
-                      ),
-                    )
-                  ],
-                ),
+                        }
+                        // perform actions after login
+                      } catch (e) {
+                        print('error on login: $e');
+                      }
+                    },
+                    child:Image.asset('assets/kakao_login.png',width: 320,)),
               ),
-            ),
+              //애플 로그인
+              Positioned(
+                top: MediaQuery.of(context).size.height/2+210,
+                child: GestureDetector(
+                  onTap: () async {
+                    final credential =
+                    await SignInWithApple.getAppleIDCredential(
+                      scopes: [
+                        AppleIDAuthorizationScopes.email,
+                        AppleIDAuthorizationScopes.fullName,
+                      ],
+                      webAuthenticationOptions: WebAuthenticationOptions(
+                        clientId: "com.swMaestro.connectee",
+                        redirectUri: Uri.parse(
+                            "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
+                      ),
+                    );
+                    var data = {
+                      "password": credential.identityToken.toString(),
+                      "username": "apple",
+                    };
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString(
+                        'apple', credential.identityToken.toString());
+                    var res = await http.post(
+                        Uri.parse("http://52.79.146.213:5000/auth/login"),
+                        body: data);
+                    var result = json.decode(res.body);
+                    print(result);
+                    if (result["success"] == true) {
+                      var token =
+                      JwtDecoder.decode(result['access_token']);
+                      prefs.setString('userId', token['sub'].toString());
+                      prefs.setString(
+                          'access_token', result['access_token']);
+                      setState(() {
+                        userId = prefs.getString('userId');
+                        if (result["isNewUser"] == true) {
+                          firstLogin = true;
+                        }
+                      });
+                    }
+                  },
+                  child: Image.asset('assets/apple_login.png',width: 320),
+                ),
+              )
+            ]
+        ),
+      ),
       onWillPop: () async {
         return false;
+
       },
     );
   }
