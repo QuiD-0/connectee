@@ -336,6 +336,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
             headers: {'Content-Type': 'application/json'},
             body: json.encode(body))
         .then((res) {
+          // print(res.body);
     });
   }
 

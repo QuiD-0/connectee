@@ -1,7 +1,6 @@
-import 'package:connectee/widget/home/CalDetail/myDiaryHeader.dart';
 import 'package:connectee/widget/home/DetailCard/detail_contents.dart';
 import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
-import 'package:connectee/widget/my_diary/editDiary.dart';
+import 'package:connectee/widget/diary/editDiary.dart';
 import 'package:flutter/material.dart';
 
 class MyDiaryDetail extends StatefulWidget {

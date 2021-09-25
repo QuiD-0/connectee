@@ -253,7 +253,6 @@ class _CheckLoginState extends State<CheckLogin> {
       ),
       onWillPop: () async {
         return false;
-
       },
     );
   }
@@ -273,20 +272,20 @@ class _HomePageState extends State<HomePage> {
         title: 'Choose your item',
         description:
             'Easily find your grocery items and you will get delivery in wide range',
-        titleColor: Colors.black,
+        titleColor: Colors.white,
         descripColor: const Color(0xFF929794),
         imagePath: 'assets/splash.png'),
     SkOnboardingModel(
         title: 'Pick Up or Delivery',
         description:
-            'We make ordering fast, simple and free-no matter if you order online or cash',
-        titleColor: Colors.black,
+            'We make ordering fast',
+        titleColor: Colors.white,
         descripColor: const Color(0xFF929794),
         imagePath: 'assets/splash.png'),
     SkOnboardingModel(
         title: 'Pay quick and easy',
         description: 'Pay for order using credit or debit card',
-        titleColor: Colors.black,
+        titleColor: Colors.white,
         descripColor: const Color(0xFF929794),
         imagePath: 'assets/splash.png'),
   ];
@@ -302,8 +301,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return firstStart
         ? SKOnboardingScreen(
-            bgColor: Colors.white,
-            themeColor: const Color(0xFFf74269),
+            bgColor: Color(0xff2d2d2d),
+            themeColor: const Color(0xFFFF9082),
             pages: pages,
             skipClicked: (value) {
               _changeFirst();
@@ -337,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   border: Border.all(width: 55),
-                  activeColor: Colors.white,
+                  activeColor: Colors.black,
                   backgroundColor: Colors.black,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
