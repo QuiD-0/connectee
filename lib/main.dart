@@ -336,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   border: Border.all(width: 55),
-                  activeColor: Colors.black,
+                  activeColor: Colors.white,
                   backgroundColor: Colors.black,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
