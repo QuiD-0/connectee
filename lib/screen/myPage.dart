@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'package:connectee/widget/my/edit_profile.dart';
-import 'package:connectee/widget/diary/othersDiary.dart';
 import 'package:connectee/widget/my/infos/noti_setting.dart';
 import 'package:connectee/widget/my/infos/open_source.dart';
 import 'package:connectee/widget/my/infos/private.dart';
@@ -22,27 +22,28 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   String userId;
   String token;
-  var userInfo = {
-    "id": 1,
-    "snsId": "1822802345",
-    "provider": "kakao",
-    "email": "wodnd101@naver.com",
-    "nickname": "이재웅",
-    "interest": "마음,나가,하루,오늘",
-    "createdAt": "2021-09-07T01:37:53.707Z",
-    "updatedAt": "2021-09-12T01:13:44.000Z",
+  var userInfo={
+    "id": 0,
+    "snsId": "",
+    "provider": "",
+    "email": "",
+    "nickname": "User",
+    "interest": "",
+    "createdAt": "",
+    "updatedAt": "",
     "deletedAt": null,
-    'desc': "",
-    "diaryCount": 100,
-    'commentCount': 100,
-    'profileImage':
-        'https://images.unsplash.com/photo-1632265345980-acae0fe74e12?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1974&q=80',
+    'intro': "",
+    "diaryCount": 0,
+    'commentCount': 0,
+    'imageUrl':null,
   };
 
   @override
   void initState() {
     // TODO: implement initState
-    _getId().then((res) {});
+    _getId().then((res) {
+      _getUserInfo();
+    });
     super.initState();
   }
 
@@ -83,15 +84,17 @@ class _MyPageState extends State<MyPage> {
                             //사용자 이미지
                             Padding(
                               padding: const EdgeInsets.only(bottom: 20),
-                              child: userInfo['profileImage'] != null
+                              child: userInfo['imageUrl'] != null
                                   ? Container(
                                       width: 100,
                                       child: Center(
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(50),
-                                          child: Image.network(
-                                            userInfo['profileImage'],
+                                          child: FadeInImage.assetNetwork(
+                                            image:userInfo['imageUrl'],
+                                            placeholder:
+                                            'assets/loading300.gif',
                                             height: 100,
                                             width: 100,
                                             fit: BoxFit.cover,
@@ -140,13 +143,16 @@ class _MyPageState extends State<MyPage> {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: () {
-                                            Navigator.of(context)
+                                          onTap: () async{
+                                            var res = await Navigator.of(context)
                                                 .push(CupertinoPageRoute(
                                               builder: (BuildContext context) =>
-                                                  new EditProfile(),
+                                                  new EditProfile(user: userInfo,),
                                               fullscreenDialog: true,
                                             ));
+                                            if (res){
+                                              _getUserInfo();
+                                            }
                                           },
                                           child: Container(
                                               padding: EdgeInsets.fromLTRB(
@@ -207,7 +213,7 @@ class _MyPageState extends State<MyPage> {
                                         height: 60,
                                         width: 210,
                                         child: Text(
-                                          '${userInfo['diaryCount']}+개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
+                                          '${userInfo['diaryCount']}개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
                                           style: TextStyle(
                                               color: Color(0xffD0D0D0),
                                               fontSize: 10,
@@ -252,9 +258,9 @@ class _MyPageState extends State<MyPage> {
                               SizedBox(
                                 height: 5,
                               ),
-                              userInfo['desc'] != ''
+                              userInfo['intro'] != ''
                                   ? Text(
-                                      '${userInfo['desc']}',
+                                      '${userInfo['intro']}',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -521,6 +527,21 @@ class _MyPageState extends State<MyPage> {
             ),
           ),
         ));
+  }
+
+  _getUserInfo() async{
+    await http
+        .get(Uri.parse(
+        'http://52.79.146.213:5000/users/myInfo'),headers: {"Authorization" : "Bearer $token"})
+        .then((res) {
+      if (res.statusCode == 200) {
+        setState(() {
+          userInfo=json.decode(res.body);
+        });
+      } else {
+        print('error');
+      }
+    });
   }
 }
 

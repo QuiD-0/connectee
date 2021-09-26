@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/screen/myPage.dart';
+import 'package:connectee/widget/my/first_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sk_onboarding_screen/sk_onboarding_model.dart';
 import 'screen/group.dart';
 import 'screen/home_screen.dart';
@@ -69,7 +74,7 @@ class _MyAppState extends State<MyApp> {
           splashIconSize: 150,
           backgroundColor: Color(0xff2D2D2D),
           splashTransition: SplashTransition.fadeTransition,
-          pageTransitionType : PageTransitionType.fade,
+          pageTransitionType: PageTransitionType.fade,
           nextScreen: CheckLogin(
             id: userId,
           ),
@@ -118,6 +123,7 @@ class _MyAppState extends State<MyApp> {
 
 class CheckLogin extends StatefulWidget {
   final id;
+
   const CheckLogin({Key key, this.id}) : super(key: key);
 
   @override
@@ -129,7 +135,7 @@ class _CheckLoginState extends State<CheckLogin> {
 
   @override
   void initState() {
-    userId= widget.id;
+    userId = widget.id;
     super.initState();
   }
 
@@ -140,117 +146,116 @@ class _CheckLoginState extends State<CheckLogin> {
           ? HomePage()
           //Oauth page
           : Container(
-        height: MediaQuery.of(context).size.height,
-        color: Color(0xff2D2D2D),
-        child: Stack(
-            alignment: Alignment.center,
-            children:[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/splash.png',width: 207,),
-                ],
-              ),
-              //카카오 로그인
-              Positioned(
-                top: MediaQuery.of(context).size.height/2+150,
-                child: GestureDetector(
-                    onTap: () async {
-                      try {
-                        final installed = await isKakaoTalkInstalled();
-                        installed
-                            ? await UserApi.instance.loginWithKakaoTalk()
-                            : await UserApi.instance
-                            .loginWithKakaoAccount();
-                        dynamic token =
-                        await AccessTokenStore.instance.fromStore();
-                        if (token.refreshToken == null) {
-                          print('token error');
-                        } else {
-                          final prefs =
-                          await SharedPreferences.getInstance();
-                          var data = {
-                            "password": token.accessToken.toString(),
-                            "username": "kakao",
-                          };
-                          prefs.setString('kakao', token.accessToken);
-                          var res = await http.post(
-                              Uri.parse(
-                                  "http://52.79.146.213:5000/auth/login"),
-                              body: data);
-                          var result = json.decode(res.body);
-                          print(result);
-                          if (result["success"] == true) {
-                            var token =
-                            JwtDecoder.decode(result['access_token']);
-                            prefs.setString(
-                                'userId', token['sub'].toString());
-                            prefs.setString(
-                                'access_token', result['access_token']);
-                            setState(() {
-                              userId = prefs.getString('userId');
-                              if (result["isNewUser"] == true) {
-                                firstLogin = true;
-                              }
-                            });
+              height: MediaQuery.of(context).size.height,
+              color: Color(0xff2D2D2D),
+              child: Stack(alignment: Alignment.center, children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/splash.png',
+                      width: 207,
+                    ),
+                  ],
+                ),
+                //카카오 로그인
+                Positioned(
+                  top: MediaQuery.of(context).size.height / 2 + 150,
+                  child: GestureDetector(
+                      onTap: () async {
+                        try {
+                          final installed = await isKakaoTalkInstalled();
+                          installed
+                              ? await UserApi.instance.loginWithKakaoTalk()
+                              : await UserApi.instance.loginWithKakaoAccount();
+                          dynamic token =
+                              await AccessTokenStore.instance.fromStore();
+                          if (token.refreshToken == null) {
+                            print('token error');
+                          } else {
+                            final prefs = await SharedPreferences.getInstance();
+                            var data = {
+                              "password": token.accessToken.toString(),
+                              "username": "kakao",
+                            };
+                            prefs.setString('kakao', token.accessToken);
+                            var res = await http.post(
+                                Uri.parse(
+                                    "http://52.79.146.213:5000/auth/login"),
+                                body: data);
+                            var result = json.decode(res.body);
+                            print(result);
+                            if (result["success"] == true) {
+                              var token =
+                                  JwtDecoder.decode(result['access_token']);
+                              prefs.setString(
+                                  'userId', token['sub'].toString());
+                              prefs.setString(
+                                  'access_token', result['access_token']);
+                              setState(() {
+                                userId = prefs.getString('userId');
+                                if (result["isNewUser"] == true) {
+                                  firstLogin = true;
+                                }
+                              });
+                            }
                           }
+                          // perform actions after login
+                        } catch (e) {
+                          print('error on login: $e');
                         }
-                        // perform actions after login
-                      } catch (e) {
-                        print('error on login: $e');
+                      },
+                      child: Image.asset(
+                        'assets/kakao_login.png',
+                        width: 320,
+                      )),
+                ),
+                //애플 로그인
+                Positioned(
+                  top: MediaQuery.of(context).size.height / 2 + 210,
+                  child: GestureDetector(
+                    onTap: () async {
+                      final credential =
+                          await SignInWithApple.getAppleIDCredential(
+                        scopes: [
+                          AppleIDAuthorizationScopes.email,
+                          AppleIDAuthorizationScopes.fullName,
+                        ],
+                        webAuthenticationOptions: WebAuthenticationOptions(
+                          clientId: "com.swMaestro.connectee",
+                          redirectUri: Uri.parse(
+                              "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
+                        ),
+                      );
+                      var data = {
+                        "password": credential.identityToken.toString(),
+                        "username": "apple",
+                      };
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setString(
+                          'apple', credential.identityToken.toString());
+                      var res = await http.post(
+                          Uri.parse("http://52.79.146.213:5000/auth/login"),
+                          body: data);
+                      var result = json.decode(res.body);
+                      print(result);
+                      if (result["success"] == true) {
+                        var token = JwtDecoder.decode(result['access_token']);
+                        prefs.setString('userId', token['sub'].toString());
+                        prefs.setString('access_token', result['access_token']);
+                        setState(() {
+                          userId = prefs.getString('userId');
+                          if (result["isNewUser"] == true) {
+                            firstLogin = true;
+                          }
+                        });
                       }
                     },
-                    child:Image.asset('assets/kakao_login.png',width: 320,)),
-              ),
-              //애플 로그인
-              Positioned(
-                top: MediaQuery.of(context).size.height/2+210,
-                child: GestureDetector(
-                  onTap: () async {
-                    final credential =
-                    await SignInWithApple.getAppleIDCredential(
-                      scopes: [
-                        AppleIDAuthorizationScopes.email,
-                        AppleIDAuthorizationScopes.fullName,
-                      ],
-                      webAuthenticationOptions: WebAuthenticationOptions(
-                        clientId: "com.swMaestro.connectee",
-                        redirectUri: Uri.parse(
-                            "https://plausible-tangy-shoulder.glitch.me/callbacks/sign_in_with_apple"),
-                      ),
-                    );
-                    var data = {
-                      "password": credential.identityToken.toString(),
-                      "username": "apple",
-                    };
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.setString(
-                        'apple', credential.identityToken.toString());
-                    var res = await http.post(
-                        Uri.parse("http://52.79.146.213:5000/auth/login"),
-                        body: data);
-                    var result = json.decode(res.body);
-                    print(result);
-                    if (result["success"] == true) {
-                      var token =
-                      JwtDecoder.decode(result['access_token']);
-                      prefs.setString('userId', token['sub'].toString());
-                      prefs.setString(
-                          'access_token', result['access_token']);
-                      setState(() {
-                        userId = prefs.getString('userId');
-                        if (result["isNewUser"] == true) {
-                          firstLogin = true;
-                        }
-                      });
-                    }
-                  },
-                  child: Image.asset('assets/apple_login.png',width: 320),
-                ),
-              )
-            ]
-        ),
-      ),
+                    child: Image.asset('assets/apple_login.png', width: 320),
+                  ),
+                )
+              ]),
+            ),
       onWillPop: () async {
         return false;
       },
@@ -267,6 +272,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool firstStart = false;
+  TextEditingController name = TextEditingController();
+  TextEditingController desc = TextEditingController();
+  File _image;
+  String userId;
+  String token;
+
   final pages = [
     SkOnboardingModel(
         title: 'Choose your item',
@@ -277,8 +288,7 @@ class _HomePageState extends State<HomePage> {
         imagePath: 'assets/splash.png'),
     SkOnboardingModel(
         title: 'Pick Up or Delivery',
-        description:
-            'We make ordering fast',
+        description: 'We make ordering fast',
         titleColor: Colors.white,
         descripColor: const Color(0xFF929794),
         imagePath: 'assets/splash.png'),
@@ -294,6 +304,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     _checkFirst();
+    _getId();
     super.initState();
   }
 
@@ -312,15 +323,315 @@ class _HomePageState extends State<HomePage> {
             },
           )
         : firstLogin
-            ? Container(
-                child: GestureDetector(
-                  child: Text('닉네임 설정'),
-                  onTap: () {
-                    //닉네임 설정후 완료하면 넘어감
-                    setState(() {
-                      firstLogin = false;
-                    });
-                  },
+            ? Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    '프로필 설정',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  centerTitle: true,
+                  actions: [
+                    GestureDetector(
+                      onTap: () {
+                        _updateUserInfo();
+                        setState(() {
+                          firstLogin=false;
+                        });
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 80,
+                        height: 40,
+                        child: Text(
+                          '완료',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Color(0xff2D2D2D),
+                            borderRadius: BorderRadius.circular(13)),
+                        child: Column(
+                          children: [
+                            //그룹 대표 사진
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 30, bottom: 20),
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    var status = Platform.isIOS
+                                        ? await Permission.photos.request()
+                                        : await Permission.storage.request();
+                                    if (status.isGranted) {
+                                      final ImagePicker _picker = ImagePicker();
+                                      XFile image = await _picker.pickImage(
+                                        source: ImageSource.gallery,
+                                      );
+                                      if (image == null) {
+                                        setState(() {
+                                          _image = null;
+                                        });
+                                      }
+
+                                      File croppedFile =
+                                          await ImageCropper.cropImage(
+                                        cropStyle: CropStyle.circle,
+                                        sourcePath: File(image.path).path,
+                                        aspectRatioPresets: [
+                                          CropAspectRatioPreset.square,
+                                        ],
+                                        androidUiSettings: AndroidUiSettings(
+                                            hideBottomControls: true,
+                                            activeControlsWidgetColor:
+                                                Colors.black,
+                                            toolbarTitle: 'Edit Image',
+                                            toolbarColor: Colors.black,
+                                            toolbarWidgetColor: Colors.white,
+                                            initAspectRatio:
+                                                CropAspectRatioPreset.square,
+                                            lockAspectRatio: true),
+                                        iosUiSettings: IOSUiSettings(
+                                          minimumAspectRatio: 1.0,
+                                        ),
+                                      );
+                                      setState(() {
+                                        _image = croppedFile;
+                                      });
+                                    } else {
+                                      openAppSettings();
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffFF9082),
+                                      borderRadius: BorderRadius.circular(100),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0x32000000),
+                                            offset: Offset.zero,
+                                            blurRadius: 10,
+                                            spreadRadius: 0)
+                                      ],
+                                    ),
+                                    child: _image == null
+                                        ? Container()
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            child: Image.file(
+                                              File(_image.path),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                  )),
+                            ),
+                            Text(
+                              '프로필 사진 바꾸기',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            //디바이더
+                            Container(
+                              height: 1,
+                              width: double.infinity,
+                              color: Color(0xff4D4D4D),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Container(
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20, 0, 20, 20),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 80,
+                                          height: 35,
+                                          child: Text(
+                                            '이름',
+                                            textAlign: TextAlign.start,
+                                            style: textStyle,
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 35,
+                                              width: 250,
+                                              child: TextField(
+                                                controller: name,
+                                                maxLength: 12,
+                                                cursorColor: Colors.white,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                                decoration: InputDecoration(
+                                                  counterText: '',
+                                                  filled: true,
+                                                  fillColor: Color(0xff565656),
+                                                  hintText: '이름을 입력해주세요',
+                                                  hintStyle: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Color(0xffD0D0D0)),
+                                                  contentPadding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0,
+                                                          bottom: 13,
+                                                          top: 0),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide(width: 0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide(width: 0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            // Padding(
+                                            //   padding:
+                                            //       const EdgeInsets.only(top: 10, left: 2),
+                                            //   child: Text(
+                                            //     '최대 12자까지 입력이 가능합니다',
+                                            //     style: descStyle,
+                                            //   ),
+                                            // ),
+                                            SizedBox(
+                                              height: 20,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  //그룹 설명
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20, 0, 20, 20),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 80,
+                                          height: 85,
+                                          child: Text(
+                                            '한 마디',
+                                            textAlign: TextAlign.start,
+                                            style: textStyle,
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 100,
+                                              width: 250,
+                                              child: TextField(
+                                                controller: desc,
+                                                maxLength: 54,
+                                                maxLines: 3,
+                                                cursorColor: Colors.white,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    height: 1.8),
+                                                decoration: InputDecoration(
+                                                  counterText: '',
+                                                  filled: true,
+                                                  fillColor: Color(0xff565656),
+                                                  hintText:
+                                                      '아직 한 마디가 없어요. 친구들에게 보여줄 한 마디를 작성해주세요!',
+                                                  hintStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Color(0xffD0D0D0)),
+                                                  contentPadding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0,
+                                                          bottom: 15,
+                                                          top: 0),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide(width: 0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide(width: 0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                  errorText:
+                                                      desc.text.length > 40
+                                                          ? '최대 40자까지 입력이 가능합니다'
+                                                          : '',
+                                                  errorStyle: TextStyle(
+                                                      color: Color(0xffFF9082),
+                                                      fontSize: 9),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide(width: 0),
+                                                  ),
+                                                  focusedErrorBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide(width: 0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //마지막 빈공간
+                            SizedBox(
+                              height: 30,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               )
             : CupertinoTabScaffold(
@@ -460,6 +771,28 @@ class _HomePageState extends State<HomePage> {
               );
   }
 
+  var descStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 9,
+  );
+  var textStyle =
+      TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
+
+  _updateUserInfo() async {
+    var request = new http.MultipartRequest(
+      "PATCH",
+      Uri.parse('http://52.79.146.213:5000/users/update'),
+    );
+    request.headers['Authorization'] = "Bearer $token";
+    request.fields['nickname'] = name.text;
+    request.fields['intro'] = desc.text;
+    if (_image != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('image', _image.path));
+    }
+    request.send();
+  }
+
   _checkFirst() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -473,6 +806,14 @@ class _HomePageState extends State<HomePage> {
       firstStart = false;
     });
     prefs.setBool("first", false);
+  }
+
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+      token = prefs.getString('access_token');
+    });
   }
 }
 

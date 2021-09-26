@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectee/widget/diary/comment_list.dart';
 import 'package:intl/intl.dart';
 import 'package:connectee/model/post.dart';
 import 'package:connectee/widget/home/CalDetail/myDiaryHeader.dart';
@@ -11,7 +12,6 @@ import 'package:http/http.dart' as http;
 
 class MyDiary extends StatefulWidget {
   final back;
-
   const MyDiary({Key key, this.back}) : super(key: key);
 
   @override
@@ -24,23 +24,22 @@ class _MyDiaryState extends State<MyDiary> {
   int page=1;
   String userId;
   String token;
-  List _data = [
-
-  ];
+  List _data = [];
+  int index=0;
   var userInfo = {
-    "id": 1,
-    "snsId": "1822802345",
-    "provider": "kakao",
-    "email": "wodnd101@naver.com",
-    "nickname": "이재웅",
-    "interest": "마음,나가,하루,오늘",
-    "createdAt": "2021-09-07T01:37:53.707Z",
-    "updatedAt": "2021-09-12T01:13:44.000Z",
+    "id": 0,
+    "snsId": "",
+    "provider": "",
+    "email": "",
+    "nickname": "User",
+    "interest": "",
+    "createdAt": "",
+    "updatedAt": "",
     "deletedAt": null,
-    'desc': "",
-    "diaryCount": 2,
-    'commentCount': 5,
-    'profileImage': null,
+    'intro': "",
+    "diaryCount": 0,
+    'commentCount': 0,
+    'imageUrl': null,
   };
   int month = 0;
   int year=0;
@@ -51,7 +50,7 @@ class _MyDiaryState extends State<MyDiary> {
    page=1;
     _getId().then((res){
       //사용자정보
-
+      _getUserInfo();
       //내 다이어리
       _getMyDiary();
     });
@@ -97,10 +96,12 @@ class _MyDiaryState extends State<MyDiary> {
               setState(() {
                 month=0;
                 year=0;
+                index=0;
                 page=1;
                 _data=[];
               });
               _getMyDiary();
+              _getUserInfo();
               _refreshController.refreshCompleted();
             },
             enablePullUp: true,
@@ -130,15 +131,17 @@ class _MyDiaryState extends State<MyDiary> {
                             //사용자 이미지
                             Padding(
                               padding: const EdgeInsets.only(bottom: 20),
-                              child: userInfo['profileImage'] != null
+                              child: userInfo['imageUrl'] != null
                                   ? Container(
                                       width: 100,
                                       child: Center(
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(50),
-                                          child: Image.network(
-                                            userInfo['profileImage'],
+                                          child:  FadeInImage.assetNetwork(
+                                            image:userInfo['imageUrl'],
+                                            placeholder:
+                                            'assets/loading300.gif',
                                             height: 100,
                                             width: 100,
                                             fit: BoxFit.cover,
@@ -222,7 +225,7 @@ class _MyDiaryState extends State<MyDiary> {
                                         height: 60,
                                         width: 210,
                                         child: Text(
-                                          '${userInfo['diaryCount']}+개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
+                                          '${userInfo['diaryCount']}개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
                                           style: TextStyle(
                                               color: Color(0xffD0D0D0),
                                               fontSize: 10,
@@ -262,9 +265,9 @@ class _MyDiaryState extends State<MyDiary> {
                               SizedBox(
                                 height: 5,
                               ),
-                              userInfo['desc'] != ''
+                              userInfo['intro'] != ''
                                   ? Text(
-                                      '${userInfo['desc']}',
+                                      '${userInfo['intro']}',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -307,10 +310,6 @@ class _MyDiaryState extends State<MyDiary> {
                     ],
                   ),
                 ),
-                // 다이어리 내용없을때
-                _data.length == 0
-                    ? Container()
-                    : Container(),
                 for (var diary in _data)
                   Column(
                     children: [
@@ -424,6 +423,7 @@ class _MyDiaryState extends State<MyDiary> {
                                           ),
                                         ),
                                         Container(
+                                          height: 25,
                                           margin:
                                               EdgeInsets.fromLTRB(20, 15, 20, 15),
                                           child: Row(
@@ -461,15 +461,15 @@ class _MyDiaryState extends State<MyDiary> {
                                                   ),
                                                 ],
                                               )),
-                                              GestureDetector(
+                                              diary.emotionCount != 0?GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(
                                                     context,
                                                     CupertinoPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                      new MyDiaryDetail(
-                                                        post: diary,edit: true,),
+                                                      new CommentList(
+                                                        diary: diary),
                                                       fullscreenDialog: true,
                                                     ),
                                                   );
@@ -493,7 +493,7 @@ class _MyDiaryState extends State<MyDiary> {
                                                     ),
                                                   ),
                                                 ),
-                                              )
+                                              ):Container()
                                             ],
                                           ),
                                         )
@@ -513,6 +513,11 @@ class _MyDiaryState extends State<MyDiary> {
   }
 
   _monthCheck(i) {
+    if(_data[0]==i){
+      year=DateTime.parse(i.createdAt).year;
+      month = DateTime.parse(i.createdAt).month;
+      return true;
+    }
     if (DateTime.parse(i.createdAt).year != year){
       year=DateTime.parse(i.createdAt).year;
       month = DateTime.parse(i.createdAt).month;
@@ -551,6 +556,22 @@ class _MyDiaryState extends State<MyDiary> {
             _data.add(diaryToAdd);
           });
         }
+      } else {
+        print('error');
+      }
+    });
+  }
+
+
+  _getUserInfo() async{
+    await http
+        .get(Uri.parse(
+        'http://52.79.146.213:5000/users/myInfo'),headers: {"Authorization" : "Bearer $token"})
+        .then((res) {
+      if (res.statusCode == 200) {
+        setState(() {
+          userInfo=json.decode(res.body);
+        });
       } else {
         print('error');
       }

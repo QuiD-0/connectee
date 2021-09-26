@@ -8,32 +8,25 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EditProfile extends StatefulWidget {
-  final user;
-
-  const EditProfile({Key key, this.user}) : super(key: key);
+class FirstProfile extends StatefulWidget {
+  const FirstProfile({Key key}) : super(key: key);
 
   @override
-  _EditProfileState createState() => _EditProfileState();
+  _FirstProfileState createState() => _FirstProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _FirstProfileState extends State<FirstProfile> {
   var user;
   String userId;
   String token;
-  TextEditingController name;
-  TextEditingController desc;
+  TextEditingController name= TextEditingController();
+  TextEditingController desc= TextEditingController();
   File _image;
-  var firstImage;
 
   @override
   void initState() {
     // TODO: implement initState
-    user = widget.user;
     _getId();
-    firstImage = user['imageUrl'];
-    name = TextEditingController(text: user['nickname']);
-    desc = TextEditingController(text: user['intro']);
     super.initState();
   }
 
@@ -42,7 +35,7 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '프로필 수정',
+          '프로필 설정',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         centerTitle: true,
@@ -52,7 +45,7 @@ class _EditProfileState extends State<EditProfile> {
             size: 16,
           ),
           onPressed: () {
-            Navigator.of(context).pop(false);
+            Navigator.of(context).pop();
           },
         ),
         actions: [
@@ -99,7 +92,6 @@ class _EditProfileState extends State<EditProfile> {
                             if (image == null) {
                               setState(() {
                                 _image = null;
-                                firstImage=null;
                               });
                             }
 
@@ -123,7 +115,6 @@ class _EditProfileState extends State<EditProfile> {
                             );
                             setState(() {
                               _image = croppedFile;
-                              firstImage=null;
                             });
                           } else {
                             openAppSettings();
@@ -143,20 +134,15 @@ class _EditProfileState extends State<EditProfile> {
                                   spreadRadius: 0)
                             ],
                           ),
-                          child: firstImage != null
-                              ? ClipRRect(
+                          child: _image == null
+                              ? Container()
+                              : ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: Image.network('$firstImage')
-                          )
-                              : _image == null
-                                  ? Container()
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.file(
-                                        File(_image.path),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                            child: Image.file(
+                              File(_image.path),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         )),
                   ),
                   Text(
@@ -219,12 +205,12 @@ class _EditProfileState extends State<EditProfile> {
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(width: 0),
                                           borderRadius:
-                                              BorderRadius.circular(5),
+                                          BorderRadius.circular(5),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(width: 0),
                                           borderRadius:
-                                              BorderRadius.circular(5),
+                                          BorderRadius.circular(5),
                                         ),
                                       ),
                                     ),
@@ -279,7 +265,7 @@ class _EditProfileState extends State<EditProfile> {
                                         filled: true,
                                         fillColor: Color(0xff565656),
                                         hintText:
-                                            '아직 한 마디가 없어요. 친구들에게 보여줄 한 마디를 작성해주세요!',
+                                        '아직 한 마디가 없어요. 친구들에게 보여줄 한 마디를 작성해주세요!',
                                         hintStyle: TextStyle(
                                             fontSize: 12,
                                             color: Color(0xffD0D0D0)),
@@ -288,12 +274,12 @@ class _EditProfileState extends State<EditProfile> {
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(width: 0),
                                           borderRadius:
-                                              BorderRadius.circular(5),
+                                          BorderRadius.circular(5),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(width: 0),
                                           borderRadius:
-                                              BorderRadius.circular(5),
+                                          BorderRadius.circular(5),
                                         ),
                                         errorText: desc.text.length > 40
                                             ? '최대 40자까지 입력이 가능합니다'
@@ -336,7 +322,7 @@ class _EditProfileState extends State<EditProfile> {
     fontSize: 9,
   );
   var textStyle =
-      TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
+  TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
 
   _updateUserInfo() async {
     var request = new http.MultipartRequest(
@@ -350,11 +336,6 @@ class _EditProfileState extends State<EditProfile> {
       request.files
           .add(await http.MultipartFile.fromPath('image', _image.path));
     }
-    // //이미지 삭제
-    // else if (_image == null && firstImage==null) {
-    //   request.files
-    //       .add(await http.MultipartFile.fromPath('image', null));
-    // }
     var res = await request.send();
     var respStr = await http.Response.fromStream(res);
     var resJson = json.decode(respStr.body);

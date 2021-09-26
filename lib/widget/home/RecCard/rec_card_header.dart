@@ -1,5 +1,8 @@
+import 'package:connectee/screen/myDiary.dart';
+import 'package:connectee/widget/diary/othersDiary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RecCardHeader extends StatelessWidget {
   final data;
@@ -49,10 +52,23 @@ class Emotion extends StatelessWidget {
   }
 }
 
-class NameAndTitle extends StatelessWidget {
+class NameAndTitle extends StatefulWidget {
   final data;
   const NameAndTitle({Key key, this.data}) : super(key: key);
 
+  @override
+  _NameAndTitleState createState() => _NameAndTitleState();
+}
+
+class _NameAndTitleState extends State<NameAndTitle> {
+  String userId;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getId();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -63,14 +79,26 @@ class NameAndTitle extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 110),
-                child: Text(
-                  data.nickname,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white,),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  softWrap: false,
+              GestureDetector(
+                onTap: (){
+                  if(widget.data.userId==int.parse(userId)){
+
+                  }
+                  else{
+                    Navigator.of(context).push(CupertinoPageRoute(
+                        builder: (context) =>
+                        new OtherDiary(someonesId:widget.data.userId)));
+                  }
+                },
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 110),
+                  child: Text(
+                    widget.data.nickname,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white,),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
                 ),
               ),
               Container(
@@ -82,7 +110,7 @@ class NameAndTitle extends StatelessWidget {
               Container(
                 height: 15,
                 child: Text(
-                  data.createdAt.split('T')[0].replaceAll('-','.'),
+                  widget.data.createdAt.split('T')[0].replaceAll('-','.'),
                   style: TextStyle(fontSize: 12,color: Colors.white),
                 ),
               )
@@ -92,7 +120,7 @@ class NameAndTitle extends StatelessWidget {
             height: 10,
           ),
           Text(
-            data.title,
+            widget.data.title,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white,),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
@@ -101,6 +129,13 @@ class NameAndTitle extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _getId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
   }
 }
 
