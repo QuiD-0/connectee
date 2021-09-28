@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/screen/myPage.dart';
-import 'package:connectee/widget/my/first_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -310,19 +309,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return firstStart
-        ? SKOnboardingScreen(
-            bgColor: Color(0xff2d2d2d),
-            themeColor: const Color(0xFFFF9082),
-            pages: pages,
-            skipClicked: (value) {
-              _changeFirst();
-            },
-            getStartedClicked: (value) {
-              _changeFirst();
-            },
-          )
-        : firstLogin
+    return
+      // firstStart
+      //   ? SKOnboardingScreen(
+      //       bgColor: Color(0xff2d2d2d),
+      //       themeColor: const Color(0xFFFF9082),
+      //       pages: pages,
+      //       skipClicked: (value) {
+      //         _changeFirst();
+      //       },
+      //       getStartedClicked: (value) {
+      //         _changeFirst();
+      //       },
+      //     )
+      //   :
+    firstLogin
             ? Scaffold(
                 appBar: AppBar(
                   title: Text(

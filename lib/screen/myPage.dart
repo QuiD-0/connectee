@@ -471,11 +471,12 @@ class _MyPageState extends State<MyPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(CupertinoPageRoute(
-                              builder: (BuildContext context) =>
-                                  new OpenSource(),
-                              fullscreenDialog: true,
-                            ));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => LicensePage()));
+                            // Navigator.of(context).push(CupertinoPageRoute(
+                            //   builder: (BuildContext context) =>
+                            //       new OpenSource(),
+                            //   fullscreenDialog: true,
+                            // ));
                           },
                           child: Container(
                             decoration: BoxDecoration(
