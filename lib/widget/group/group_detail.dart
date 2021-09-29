@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:connectee/model/post.dart';
 import 'package:connectee/screen/write_diary.dart';
 import 'package:connectee/vars.dart';
-import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
+import 'package:connectee/widget/group/group_card_header.dart';
 import 'package:connectee/widget/home/diary_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -282,8 +282,8 @@ class _GroupDetailState extends State<GroupDetail> {
                       // 카드 제작
                       child: Column(
                         children: [
-                          RecCardHeader(
-                            data: post,
+                          GroupRecCardHeader(
+                            data: post,group:widget.group,
                           ),
                           GestureDetector(
                             // 리액션 상태 변경

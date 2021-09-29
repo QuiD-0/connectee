@@ -28,7 +28,7 @@ class _HomeContentState extends State<HomeContent> {
     _getId().then((res) {
       _fetchData();
       _fetchMyEmotion();
-      //내가 쓴 댓글 받아오기
+      //엑세스 타입 정하기
     });
     _Scroll.addListener(() {
       if (_Scroll.position.pixels == _Scroll.position.maxScrollExtent) {

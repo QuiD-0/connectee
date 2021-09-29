@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/vars.dart';
 import 'package:connectee/widget/diary/othersDiary.dart';
 import 'package:flutter/cupertino.dart';
