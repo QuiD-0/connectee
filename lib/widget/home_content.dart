@@ -22,6 +22,7 @@ class _HomeContentState extends State<HomeContent> {
   int page = 1;
   ScrollController _Scroll = ScrollController();
   String userId;
+  int access;
 
   @override
   void initState() {
@@ -121,16 +122,16 @@ class _HomeContentState extends State<HomeContent> {
             ListView.builder(
                 physics: ScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _data.length + 1,
+                itemCount: _data.length,
                 itemBuilder: (context, index) {
-                  if (index == _data.length) {
-                    return Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
+                  // if (index == _data.length) {
+                  //   return Padding(
+                  //     padding: const EdgeInsets.all(12.0),
+                  //     child: Center(
+                  //       child: CircularProgressIndicator(),
+                  //     ),
+                  //   );
+                  // }
                   Diary post = _data[index];
                   return Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 16),
@@ -445,6 +446,7 @@ class _HomeContentState extends State<HomeContent> {
   _getId() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
+      access = prefs.getInt("access");
       userId = prefs.getString('userId');
     });
   }
@@ -455,9 +457,18 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   Future _fetchData() async {
+    String uri;
+    //api 수정 후 변경하기 (access ==0)
+    if (true){
+      //최신
+      uri = 'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5';
+    }else{
+      //추천
+      uri = 'http://52.79.146.213:5000/diaries/recommandedDiary/$userId';
+    }
     await http
         .get(Uri.parse(
-            'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5'))
+        uri))
         .then((res) {
       if (res.statusCode == 200) {
         String jsonString = res.body;
@@ -509,6 +520,7 @@ class _HomeContentState extends State<HomeContent> {
     var data = prefs.getString(day);
     String emotion;
     String value;
+
     if (data == null) {
       emotion = null;
       value = null;
@@ -517,7 +529,7 @@ class _HomeContentState extends State<HomeContent> {
       value = data.split(',')[1];
     }
     var body = {
-      "accessType": 1, //변경 예정
+      "accessType": access, //변경 예정
       "diaryId": diaryId,
       "userId": int.parse(userId),
       "emotionType": "$emotion",

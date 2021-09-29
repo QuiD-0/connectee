@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/screen/myPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -304,6 +305,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     _checkFirst();
     _getId();
+    _setAccessType();
     super.initState();
   }
 
@@ -815,6 +817,16 @@ class _HomePageState extends State<HomePage> {
       userId = prefs.getString('userId');
       token = prefs.getString('access_token');
     });
+  }
+
+  void _setAccessType() async{
+    final prefs = await SharedPreferences.getInstance();
+    var num=Random().nextInt(2);
+    if(num==0){
+      prefs.setInt("access", 0);
+    }else{
+      prefs.setInt("access", 1);
+    }
   }
 }
 

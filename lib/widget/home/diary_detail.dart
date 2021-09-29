@@ -25,6 +25,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   int prevEmotionValue;
   String userId;
   int myCommentId;
+  int access;
   var data;
 
   @override
@@ -317,6 +318,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getString('userId');
+      access = prefs.getInt("access");
     });
   }
 
@@ -325,7 +327,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
     var body = {
       "userEmotionType": data[0],
       "userEmotionLevel": data[1],
-      "accessType": 1,
+      "accessType": access,
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,
       "userId": int.parse(userId),
@@ -345,7 +347,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
     var body = {
       "userEmotionType": data[0],
       "userEmotionLevel": data[1],
-      "accessType": 1,
+      "accessType": access,
       "emotionType": intToEng[selectedEmotion],
       "emotionLevel": emotionValue,
       "userId": int.parse(userId),
