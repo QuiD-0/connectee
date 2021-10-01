@@ -70,12 +70,13 @@ class _CommentListState extends State<CommentList> {
                           color: Color(0xff3d3d3d),
                           borderRadius: BorderRadius.circular(13)),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '${comment['userId']}님이 ${engToKor[comment['emotionType']]}의 감정을 표시했어요!',
+                            '${comment['User']['nickname']}님이 ${engToKor[comment['emotionType']]}의 감정을 표시했어요!',
                             style: TextStyle(color: Colors.white,fontSize: 12),
                           ),
+                          SizedBox(width: 20,),
                           Image.asset(
                             'assets/emotions/${comment['emotionType']}.png',
                             width: 30,

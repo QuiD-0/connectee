@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:connectee/screen/write_diary.dart';
 import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
 import 'package:connectee/widget/home/diary_detail.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:connectee/model/post.dart';
 import 'package:flutter/cupertino.dart';
@@ -348,7 +349,7 @@ class _GroupOtherDiaryState extends State<GroupOtherDiary> {
                               ),
                               userInfo['intro'] != ''
                                   ? Text(
-                                      '${userInfo['desc']}',
+                                      '${userInfo['intro']}',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -860,21 +861,29 @@ class _GroupOtherDiaryState extends State<GroupOtherDiary> {
 
   void _blockSomeone() async{
     var body = {
-      "groupId": widget.group.groupId.toString(),
-      "userId": widget.someonesId.toString(),
-      "password": widget.group.password,
+      "groupId": "${widget.group.groupId}",
+      "userId": "${widget.someonesId}",
     };
-    print(body);
     await http
         .post(Uri.parse(
-        'http://52.79.146.213:5000/groups/removeMember'),headers: {"Authorization" : "Bearer $token"},body: json.encode(body))
+        'http://52.79.146.213:5000/groups/removeMember'),headers: {"Authorization" : "Bearer $token"},body: body)
         .then((res) {
-          print(res.body);
       if (res.statusCode == 200) {
-        print('1');
+        Navigator.of(context).pop();
+        _toast('차단이 완료돠었습니다.');
       } else {
         print('error');
       }
     });
+  }
+
+  _toast(msg) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+    );
   }
 }

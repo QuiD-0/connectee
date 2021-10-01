@@ -459,7 +459,7 @@ class _HomeContentState extends State<HomeContent> {
   Future _fetchData() async {
     String uri;
     //api 수정 후 변경하기 (access ==0)
-    if (true){
+    if (access ==0){
       //최신
       uri = 'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5';
     }else{
@@ -539,6 +539,8 @@ class _HomeContentState extends State<HomeContent> {
         .post(Uri.parse('http://52.79.146.213:5000/clicks/update'),
             headers: {"Content-Type": "application/json"},
             body: json.encode(body))
-        .then((res) {});
+        .then((res) {
+          print(res.body);
+    });
   }
 }

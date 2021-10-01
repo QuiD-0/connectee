@@ -22,7 +22,7 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   String userId;
   String token;
-  var userInfo={
+  var userInfo = {
     "id": 0,
     "snsId": "",
     "provider": "",
@@ -35,7 +35,7 @@ class _MyPageState extends State<MyPage> {
     'intro': "",
     "diaryCount": 0,
     'commentCount': 0,
-    'imageUrl':null,
+    'imageUrl': null,
   };
 
   @override
@@ -92,9 +92,9 @@ class _MyPageState extends State<MyPage> {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           child: FadeInImage.assetNetwork(
-                                            image:userInfo['imageUrl'],
+                                            image: userInfo['imageUrl'],
                                             placeholder:
-                                            'assets/loading300.gif',
+                                                'assets/loading300.gif',
                                             height: 100,
                                             width: 100,
                                             fit: BoxFit.cover,
@@ -143,14 +143,17 @@ class _MyPageState extends State<MyPage> {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: () async{
-                                            var res = await Navigator.of(context)
-                                                .push(CupertinoPageRoute(
+                                          onTap: () async {
+                                            var res =
+                                                await Navigator.of(context)
+                                                    .push(CupertinoPageRoute(
                                               builder: (BuildContext context) =>
-                                                  new EditProfile(user: userInfo,),
+                                                  new EditProfile(
+                                                user: userInfo,
+                                              ),
                                               fullscreenDialog: true,
                                             ));
-                                            if (res){
+                                            if (res) {
                                               _getUserInfo();
                                             }
                                           },
@@ -324,7 +327,7 @@ class _MyPageState extends State<MyPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '알람 기능',
+                                  '알림 기능',
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.white),
                                 ),
@@ -471,7 +474,11 @@ class _MyPageState extends State<MyPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => LicensePage()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => Theme(
+                                      child: LicensePage(),
+                                      data: ThemeData.dark(),
+                                    )));
                             // Navigator.of(context).push(CupertinoPageRoute(
                             //   builder: (BuildContext context) =>
                             //       new OpenSource(),
@@ -530,14 +537,12 @@ class _MyPageState extends State<MyPage> {
         ));
   }
 
-  _getUserInfo() async{
-    await http
-        .get(Uri.parse(
-        'http://52.79.146.213:5000/users/myInfo'),headers: {"Authorization" : "Bearer $token"})
-        .then((res) {
+  _getUserInfo() async {
+    await http.get(Uri.parse('http://52.79.146.213:5000/users/myInfo'),
+        headers: {"Authorization": "Bearer $token"}).then((res) {
       if (res.statusCode == 200) {
         setState(() {
-          userInfo=json.decode(res.body);
+          userInfo = json.decode(res.body);
         });
       } else {
         print('error');

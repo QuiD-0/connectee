@@ -1,4 +1,4 @@
-import 'package:connectee/widget/diary/group_other_diary.dart';
+import 'package:connectee/widget/group/group_other_diary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

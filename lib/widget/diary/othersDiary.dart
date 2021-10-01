@@ -303,7 +303,7 @@ class _OtherDiaryState extends State<OtherDiary> {
                                         height: 60,
                                         width: 210,
                                         child: Text(
-                                          '${userInfo['diaryCount']}+개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
+                                          '${userInfo['diaryCount']}개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
                                           style: TextStyle(
                                               color: Color(0xffD0D0D0),
                                               fontSize: 10,
@@ -345,7 +345,7 @@ class _OtherDiaryState extends State<OtherDiary> {
                               ),
                               userInfo['intro'] != ''
                                   ? Text(
-                                      '${userInfo['desc']}',
+                                      '${userInfo['intro']}',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,

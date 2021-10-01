@@ -286,7 +286,8 @@ class _CalendarState extends State<Calendar> {
     };
     await http
         .patch(Uri.parse('http://52.79.146.213:5000/daily-infos/$userId'),
-            body: body);
+            body: body).then((res){
+    });
   }
 
   void _changeMainEmotion(res) async{
