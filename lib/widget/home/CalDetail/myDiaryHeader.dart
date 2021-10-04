@@ -34,7 +34,7 @@ class MyDiaryHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    height: 15,
+                    height: 12,
                     child: Text(
                       post.createdAt.split('T')[0].replaceAll('-', '.'),
                       style: TextStyle(fontSize: 12, color: Colors.white),
@@ -48,8 +48,10 @@ class MyDiaryHeader extends StatelessWidget {
                   ),
                   Container(
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           post.group.isEmpty ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 '개인',

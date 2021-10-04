@@ -31,7 +31,7 @@ class _MyDiaryState extends State<MyDiary> {
     "snsId": "",
     "provider": "",
     "email": "",
-    "nickname": "User",
+    "nickname": " ",
     "interest": "",
     "createdAt": "",
     "updatedAt": "",

@@ -396,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                                             hideBottomControls: true,
                                             activeControlsWidgetColor:
                                                 Colors.black,
-                                            toolbarTitle: 'Edit Image',
+                                            toolbarTitle: 'Fit Image',
                                             toolbarColor: Colors.black,
                                             toolbarWidgetColor: Colors.white,
                                             initAspectRatio:
