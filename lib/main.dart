@@ -95,6 +95,7 @@ class _MyAppState extends State<MyApp> {
         "username": "apple",
       };
     }
+    print(data);
     var res = await http.post(Uri.parse("http://52.79.146.213:5000/auth/login"),
         body: data);
     var result = json.decode(res.body);
@@ -116,8 +117,8 @@ class _MyAppState extends State<MyApp> {
 
   _getPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    kakaoId = prefs.getString('kakao');
-    appleId = prefs.getString('apple');
+    kakaoId = prefs.getString('kakao')??null;
+    appleId = prefs.getString('apple')??null;
   }
 }
 

@@ -511,26 +511,54 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
+
                 //임시버튼
-                GestureDetector(
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.clear();
-                    await AccessTokenStore.instance.clear();
-                    Phoenix.rebirth(context);
-                  },
-                  child: Center(
-                    child: Container(
-                      width: 100,
-                      height: 40,
-                      child: Center(child: Text('로그아웃')),
-                      color: Colors.redAccent,
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xff2d2d2d),
+                        borderRadius: BorderRadius.circular(13)),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.clear();
+                            await AccessTokenStore.instance.clear();
+                            Phoenix.rebirth(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              '로그아웃',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                // GestureDetector(
+                //   onTap: () async {
+                //     final prefs = await SharedPreferences.getInstance();
+                //     prefs.clear();
+                //     await AccessTokenStore.instance.clear();
+                //     Phoenix.rebirth(context);
+                //   },
+                //   child: Center(
+                //     child: Container(
+                //       width: 100,
+                //       height: 40,
+                //       child: Center(child: Text('로그아웃')),
+                //       color: Colors.redAccent,
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),
