@@ -47,5 +47,5 @@ app.*.map.json
 
 #keys
 lib/secret.dart
-/android/key.jks
+/android/app/key.jks
 /android/key.properties
