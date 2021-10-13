@@ -40,7 +40,7 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>use Music</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need to upload image</string>
+	<string>다이어리에 사진을 등록하거나 프로필, 그룹 대표 사진을 설정하기위해 라이브러리 권한이 사용됩니다.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
