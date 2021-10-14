@@ -95,7 +95,6 @@ class _MyAppState extends State<MyApp> {
         "username": "apple",
       };
     }
-    print(data);
     var res = await http.post(Uri.parse("http://52.79.146.213:5000/auth/login"),
         body: data);
     var result = json.decode(res.body);

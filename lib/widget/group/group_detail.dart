@@ -485,8 +485,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                 ),
                                 GestureDetector(
                                   onTap: () async {
-                                    var prevEmotion =
-                                    myEmotion[post.diaryId];
+                                    var prevEmotion = myEmotion[post.diaryId];
                                     var res = await Navigator.push(
                                       context,
                                       CupertinoPageRoute(
@@ -494,7 +493,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                         new DiaryDetail(
                                           post: post,
                                           myEmotion:
-                                          myEmotion[post.diaryId],groupName: widget.group['title'],),
+                                          myEmotion[post.diaryId],groupName: group.title,),
                                         fullscreenDialog: true,
                                       ),
                                     );
@@ -507,6 +506,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                             res[1],
                                             res[2],
                                           ];
+                                          prevEmotion = myEmotion[post.diaryId];
                                         });
                                       } else {
                                         setState(() {
@@ -515,14 +515,18 @@ class _GroupDetailState extends State<GroupDetail> {
                                             res[1],
                                             res[2],
                                           ];
+                                          prevEmotion = myEmotion[post.diaryId];
                                         });
                                       }
                                     }
-                                    if (prevEmotion != null &&
-                                        res[0] == null) {
+                                    if (prevEmotion==null && res[0]==null){
+                                      //아무것도 안하고 나온경우
+                                    }
+                                    if (prevEmotion != null && res[0] == null) {
                                       setState(() {
                                         myEmotion.remove(post.diaryId);
                                         post.emotionCount -= 1;
+                                        prevEmotion = null;
                                       });
                                     }
                                   },

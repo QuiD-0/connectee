@@ -544,7 +544,6 @@ class _MakeGroupState extends State<MakeGroup> {
                                   Container(
                                       padding: EdgeInsets.all(10),
                                       width: 250,
-                                      height: 165,
                                       decoration: BoxDecoration(
                                           color: Color(0xff565656),
                                           borderRadius: BorderRadius.circular(5)),

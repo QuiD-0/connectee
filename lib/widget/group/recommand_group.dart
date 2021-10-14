@@ -575,7 +575,6 @@ class _RecommandGroupState extends State<RecommandGroup> {
     };
     await http.post(Uri.parse('http://52.79.146.213:5000/groups/addMember'),
         headers: {"Content-Type": "application/json"}, body: json.encode(data)).then((res){
-          print(res.body);
           var result = json.decode(res.body);
           if(result['success']==true){
            print("성공");
