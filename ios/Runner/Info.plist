@@ -38,7 +38,7 @@
 		<true/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>use Music</string>
+	<string>미디어에 접근하기 위하여 미디어 권한이 사용됩니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>다이어리에 사진을 등록하거나 프로필, 그룹 대표 사진을 설정하기위해 라이브러리 권한이 사용됩니다.</string>
 	<key>UILaunchStoryboardName</key>
