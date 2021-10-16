@@ -464,7 +464,7 @@ class _HomeContentState extends State<HomeContent> {
       uri = 'http://52.79.146.213:5000/diaries/fetch?userId=$userId&page=$page&limit=5';
     }else{
       //추천
-      uri = 'http://52.79.146.213:5000/diaries/recommandedDiary/$userId';
+      uri = 'http://52.79.146.213:5000/diaries/recommandedDiary/$userId?page=$page&limit=5';
     }
     await http
         .get(Uri.parse(

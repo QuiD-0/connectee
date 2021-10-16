@@ -25,6 +25,8 @@ class _RecommandGroupState extends State<RecommandGroup> {
   String token;
   String nickname;
 
+  List themes=['취미','여행','공부','운동','맛집','영화','사랑','책','애완동물','고민'];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -200,7 +202,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                     width: 200,
                                     child: Row(
                                       children: [
-                                        for (var i in group['themes'])
+                                        for (var i in group['GroupThemes'])
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 10),
@@ -213,7 +215,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                                   BorderRadius.circular(
                                                       30)),
                                               child: Text(
-                                                "#${i['name']}",
+                                                "#${themes[i['ThemeId']-1]}",
                                                 style: TextStyle(
                                                     fontSize: 13,
                                                     fontWeight:
@@ -349,7 +351,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      for (var i in group['themes'])
+                      for (var i in group['GroupThemes'])
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: Container(
@@ -358,7 +360,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(30)),
                             child: Text(
-                              "#${i['name']}",
+                              "${themes[i['ThemeId']-1]}",
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
@@ -555,6 +557,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
     await http.get(Uri.parse(
         'http://52.79.146.213:5000/groups/recommand?accessType=timeline'),
         headers: {"Authorization": "Bearer $token"}).then((value) {
+          print(value);
       if (value.statusCode == 200) {
         String jsonString = value.body;
         var result = json.decode(jsonString);

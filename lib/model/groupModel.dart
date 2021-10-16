@@ -24,9 +24,11 @@ class Group {
 
   static getThemes(map) {
     var topics=[];
-      for(var i in map['themes']){
-        topics.add(i['name']);
+      for(var i in map['GroupThemes']){
+        topics.add(themes[i['ThemeId']-1]);
       }
       return topics;
   }
 }
+
+List themes=['취미','여행','공부','운동','맛집','영화','사랑','책','애완동물','고민'];

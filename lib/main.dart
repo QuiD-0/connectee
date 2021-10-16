@@ -3,9 +3,12 @@ import 'dart:io';
 import 'dart:math';
 import 'package:connectee/screen/myDiary.dart';
 import 'package:connectee/screen/myPage.dart';
+import 'package:connectee/widget/my/infos/rules.dart';
+import 'package:connectee/widget/my/infos/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -116,8 +119,8 @@ class _MyAppState extends State<MyApp> {
 
   _getPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    kakaoId = prefs.getString('kakao')??null;
-    appleId = prefs.getString('apple')??null;
+    kakaoId = prefs.getString('kakao') ?? null;
+    appleId = prefs.getString('apple') ?? null;
   }
 }
 
@@ -277,6 +280,8 @@ class _HomePageState extends State<HomePage> {
   File _image;
   String userId;
   String token;
+  bool check = false;
+  bool check2 = false;
 
   final pages = [
     SkOnboardingModel(
@@ -312,20 +317,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return
-      // firstStart
-      //   ? SKOnboardingScreen(
-      //       bgColor: Color(0xff2d2d2d),
-      //       themeColor: const Color(0xFFFF9082),
-      //       pages: pages,
-      //       skipClicked: (value) {
-      //         _changeFirst();
-      //       },
-      //       getStartedClicked: (value) {
-      //         _changeFirst();
-      //       },
-      //     )
-      //   :
-    firstLogin
+        // firstStart
+        //   ? SKOnboardingScreen(
+        //       bgColor: Color(0xff2d2d2d),
+        //       themeColor: const Color(0xFFFF9082),
+        //       pages: pages,
+        //       skipClicked: (value) {
+        //         _changeFirst();
+        //       },
+        //       getStartedClicked: (value) {
+        //         _changeFirst();
+        //       },
+        //     )
+        //   :
+        firstLogin
             ? Scaffold(
                 appBar: AppBar(
                   title: Text(
@@ -334,24 +339,42 @@ class _HomePageState extends State<HomePage> {
                   ),
                   centerTitle: true,
                   actions: [
-                    GestureDetector(
-                      onTap: () {
-                        _updateUserInfo();
-                        setState(() {
-                          firstLogin=false;
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 80,
-                        height: 40,
-                        child: Text(
-                          '완료',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
+                    check && check2
+                        ? GestureDetector(
+                            onTap: () {
+                              _updateUserInfo();
+                              setState(() {
+                                firstLogin = !firstLogin;
+                              });
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 80,
+                              height: 40,
+                              child: Text(
+                                '완료',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              _toast('약관동의가 필요합니다.');
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 80,
+                              height: 40,
+                              child: Text(
+                                '완료',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white54),
+                              ),
+                            ),
+                          ),
                   ],
                 ),
                 body: SafeArea(
@@ -540,7 +563,7 @@ class _HomePageState extends State<HomePage> {
                                   //그룹 설명
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
-                                        20, 0, 20, 20),
+                                        20, 0, 20, 00),
                                     child: Row(
                                       children: [
                                         Container(
@@ -626,10 +649,96 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             ),
-                            //마지막 빈공간
-                            SizedBox(
-                              height: 30,
+                            Row(
+                              children: [
+                                Container(
+                                  width: 105,
+                                  child: Theme(
+                                    data: Theme.of(context).copyWith(
+                                      unselectedWidgetColor: Colors.white70,
+                                    ),
+                                    child: Checkbox(
+                                      value: check,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          check = val;
+                                        });
+                                      },
+                                      activeColor: Colors.white,
+                                      checkColor: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: (){
+                                    Navigator.of(context).push(CupertinoPageRoute(
+                                      builder: (BuildContext context) => new Service(),
+                                      fullscreenDialog: true,
+                                    ));
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '서비스 이용약관 동의 (필수) ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                        size: 15,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 105,
+                                  child: Theme(
+                                    data: Theme.of(context).copyWith(
+                                      unselectedWidgetColor: Colors.white70,
+                                    ),
+                                    child: Checkbox(
+                                      value: check2,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          check2 = val;
+                                        });
+                                      },
+                                      activeColor: Colors.white,
+                                      checkColor: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: (){
+                                    Navigator.of(context).push(CupertinoPageRoute(
+                                      builder: (BuildContext context) => new Rules(),
+                                      fullscreenDialog: true,
+                                    ));
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '다이어리 이용 규칙 동의 (필수) ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                        size: 15,
+                                      )
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                            SizedBox(height: 10,),
                           ],
                         ),
                       ),
@@ -819,14 +928,24 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _setAccessType() async{
+  void _setAccessType() async {
     final prefs = await SharedPreferences.getInstance();
-    var num=Random().nextInt(2);
-    if(num==0){
+    var num = Random().nextInt(2);
+    if (num == 0) {
       prefs.setInt("access", 0);
-    }else{
+    } else {
       prefs.setInt("access", 1);
     }
+  }
+
+  _toast(msg) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+    );
   }
 }
 

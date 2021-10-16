@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:connectee/screen/write_diary.dart';
 import 'package:connectee/widget/home/RecCard/rec_card_header.dart';
 import 'package:connectee/widget/home/diary_detail.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:connectee/model/post.dart';
 import 'package:flutter/cupertino.dart';
@@ -136,8 +137,10 @@ class _OtherDiaryState extends State<OtherDiary> {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(50),
-                                          child: Image.network(
-                                            userInfo['imageUrl'],
+                                          child: FadeInImage.assetNetwork(
+                                            image:userInfo['imageUrl'],
+                                            placeholder:
+                                            'assets/loading300.gif',
                                             height: 100,
                                             width: 100,
                                             fit: BoxFit.cover,
@@ -185,79 +188,79 @@ class _OtherDiaryState extends State<OtherDiary> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        // SizedBox(width: 10,),
-                                        // GestureDetector(
-                                        //   onTap: () async{
-                                        //     var res = await showDialog(
-                                        //       context: context,
-                                        //       barrierDismissible: false,
-                                        //       barrierColor: Color(0x99000000),
-                                        //       builder: (context) =>
-                                        //           AlertDialog(
-                                        //             titlePadding: EdgeInsets.fromLTRB(
-                                        //                 20, 40, 20, 10),
-                                        //             elevation: 0,
-                                        //             backgroundColor: Color(0xff3D3D3D),
-                                        //             shape: RoundedRectangleBorder(
-                                        //                 borderRadius: BorderRadius.circular(10.0)),
-                                        //             title: Text(
-                                        //               '차단하기',
-                                        //               textAlign: TextAlign.center,
-                                        //             ),
-                                        //             titleTextStyle: TextStyle(
-                                        //                 fontSize: 18,
-                                        //                 color: Colors.white,
-                                        //                 fontFamily: 'GmarketSans',
-                                        //                 fontWeight: FontWeight.bold),
-                                        //             content: Text('해당 사용자를\n차단하시겟습니까?',textAlign: TextAlign.center,),
-                                        //             contentTextStyle: TextStyle(
-                                        //                 fontSize: 16,
-                                        //                 color: Colors.white,
-                                        //                 fontFamily: 'GmarketSans'),
-                                        //             actions: <Widget>[
-                                        //               Row(
-                                        //                 mainAxisAlignment: MainAxisAlignment
-                                        //                     .spaceAround,
-                                        //                 children: [
-                                        //                   FlatButton(
-                                        //                     onPressed: () =>
-                                        //                         Navigator.pop(context, false),
-                                        //                     child: Text('취소',
-                                        //                         style: TextStyle(
-                                        //                             fontSize: 16,
-                                        //                             color: Colors.white,
-                                        //                             fontFamily: 'GmarketSans')),
-                                        //                   ),
-                                        //                   FlatButton(
-                                        //                     onPressed: () =>
-                                        //                         Navigator.pop(context, true),
-                                        //                     child: Text('확인',
-                                        //                         style: TextStyle(
-                                        //                             fontSize: 16,
-                                        //                             color: Colors.white,
-                                        //                             fontFamily: 'GmarketSans')),
-                                        //                   ),
-                                        //                 ],
-                                        //               ),
-                                        //             ],
-                                        //           ),
-                                        //     );
-                                        //     if (res==true) {
-                                        //       print('차단');
-                                        //
-                                        //     }else{
-                                        //
-                                        //     }
-                                        //   },
-                                        //   child: Container(
-                                        //     padding: EdgeInsets.fromLTRB(10,5,10,5),
-                                        //     decoration: BoxDecoration(
-                                        //       color: Color(0xff3D3D3D),
-                                        //       borderRadius: BorderRadius.circular(30),
-                                        //     ),
-                                        //     child: Text('차단',style: TextStyle(color: Colors.white,fontSize: 12),),
-                                        //   ),
-                                        // ),
+                                        SizedBox(width: 10,),
+                                        GestureDetector(
+                                          onTap: () async{
+                                            var res = await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              barrierColor: Color(0x99000000),
+                                              builder: (context) =>
+                                                  AlertDialog(
+                                                    titlePadding: EdgeInsets.fromLTRB(
+                                                        20, 40, 20, 10),
+                                                    elevation: 0,
+                                                    backgroundColor: Color(0xff3D3D3D),
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10.0)),
+                                                    title: Text(
+                                                      '차단하기',
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                    titleTextStyle: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.white,
+                                                        fontFamily: 'GmarketSans',
+                                                        fontWeight: FontWeight.bold),
+                                                    content: Text('해당 사용자를\n차단하시겟습니까?',textAlign: TextAlign.center,),
+                                                    contentTextStyle: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white,
+                                                        fontFamily: 'GmarketSans'),
+                                                    actions: <Widget>[
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment
+                                                            .spaceAround,
+                                                        children: [
+                                                          FlatButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(context, false),
+                                                            child: Text('취소',
+                                                                style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    color: Colors.white,
+                                                                    fontFamily: 'GmarketSans')),
+                                                          ),
+                                                          FlatButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(context, true),
+                                                            child: Text('확인',
+                                                                style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    color: Colors.white,
+                                                                    fontFamily: 'GmarketSans')),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
+                                            if (res==true) {
+                                              // print('block');
+                                              // print(widget.someonesId);
+                                              // print(userId);
+                                              _toast('차단이 완료되었습니다.');
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.fromLTRB(10,5,10,5),
+                                            decoration: BoxDecoration(
+                                              color: Color(0xff3D3D3D),
+                                              borderRadius: BorderRadius.circular(30),
+                                            ),
+                                            child: Text('차단',style: TextStyle(color: Colors.white,fontSize: 12),),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     Row(
@@ -840,5 +843,14 @@ class _OtherDiaryState extends State<OtherDiary> {
         print('error');
       }
     });
+  }
+  _toast(msg) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+    );
   }
 }

@@ -637,7 +637,7 @@ class _MakeGroupState extends State<MakeGroup> {
                                                   child: Text(
                                                     '취소',
                                                     style: TextStyle(
-                                                        color: Color(0xff2D2D2D)),
+                                                        color: Color(0xff2D2D2D),fontSize: 12),
                                                   ),
                                                   decoration: BoxDecoration(
                                                       color: Color(0xff9d9d9d),
@@ -664,7 +664,7 @@ class _MakeGroupState extends State<MakeGroup> {
                                                   child: Text(
                                                     '확인',
                                                     style: TextStyle(
-                                                        color: Color(0xff2D2D2D)),
+                                                        color: Color(0xff2D2D2D),fontSize: 12),
                                                   ),
                                                   decoration: BoxDecoration(
                                                       color: Color(0xff9d9d9d),
