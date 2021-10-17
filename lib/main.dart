@@ -7,6 +7,7 @@ import 'package:connectee/widget/my/infos/rules.dart';
 import 'package:connectee/widget/my/infos/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -482,6 +483,7 @@ class _HomePageState extends State<HomePage> {
                               height: 30,
                             ),
                             Container(
+                              width: double.infinity,
                               child: Column(
                                 children: [
                                   Padding(
@@ -504,7 +506,7 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Container(
                                               height: 35,
-                                              width: 250,
+                                              width: MediaQuery.of(context).size.width *0.6,
                                               child: TextField(
                                                 controller: name,
                                                 maxLength: 12,
@@ -580,8 +582,8 @@ class _HomePageState extends State<HomePage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Container(
+                                              width: MediaQuery.of(context).size.width *0.6,
                                               height: 100,
-                                              width: 250,
                                               child: TextField(
                                                 controller: desc,
                                                 maxLength: 54,
