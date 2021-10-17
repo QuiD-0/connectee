@@ -221,9 +221,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                                     borderRadius: BorderRadius.circular(13.0)),
                                 backgroundColor: Color(0xff2d2d2d),
                                 context: context,
-                                builder: (context) => Container(
-                                      child: emotionSelector(),
-                                    ));
+                                builder: (context) => emotionSelector());
                             // Detect when it closes
                             await bottomSheet.then((onValue) {
                               if (onValue == null) {
@@ -1158,7 +1156,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
-          height: 400,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: Column(
             children: [
               Padding(
@@ -1193,14 +1191,14 @@ class _WriteDiaryState extends State<WriteDiary> {
               // pop 이후에 selectEmotion -> null로 바꾸기
               selectEmotion == null
                   ? Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
                       child: Container(
                         child: Wrap(
                           alignment: WrapAlignment.center,
                           children: [
                             for (var i in [1, 2, 3, 4, 5, 6, 7])
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: Column(
                                   children: [
                                     GestureDetector(
