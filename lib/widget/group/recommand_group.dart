@@ -148,7 +148,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                         ),
                         //그룹 정보
                         Container(
-                          width: 250,
+                          width: 230,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,

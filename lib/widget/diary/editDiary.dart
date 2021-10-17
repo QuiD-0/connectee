@@ -66,7 +66,7 @@ class _EditDiaryState extends State<EditDiary> {
 
   @override
   Widget build(BuildContext context) {
-    String group = widget.post.group;
+    List group = widget.post.group;
     var post = widget.post;
     return WillPopScope(
       onWillPop: _onBackPress,
@@ -280,7 +280,7 @@ class _EditDiaryState extends State<EditDiary> {
                         TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       //공개 비공개 설정, 그룹이 있을경우에는 그룹 이름 출력
-                      group == null
+                      group.isEmpty
                           ? Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Row(
@@ -384,7 +384,7 @@ class _EditDiaryState extends State<EditDiary> {
                               padding:
                               const EdgeInsets.fromLTRB(18, 7, 18, 7),
                               child: Text(
-                                '$group',
+                                '${group[0]['title']}',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 15),
                               ),
@@ -1392,7 +1392,7 @@ class _EditDiaryState extends State<EditDiary> {
 
   }
 
-  List getImage(post) {
+  getImage(post) {
     if(post.category =='diary' || post.category=='trip'){
       return widget.post.Images;
     }else{

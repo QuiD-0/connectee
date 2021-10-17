@@ -199,7 +199,7 @@ class _EditProfileState extends State<EditProfile> {
                                 children: [
                                   Container(
                                     height: 35,
-                                    width: 250,
+                                width: MediaQuery.of(context).size.width *0.6,
                                     child: TextField(
                                       controller: name,
                                       maxLength: 12,
@@ -264,7 +264,7 @@ class _EditProfileState extends State<EditProfile> {
                                 children: [
                                   Container(
                                     height: 100,
-                                    width: 250,
+                                width: MediaQuery.of(context).size.width *0.6,
                                     child: TextField(
                                       controller: desc,
                                       maxLength: 54,

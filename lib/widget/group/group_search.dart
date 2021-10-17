@@ -19,7 +19,7 @@ class _GroupSearchState extends State<GroupSearch> {
   List searchData = [];
   List<String> recent = [];
   String userId;
-
+  List themes=['취미','여행','공부','운동','맛집','영화','사랑','책','애완동물','고민'];
   @override
   void initState() {
     // TODO: implement initState
@@ -323,7 +323,7 @@ class _GroupSearchState extends State<GroupSearch> {
                                 ),
                                 //그룹 정보
                                 Container(
-                                  width: 250,
+                                  width: 230,
                                   child: Column(
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
@@ -382,7 +382,7 @@ class _GroupSearchState extends State<GroupSearch> {
                                             child: Row(
                                               children: [
                                                 for (var i
-                                                in group['themes'])
+                                                in group['GroupThemes'])
                                                   Padding(
                                                     padding:
                                                     const EdgeInsets
@@ -400,7 +400,7 @@ class _GroupSearchState extends State<GroupSearch> {
                                                               .circular(
                                                               30)),
                                                       child: Text(
-                                                        "#${i['name']}",
+                                                        "#${themes[i['ThemeId']-1]}",
                                                         style: TextStyle(
                                                             fontSize: 13,
                                                             fontWeight:
@@ -551,7 +551,7 @@ class _GroupSearchState extends State<GroupSearch> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      for (var i in group['themes'])
+                      for (var i in group['GroupThemes'])
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: Container(
@@ -560,7 +560,7 @@ class _GroupSearchState extends State<GroupSearch> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(30)),
                             child: Text(
-                              "#${i['name']}",
+                              "#${themes[i['ThemeId']-1]}",
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
@@ -575,7 +575,7 @@ class _GroupSearchState extends State<GroupSearch> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '100+ ',
+                        '${group['groupDiaryCount']}+ ',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

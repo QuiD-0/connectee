@@ -371,13 +371,15 @@ class _SearchState extends State<Search> {
                           return Padding(
                             padding: const EdgeInsets.all(10),
                             child: Container(
-                              padding: EdgeInsets.fromLTRB(15, 15, 10, 15),
+                              padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
                               decoration: BoxDecoration(
                                   color: Color(0xff3d3d3d),
                                   borderRadius: BorderRadius.circular(13)),
                               height: 114,
+                              width: 300,
                               child: widget.type == "movie"
                                   ? Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         searchData[index - 1]['image'] != "none"
                                             ? ClipRRect(
@@ -386,15 +388,15 @@ class _SearchState extends State<Search> {
                                                 child: Image.network(
                                                   searchData[index - 1]
                                                       ['image'],
-                                                  width: 82,
-                                                  height: 82,
+                                                  width: 80,
+                                                  height: 80,
                                                   fit: BoxFit.cover,
                                                 ),
                                               )
                                             : Container(
                                                 alignment: Alignment.center,
-                                                width: 82,
-                                                height: 82,
+                                                width: 80,
+                                                height: 80,
                                                 decoration: BoxDecoration(
                                                     color: Color(0xff4d4d4d),
                                                     borderRadius:
@@ -414,63 +416,67 @@ class _SearchState extends State<Search> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                    width: 175,
-                                                    child: Text(
-                                                      searchData[index - 1]
-                                                          ['title'],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.of(context).pop([
-                                                      searchData[index - 1]
-                                                          ['title'],
-                                                      searchData[index - 1]
-                                                          ['image'],
-                                                      searchData[index - 1]
-                                                          ['director'],
-                                                      searchData[index - 1]
-                                                          ['actor'],
-                                                      searchData[index - 1]
-                                                          ['playDate'],
-                                                      searchData[index - 1]
-                                                      ['userRating'],
-                                                    ]);
-                                                  },
-                                                  child: Container(
-                                                    width: 70,
-                                                    height: 30,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xff2d2d2d),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(30)),
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      '선택',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16),
+                                            Container(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Container(
+                                                      width: 160,
+                                                      child: Text(
+                                                        searchData[index - 1]
+                                                            ['title'],
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.bold),
+                                                      )),
+                                                  SizedBox(width: 5,),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context).pop([
+                                                        searchData[index - 1]
+                                                            ['title'],
+                                                        searchData[index - 1]
+                                                            ['image'],
+                                                        searchData[index - 1]
+                                                            ['director'],
+                                                        searchData[index - 1]
+                                                            ['actor'],
+                                                        searchData[index - 1]
+                                                            ['playDate'],
+                                                        searchData[index - 1]
+                                                        ['userRating'],
+                                                      ]);
+                                                    },
+                                                    child: Container(
+                                                      width: 60,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Color(0xff2d2d2d),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30)),
+                                                      alignment: Alignment.center,
+                                                      child: Text(
+                                                        '선택',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16),
+                                                      ),
                                                     ),
-                                                  ),
-                                                )
-                                              ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 10,
                                             ),
                                             Container(
-                                              width: 240,
+                                              width: 230,
                                               child: Text(
                                                 '감독: ${searchData[index - 1]['director']}',
                                                 style: TextStyle(
@@ -483,7 +489,7 @@ class _SearchState extends State<Search> {
                                               height: 10,
                                             ),
                                             Container(
-                                                width: 240,
+                                                width: 230,
                                                 child: Text(
                                                   '배우: ${searchData[index - 1]['actor']}',
                                                   style: TextStyle(
@@ -505,15 +511,15 @@ class _SearchState extends State<Search> {
                                                 child: Image.network(
                                                   searchData[index - 1]
                                                       ['image'],
-                                                  width: 82,
-                                                  height: 82,
+                                                  width: 80,
+                                                  height: 80,
                                                   fit: BoxFit.cover,
                                                 ),
                                               )
                                             : Container(
                                                 alignment: Alignment.center,
-                                                width: 82,
-                                                height: 82,
+                                                width: 80,
+                                                height: 80,
                                                 decoration: BoxDecoration(
                                                     color: Color(0xff4d4d4d),
                                                     borderRadius:
@@ -536,7 +542,7 @@ class _SearchState extends State<Search> {
                                             Row(
                                               children: [
                                                 Container(
-                                                    width: 175,
+                                                    width: 160,
                                                     child: Text(
                                                       searchData[index - 1]
                                                           ['title'],
@@ -548,6 +554,7 @@ class _SearchState extends State<Search> {
                                                           fontWeight:
                                                               FontWeight.bold),
                                                     )),
+                                                SizedBox(width: 5,),
                                                 GestureDetector(
                                                   onTap: () {
                                                     Navigator.of(context).pop([
@@ -587,7 +594,7 @@ class _SearchState extends State<Search> {
                                               height: 10,
                                             ),
                                             Container(
-                                              width: 240,
+                                              width: 230,
                                               child: Text(
                                                 '저자: ${searchData[index - 1]['author']}',
                                                 style: TextStyle(
@@ -600,7 +607,7 @@ class _SearchState extends State<Search> {
                                               height: 10,
                                             ),
                                             Container(
-                                                width: 240,
+                                                width: 230,
                                                 child: Text(
                                                   '출판: ${searchData[index - 1]['publisher']}',
                                                   style: TextStyle(

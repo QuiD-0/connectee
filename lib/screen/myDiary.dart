@@ -323,7 +323,7 @@ class _MyDiaryState extends State<MyDiary> {
                                     width: double.infinity,
                                     color: Color(0xff2d2d2d),
                                     child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(20.0,0,10,0),
+                                      padding: const EdgeInsets.fromLTRB(20.0,2,10,0),
                                       child: Align(
                                         alignment: Alignment.topLeft,
                                         child: Container(

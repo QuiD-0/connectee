@@ -1156,7 +1156,7 @@ class _WriteDiaryState extends State<WriteDiary> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.55,
           child: Column(
             children: [
               Padding(
@@ -1191,7 +1191,7 @@ class _WriteDiaryState extends State<WriteDiary> {
               // pop 이후에 selectEmotion -> null로 바꾸기
               selectEmotion == null
                   ? Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                       child: Container(
                         child: Wrap(
                           alignment: WrapAlignment.center,

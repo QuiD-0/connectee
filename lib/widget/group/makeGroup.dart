@@ -201,7 +201,7 @@ class _MakeGroupState extends State<MakeGroup> {
                                   children: [
                                     Container(
                                       height: 35,
-                                      width: 250,
+                                  width: MediaQuery.of(context).size.width *0.6,
                                       child: TextField(
                                         controller: name,
                                         maxLength: 12,
@@ -263,7 +263,7 @@ class _MakeGroupState extends State<MakeGroup> {
                                   children: [
                                     Container(
                                       height: 85,
-                                      width: 250,
+                                  width: MediaQuery.of(context).size.width *0.6,
                                       child: TextField(
                                         controller: desc,
                                         maxLength: 54,
@@ -805,7 +805,7 @@ class _MakeGroupState extends State<MakeGroup> {
                                   width: 80,
                                 ),
                                 Container(
-                                    width: 250,
+                                    width: MediaQuery.of(context).size.width *0.6,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [

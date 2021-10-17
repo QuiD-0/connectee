@@ -173,7 +173,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                       fit: BoxFit.contain,
                                     ),
                                     Text(
-                                      '  (1/${group.limitMembers.toString()})',
+                                      '  (${group.groupUserCount.toString()}/${group.limitMembers.toString()})',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12),
@@ -650,7 +650,7 @@ class _GroupDetailState extends State<GroupDetail> {
         .then((res) {
       String jsonString = res.body;
        var info = jsonDecode(jsonString);
-      diaryCount=info['groupDiaryCount'];
+      diaryCount=info['groupDiaryCount']??0;
     });
 
   }

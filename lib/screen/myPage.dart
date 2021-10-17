@@ -214,7 +214,7 @@ class _MyPageState extends State<MyPage> {
                                           const EdgeInsets.only(bottom: 10),
                                       child: Container(
                                         height: 60,
-                                        width: 210,
+                                        width: 200,
                                         child: Text(
                                           '${userInfo['diaryCount']}개의 다이어리를 작성하고,\n${userInfo['commentCount'].toString()}번의 감정을 표현했어요!',
                                           style: TextStyle(
@@ -288,6 +288,97 @@ class _MyPageState extends State<MyPage> {
                   ),
                 ),
                 //앱설정
+                // Padding(
+                //   padding: EdgeInsets.all(10),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //         color: Color(0xff2d2d2d),
+                //         borderRadius: BorderRadius.circular(13)),
+                //     width: double.infinity,
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Container(
+                //           padding: EdgeInsets.all(20),
+                //           child: Text(
+                //             '앱설정',
+                //             style: TextStyle(
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 16,
+                //                 color: Colors.white),
+                //           ),
+                //         ),
+                //         Container(
+                //           height: 1,
+                //           width: double.infinity,
+                //           color: Color(0xff4D4D4D),
+                //         ),
+                //         GestureDetector(
+                //           onTap: () {
+                //             Navigator.of(context).push(CupertinoPageRoute(
+                //               builder: (BuildContext context) => new Notify(),
+                //               fullscreenDialog: true,
+                //             ));
+                //           },
+                //           child: Container(
+                //             color: Color(0xff2d2d2d),
+                //             padding: EdgeInsets.all(20),
+                //             child: Row(
+                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //               children: [
+                //                 Text(
+                //                   '알림 기능',
+                //                   style: TextStyle(
+                //                       fontSize: 16, color: Colors.white),
+                //                 ),
+                //                 Icon(
+                //                   Icons.arrow_forward_ios,
+                //                   size: 16,
+                //                   color: Colors.white,
+                //                 )
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //         Container(
+                //           height: 1,
+                //           width: double.infinity,
+                //           color: Color(0xff4D4D4D),
+                //         ),
+                //         GestureDetector(
+                //           onTap: () {
+                //             Navigator.of(context).push(CupertinoPageRoute(
+                //               builder: (BuildContext context) => new Rules(),
+                //               fullscreenDialog: true,
+                //             ));
+                //           },
+                //           child: Container(
+                //             decoration: BoxDecoration(
+                //                 color: Color(0xff2d2d2d),
+                //                 borderRadius: BorderRadius.circular(13)),
+                //             padding: EdgeInsets.all(20),
+                //             child: Row(
+                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //               children: [
+                //                 Text(
+                //                   '다이어리 이용 규칙',
+                //                   style: TextStyle(
+                //                       fontSize: 16, color: Colors.white),
+                //                 ),
+                //                 Icon(
+                //                   Icons.arrow_forward_ios,
+                //                   size: 16,
+                //                   color: Colors.white,
+                //                 )
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                //이용안내
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: Container(
@@ -301,43 +392,11 @@ class _MyPageState extends State<MyPage> {
                         Container(
                           padding: EdgeInsets.all(20),
                           child: Text(
-                            '앱설정',
+                            '이용안내',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                                 color: Colors.white),
-                          ),
-                        ),
-                        Container(
-                          height: 1,
-                          width: double.infinity,
-                          color: Color(0xff4D4D4D),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(CupertinoPageRoute(
-                              builder: (BuildContext context) => new Notify(),
-                              fullscreenDialog: true,
-                            ));
-                          },
-                          child: Container(
-                            color: Color(0xff2d2d2d),
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '알림 기능',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
                           ),
                         ),
                         Container(
@@ -372,31 +431,6 @@ class _MyPageState extends State<MyPage> {
                                 )
                               ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                //이용안내
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xff2d2d2d),
-                        borderRadius: BorderRadius.circular(13)),
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            '이용안내',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.white),
                           ),
                         ),
                         Container(

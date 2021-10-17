@@ -288,7 +288,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                               ),
                                         //그룹 정보
                                         Container(
-                                          width: 250,
+                                          width: 230,
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -342,68 +342,70 @@ class _GroupScreenState extends State<GroupScreen> {
                                                 height: 12,
                                               ),
                                               //그룹 토픽
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    width: 200,
-                                                    child: Row(
-                                                      children: [
-                                                        for (var i
-                                                        in group.topic)
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                right: 10),
-                                                            child: Container(
-                                                              padding: EdgeInsets
-                                                                  .fromLTRB(
-                                                                  11, 3, 11, 3),
-                                                              decoration: BoxDecoration(
-                                                                  color:
-                                                                  Colors.white,
-                                                                  borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                      30)),
-                                                              child: Text(
-                                                                "#$i",
-                                                                style: TextStyle(
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                              Container(
+                                                width: double.infinity,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      child: Row(
+                                                        children: [
+                                                          for (var i
+                                                          in group.topic)
+                                                            Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  right: 10),
+                                                              child: Container(
+                                                                padding: EdgeInsets
+                                                                    .fromLTRB(
+                                                                    11, 3, 11, 3),
+                                                                decoration: BoxDecoration(
+                                                                    color:
+                                                                    Colors.white,
+                                                                    borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                        30)),
+                                                                child: Text(
+                                                                  "#$i",
+                                                                  style: TextStyle(
+                                                                      fontSize: 13,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  // 좋아요
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      _like(group.groupId);
-                                                    },
-                                                    child:Padding(
-                                                      padding: EdgeInsets.only(right: 10),
-                                                      child: likedGroup.contains(
-                                                          group.groupId)
-                                                          ? Image.asset(
-                                                        'assets/icons/heart_fill.png',
-                                                        height: 18,
-                                                        width: 20,
-                                                        fit: BoxFit.contain,
-                                                      )
-                                                          : Image.asset(
-                                                        'assets/icons/heart.png',
-                                                        height: 18,
-                                                        width: 20,
-                                                        fit: BoxFit.contain,
+                                                            )
+                                                        ],
                                                       ),
+                                                    ),
+                                                    // 좋아요
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        _like(group.groupId);
+                                                      },
+                                                      child:Padding(
+                                                        padding: EdgeInsets.only(right: 10),
+                                                        child: likedGroup.contains(
+                                                            group.groupId)
+                                                            ? Image.asset(
+                                                          'assets/icons/heart_fill.png',
+                                                          height: 18,
+                                                          width: 20,
+                                                          fit: BoxFit.contain,
+                                                        )
+                                                            : Image.asset(
+                                                          'assets/icons/heart.png',
+                                                          height: 18,
+                                                          width: 20,
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      )
                                                     )
-                                                  )
-                                                ],
+                                                  ],
+                                                ),
                                               )
                                             ],
                                           ),
