@@ -18,8 +18,21 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakaof90217e80d59b2b247b80059e64a9fa4</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>KAKAO_APP_KEY</key>
+	<string>f90217e80d59b2b247b80059e64a9fa4</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaof90217e80d59b2b247b80059e64a9fa4</string>
@@ -28,19 +41,6 @@
 		<string>kakaolink</string>
 		<string>kakaotalk-5.9.7</string>
 	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-	<dict>
-	<key>CFBundleTypeRole</key>
-	<string>Editor</string>
-	<key>CFBundleURLSchemes</key>
-	<array>
-	<string>kakaof90217e80d59b2b247b80059e64a9fa4</string>
-	</array>
-	</dict>
-	</array>
-	<key>KAKAO_APP_KEY</key>
-	<string>f90217e80d59b2b247b80059e64a9fa4</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
