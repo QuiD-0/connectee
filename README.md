@@ -2,6 +2,14 @@
 
 ![메인 사진(수정)](README.assets/main.png)
 
+## 🚩배포링크
+
+[플레이 스토어](https://play.google.com/store/apps/details?id=com.swMaestro12.connectee)
+
+[앱스토어](https://apps.apple.com/app/id1588851519) 
+
+
+
 ## 📄프로젝트 개요
 
 사용자가 자신의 감정 상태를 7가지 감정 종류에 따라 수치화하여 입력한 뒤, 그 감정에 관한 **다이어리를 작성하고 공유하는 플랫폼입니다.** 
