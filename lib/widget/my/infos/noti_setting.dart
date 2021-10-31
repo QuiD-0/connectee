@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class Notify extends StatefulWidget {
   const Notify({Key key}) : super(key: key);
@@ -10,7 +13,7 @@ class Notify extends StatefulWidget {
 }
 
 class _NotifyState extends State<Notify> {
-  bool status =true;
+  bool status =false;
 
   @override
   void initState() {
@@ -104,6 +107,63 @@ class _NotifyState extends State<Notify> {
   _setNotiVal(bool val) async{
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('status', val);
+    if(val==true){
+      _dailyAtTimeNotification();
+    }
+    else{
+      await FlutterLocalNotificationsPlugin().cancel(0);
+      print("cancel");
+    }
+  }
+  Future _dailyAtTimeNotification() async {
+    final notiTitle = 'title';
+    final notiDesc = 'description';
+
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    final result = await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    var android = AndroidNotificationDetails(
+        '0', 'connectee',
+        channelDescription: '오늘의 감정을 기록해 보세요!');
+    var ios = IOSNotificationDetails();
+    var detail = NotificationDetails(android: android, iOS: ios);
+
+    if (true) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+          ?.deleteNotificationChannelGroup('0');
+
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        0, // id는 unique해야합니다. int값
+        notiTitle,
+        notiDesc,
+        _setNotiTime(),
+        detail,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    }
+  }
+
+  tz.TZDateTime _setNotiTime() {
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
+
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
+        21, 00);
+    print(scheduledDate);
+    return scheduledDate;
   }
 }
 

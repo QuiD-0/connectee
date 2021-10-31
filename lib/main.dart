@@ -27,11 +27,30 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sk_onboarding_screen/sk_onboarding_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 bool firstLogin = false;
 
-void main() {
+void main() async{
+  _initNotiSetting();
   runApp(Phoenix(child: MyApp()));
+}
+
+void _initNotiSetting() async {
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final initSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+  final initSettingsIOS = IOSInitializationSettings(
+    requestSoundPermission: false,
+    requestBadgePermission: false,
+    requestAlertPermission: false,
+  );
+  final initSettings = InitializationSettings(
+    android: initSettingsAndroid,
+    iOS: initSettingsIOS,
+  );
+  await flutterLocalNotificationsPlugin.initialize(
+    initSettings,
+  );
 }
 
 class MyApp extends StatefulWidget {
