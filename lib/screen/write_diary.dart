@@ -1198,7 +1198,7 @@ class _WriteDiaryState extends State<WriteDiary> {
                           children: [
                             for (var i in [1, 2, 3, 4, 5, 6, 7])
                               Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.fromLTRB(12.0,10,12,10),
                                 child: Column(
                                   children: [
                                     GestureDetector(

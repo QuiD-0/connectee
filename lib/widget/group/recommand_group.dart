@@ -414,7 +414,7 @@ class _RecommandGroupState extends State<RecommandGroup> {
                               color: Colors.white, fontSize: 12, height: 1.7),
                         ),
                       )),
-                  GestureDetector(
+                  (group['groupUserCount']!=group['limitMembers'])?GestureDetector(
                     onTap: () async {
                       //그룹 참가
                       if (group['password'] == '') {
@@ -525,6 +525,23 @@ class _RecommandGroupState extends State<RecommandGroup> {
                       height: 48,
                       decoration: BoxDecoration(
                           color: Colors.white,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: Text(
+                        'CONNECT!',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ):GestureDetector(
+                    onTap: (){
+                      _toast('인원이 가득 차 가입할 수 없습니다');
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 311,
+                      height: 48,
+                      decoration: BoxDecoration(
+                          color: Colors.white24,
                           borderRadius: BorderRadius.circular(30)),
                       child: Text(
                         'CONNECT!',
